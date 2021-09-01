@@ -1,0 +1,1 @@
+enum ChatMarker { sent, displayed }
