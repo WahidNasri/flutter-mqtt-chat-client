@@ -12,14 +12,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ChatApp.instance() == null ||
-              !ChatApp.instance()!.clientHandler.isConnected()
-          ? LoginPage()
-          : ChatUIPage(room: "topic/test"),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: LoginPage());
   }
 }

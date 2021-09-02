@@ -13,14 +13,14 @@ class MqttClient extends ClientHandler {
   MqttServerClient? _client;
   String? _clientId;
   User? _user;
-  StreamController<PayloadWithTopic>? _messagesController;
+  StreamController<PayloadWithTopic>? _messagesController = StreamController.broadcast( );
   @override
   Future<bool> connect(String username, String password) async {
     String cid = getClientId()!;
     _client = MqttServerClient.withPort(
-        Platform.operatingSystem.toLowerCase() == 'android'
-            ? '172.16.14.99'
-            : 'localhost',
+        Platform.operatingSystem.toLowerCase() == 'windows'
+            ? 'localhost'
+            : '172.16.14.99',
         cid,
         1883);
     // _client = MqttServerClient.withPort('broker.emqx.io', resource, 1883
@@ -46,7 +46,6 @@ class MqttClient extends ClientHandler {
     try {
       await _client!.connect();
 
-      _messagesController = StreamController<PayloadWithTopic>.broadcast();
       _subscribeToArchivesTopics();
       _listenAndFilter();
       return true;

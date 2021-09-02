@@ -164,8 +164,6 @@ class LoginPage extends StatelessWidget {
   }
 
   _loginTap(BuildContext context) async {
-    var chapp = ChatApp.instance();
-
     bool connected = await ChatApp.instance()!
         .clientHandler
         .connect(_usernameController.text, _passwordController.text);
