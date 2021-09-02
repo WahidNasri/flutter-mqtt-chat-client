@@ -3,12 +3,9 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter_mqtt/MqttImpl/topics_generator.dart';
-import 'package:flutter_mqtt/MqttImpl/utils.dart';
 import 'package:flutter_mqtt/abstraction/ClientHandler.dart';
-import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/abstraction/models/PayloadWithTopic.dart';
 import 'package:flutter_mqtt/abstraction/models/User.dart';
-import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
@@ -17,7 +14,6 @@ class MqttClient extends ClientHandler {
   String? _clientId;
   User? _user;
   StreamController<PayloadWithTopic>? _messagesController;
-  StreamController<ConnectionState>? _connectionController;
   @override
   Future<bool> connect(String username, String password) async {
     String cid = getClientId()!;
@@ -41,8 +37,6 @@ class MqttClient extends ClientHandler {
     _client!.keepAlivePeriod = 60;
     _client!.autoReconnect = true;
 
-    _broadcastConnectionState();
-
     final connMessage = MqttConnectMessage()
         .authenticateAs(username, password)
         .withWillTopic('lastwills')
@@ -50,16 +44,10 @@ class MqttClient extends ClientHandler {
         .withWillQos(MqttQos.atLeastOnce);
     _client!.connectionMessage = connMessage;
     try {
-      _broadcastConnectionState();
-
       await _client!.connect();
 
       _messagesController = StreamController<PayloadWithTopic>.broadcast();
-      _connectionController =
-          _connectionController = StreamController.broadcast();
-
       _subscribeToArchivesTopics();
-      _broadcastConnectionState();
       _listenAndFilter();
       return true;
     } catch (e) {
@@ -102,20 +90,6 @@ class MqttClient extends ClientHandler {
 
       print('Received message:$payload from topic: ${c[0].topic}>');
     });
-
-    _client!.published!.listen((MqttPublishMessage message) {
-      final payload =
-          MqttPublishPayload.bytesToStringAsString(message.payload.message);
-      _ackController!.add(payload);
-    });
-  }
-
-  void _broadcastConnectionState() {
-    _connectionController.add(fromMqttStatus(_client == null
-        ? null
-        : _client!.connectionStatus == null
-            ? null
-            : _client!.connectionStatus!.state));
   }
 
   @override
@@ -190,18 +164,13 @@ class MqttClient extends ClientHandler {
 // connection succeeded
   void onConnected() {
     print('Connected');
-    _broadcastConnectionState();
   }
 
 // unconnected
   void onDisconnected() {
     print('Disconnected');
-    _broadcastConnectionState();
     if (_messagesController != null && !_messagesController!.isClosed) {
       _messagesController!.close();
-    }
-    if (_ackController != null && !_ackController!.isClosed) {
-      _ackController!.close();
     }
     _user = null;
     _client = null;
@@ -226,22 +195,11 @@ class MqttClient extends ClientHandler {
   //auto reconnect
   void onAutoReconnect() {
     print('Auto Reconnect');
-    _broadcastConnectionState();
   }
 
 // PING response received
   void pong() {
     print('Ping response client callback invoked');
-  }
-
-  @override
-  Stream<ConnectionState> connectionStateStream() {
-    return _connectionController.stream;
-  }
-
-  @override
-  Stream<String> acknowledgementsStream() {
-    return _ackController!.stream;
   }
 
   @override
