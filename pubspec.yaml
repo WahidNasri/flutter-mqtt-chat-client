@@ -35,13 +35,22 @@ dependencies:
   mime: ^1.0.0
   uuid: ^3.0.4
   open_file: ^3.2.1
-  floor: ^1.1.0
+  moor:
+  sqlite3_flutter_libs:
+  path_provider:
+  path:
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  floor_generator: ^1.1.0
-  build_runner: ^2.0.0
+  moor_generator:
+  build_runner:
+  
+#dependency_overrides:
+#  meta: ^1.3.0
+#  analyzer: '1.5.0'
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

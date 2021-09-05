@@ -13,10 +13,15 @@ class MqttClient extends ClientHandler {
   MqttServerClient? _client;
   String? _clientId;
   User? _user;
-  StreamController<PayloadWithTopic>? _messagesController = StreamController.broadcast( );
+  StreamController<PayloadWithTopic>? _messagesController =
+      StreamController.broadcast();
   @override
-  Future<bool> connect(String username, String password) async {
-    String cid = getClientId()!;
+  Future<bool> connect(
+      {required String username,
+      required String password,
+      String? clientId}) async {
+    String cid = clientId ?? getClientId()!;
+    _clientId = clientId;
     _client = MqttServerClient.withPort(
         Platform.operatingSystem.toLowerCase() == 'windows'
             ? 'localhost'

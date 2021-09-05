@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mqtt/db/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/screens/rooms_page.dart';
 
@@ -164,9 +165,9 @@ class LoginPage extends StatelessWidget {
   }
 
   _loginTap(BuildContext context) async {
-    bool connected = await ChatApp.instance()!
-        .clientHandler
-        .connect(_usernameController.text, _passwordController.text);
+    bool connected = await ChatApp.instance()!.clientHandler.connect(
+        username: _usernameController.text, password: _passwordController.text);
+    AppData.instance();
     if (connected) {
       Navigator.push(
         context,

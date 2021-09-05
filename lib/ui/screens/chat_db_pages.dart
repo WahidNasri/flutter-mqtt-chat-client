@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
+import 'package:flutter_mqtt/db/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
@@ -13,15 +14,15 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_mqtt/ui/extensions/UiMessages.dart';
 
-class ChatUIPage extends StatefulWidget {
+class ChatUIDBPage extends StatefulWidget {
   final String room;
-  const ChatUIPage({Key? key, required this.room}) : super(key: key);
+  const ChatUIDBPage({Key? key, required this.room}) : super(key: key);
 
   @override
   _ChatUIPageState createState() => _ChatUIPageState();
 }
 
-class _ChatUIPageState extends State<ChatUIPage> {
+class _ChatUIPageState extends State<ChatUIDBPage> {
   List<types.Message> _messages = [];
   bool isTyping = false;
   final subscriptions = List<StreamSubscription<dynamic>>.empty(growable: true);
@@ -35,15 +36,17 @@ class _ChatUIPageState extends State<ChatUIPage> {
 
   @override
   void initState() {
-    var s1 = ChatApp.instance()!.messageReader.getChatMessages().listen((msg) {
+    var s1 = AppData.instance()!.getMessagesByRoom(widget.room).listen((msgs) {
       //ignore message for other rooms
-      if (msg.roomId != widget.room) {
-        return;
-      }
-      types.Message conv = msg.toUiMessage();
+
+      //types.Message conv = msgs..toUiMessage();
 
       setState(() {
-        _insert(conv);
+        //_insert(conv);
+        _messages = msgs
+            .where((m) => m.roomId == widget.room)
+            .map((e) => e.toUiMessage())
+            .toList();
       });
     });
     var s2 =
@@ -129,10 +132,10 @@ class _ChatUIPageState extends State<ChatUIPage> {
         author: _user,
         createdAt: DateTime.now().millisecondsSinceEpoch,
         id: const Uuid().v4(),
-        mimeType: lookupMimeType(result.files.single.path),
+        mimeType: lookupMimeType(result.files.single.path ?? ''),
         name: result.files.single.name,
         size: result.files.single.size,
-        uri: result.files.single.path,
+        uri: result.files.single.path ?? '',
       );
 
       _addMessage(message);

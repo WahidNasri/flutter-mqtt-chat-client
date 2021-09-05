@@ -2,7 +2,8 @@ import 'package:flutter_mqtt/abstraction/models/PayloadWithTopic.dart';
 import 'package:flutter_mqtt/abstraction/models/User.dart';
 
 abstract class ClientHandler {
-  Future<bool> connect(String username, String password);
+  Future<bool> connect(
+      {required String username, required String password, String? clientId});
   void disconnect();
   bool isConnected();
   bool isConnecting();

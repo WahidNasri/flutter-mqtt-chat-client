@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mqtt/ui/screens/chat_ui_page.dart';
-import 'package:flutter_mqtt/global/ChatApp.dart';
-import 'package:flutter_mqtt/ui/screens/login_page.dart';
+import 'package:flutter_mqtt/ui/screens/startup_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,6 +14,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: LoginPage());
+        home: StartupPage());
   }
 }
