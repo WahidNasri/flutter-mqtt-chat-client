@@ -64,15 +64,17 @@ class MqttClient extends ClientHandler {
   }
 
   void _subscribeToArchivesTopics() {
-    _client!.subscribe(
-        TopicsNamesGenerator.getArchivesRoomsTopic(getClientId()!),
-        MqttQos.atLeastOnce);
-    _client!.subscribe(
-        TopicsNamesGenerator.getArchivesMessagesTopic(getClientId()!),
-        MqttQos.atLeastOnce);
-    _client!.subscribe(
-        TopicsNamesGenerator.getArchivesMyIdTopic(getClientId()!),
-        MqttQos.atLeastOnce);
+    Future.delayed(Duration(seconds: 3), (){
+      _client!.subscribe(
+          TopicsNamesGenerator.getArchivesRoomsTopic(getClientId()!),
+          MqttQos.atLeastOnce);
+      _client!.subscribe(
+          TopicsNamesGenerator.getArchivesMessagesTopic(getClientId()!),
+          MqttQos.atLeastOnce);
+      _client!.subscribe(
+          TopicsNamesGenerator.getArchivesMyIdTopic(getClientId()!),
+          MqttQos.atLeastOnce);
+    });
   }
 
   void _listenAndFilter() {
@@ -154,6 +156,9 @@ class MqttClient extends ClientHandler {
     String eventsTopic =
         TopicsNamesGenerator.getEventsTopicForBareRoom(bareRoom);
 
+    if(_client == null){
+      return;
+    }
     _client!.unsubscribe(messagesTopic);
     _client!.unsubscribe(eventsTopic);
   }
@@ -165,6 +170,9 @@ class MqttClient extends ClientHandler {
 
   @override
   void leaveContactEvents(String contactId) {
+    if(_client == null){
+      return;
+    }
     _client!.unsubscribe("presence/" + contactId);
   }
 
@@ -182,6 +190,9 @@ class MqttClient extends ClientHandler {
     } catch (e) {
       print(e);
     }
+    _client = null;
+    _clientId = null;
+    _user = null;
   }
 
   @override

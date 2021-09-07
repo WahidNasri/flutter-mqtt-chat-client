@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
-import 'package:flutter_mqtt/ui/screens/chat_ui_page.dart';
+import 'package:flutter_mqtt/ui/screens/live/chat_ui_page.dart';
 
 class RoomsPage extends StatefulWidget {
   RoomsPage({Key? key}) : super(key: key);

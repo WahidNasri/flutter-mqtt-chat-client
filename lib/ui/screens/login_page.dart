@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
-import 'package:flutter_mqtt/ui/screens/rooms_db_page.dart';
+import 'package:flutter_mqtt/ui/screens/fromdb/rooms_db_page.dart';
 
 
 class LoginPage extends StatelessWidget {
@@ -63,7 +63,7 @@ class LoginPage extends StatelessWidget {
                           margin: EdgeInsets.only(top: 50),
                           child: Center(
                             child: Text(
-                              "Login",
+                              "Flutter MQTT",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 40,
@@ -99,10 +99,12 @@ class LoginPage extends StatelessWidget {
                                       bottom: BorderSide(
                                           color: Colors.grey[100]!))),
                               child: TextField(
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
                                 controller: _usernameController,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Email or Phone number",
+                                    hintText: "Email",
                                     hintStyle:
                                         TextStyle(color: Colors.grey[400])),
                               ),
@@ -111,6 +113,7 @@ class LoginPage extends StatelessWidget {
                               padding: EdgeInsets.all(8.0),
                               child: TextField(
                                 controller: _passwordController,
+                                obscureText: true,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Password",
@@ -168,7 +171,7 @@ class LoginPage extends StatelessWidget {
         username: _usernameController.text, password: _passwordController.text);
     if (connected) {
       AppData.instance()!.usersHandler.storeWaitingCredentials(
-          _usernameController.text, _passwordController.text);
+          _usernameController.text.trim(), _passwordController.text);
 
       Navigator.pushReplacement(
         context,

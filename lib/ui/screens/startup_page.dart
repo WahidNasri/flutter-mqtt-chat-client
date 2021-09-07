@@ -3,8 +3,8 @@ import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
-import 'package:flutter_mqtt/ui/screens/rooms_db_page.dart';
-import 'package:flutter_mqtt/ui/screens/rooms_page.dart';
+import 'package:flutter_mqtt/ui/screens/fromdb/rooms_db_page.dart';
+import 'package:flutter_mqtt/ui/screens/live/rooms_page.dart';
 
 class StartupPage extends StatefulWidget {
   const StartupPage({Key? key}) : super(key: key);
@@ -57,7 +57,8 @@ class _StartupPageState extends State<StartupPage> {
             SizedBox(height: 20,),
             FloatingActionButton(
                 onPressed: _onGoChat,
-                child: Icon(Icons.arrow_right_alt_outlined))
+                child: Icon(Icons.arrow_right_alt_outlined)),
+            TextButton(onPressed: _onStartOver, child: Text("Start with new login"))
           ],
         ),
       );
@@ -69,8 +70,8 @@ class _StartupPageState extends State<StartupPage> {
         {
           ChatApp.instance()!.clientHandler.connect(
               clientId: users.client_id!,
-              password: users.password!,
-              username: users.username!)
+              password: users.password ?? "",
+              username: users.username ?? "")
         }
     });
     Navigator.pushReplacement(
@@ -79,9 +80,20 @@ class _StartupPageState extends State<StartupPage> {
     );
   }
   void _onLogin(){
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
-    );
+    //delete any data created by mistake
+    AppData.instance()!.deleteAll().then((value) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    });
+  }
+  void _onStartOver(){
+    AppData.instance()!.deleteAllAndDisconnect().then((value) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    });
   }
 }

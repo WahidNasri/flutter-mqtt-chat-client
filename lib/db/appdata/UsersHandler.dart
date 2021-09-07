@@ -25,6 +25,16 @@ class UsersHandler {
     return MyDatabase.instance()!.userDao.getUser();
   }
 
+  Stream<DbUser?> getLocalUserAsync(){
+    return MyDatabase.instance()!.userDao.getUserAsync().map((users){
+      if(users.length == 0){
+        return null;
+      }
+      else{
+        return users[0];
+      }
+    });
+  }
   Future deleteAll() {
     return MyDatabase.instance()!.userDao.deleteAllUsers();
   }

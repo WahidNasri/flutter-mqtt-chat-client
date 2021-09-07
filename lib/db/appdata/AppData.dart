@@ -67,6 +67,9 @@ class AppData {
       ChatApp.instance()!.clientHandler.leaveContactEvents(contact.id);
     }
     ChatApp.instance()!.disconnect();
+    await deleteAll();
+  }
+  Future deleteAll() async {
     await usersHandler.deleteAll();
     await messagesHandler.deleteAll();
     await contactsHandler.deleteAll();

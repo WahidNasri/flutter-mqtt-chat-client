@@ -37,7 +37,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
 
     var s2 =
         ChatApp.instance()!.messageReader.getTypingMessages().listen((event) {
-      if (event.roomId == widget.room) {
+      if (event.roomId == widget.room && event.fromId != _user!.id) {
         setState(() {
           isTyping = event.isTyping;
         });
@@ -190,6 +190,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
           title: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,7 +198,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
           Text(widget.room),
           Visibility(
             child: Text(
-              "Someone is Typing...",
+              "Typing...",
               style: TextStyle(fontSize: 11),
             ),
             visible: isTyping,

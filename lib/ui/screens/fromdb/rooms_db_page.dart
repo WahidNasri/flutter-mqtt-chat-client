@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
-import 'package:flutter_mqtt/ui/screens/chat_db_pages.dart';
-import 'package:flutter_mqtt/ui/screens/chat_ui_page.dart';
+import 'package:flutter_mqtt/ui/screens/fromdb/chat_db_pages.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
 
 class RoomsDBPage extends StatefulWidget {
@@ -33,33 +32,49 @@ class _RoomsPageState extends State<RoomsDBPage> {
         title: Text("Rooms"),
         actions: [IconButton(onPressed: _onLogout, icon: Icon(Icons.logout))],
       ),
-      body: StreamBuilder<List<ContactChat>>(
-          stream: AppData.instance()!.contactsHandler.getContacts(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            }
-            if (snapshot.hasData) {
-              var cchats = snapshot.data;
-              return ListView.builder(
-                  itemCount: cchats!.length,
-                  itemBuilder: (context, position) {
-                    return InkWell(
-                      onTap: () {
-                        _openRoom(context, cchats[position].roomId);
-                      },
-                      child: ListTile(
-                        title: Text(cchats[position].firstName +
-                            " " +
-                            cchats[position].lastName),
-                        subtitle: Text("Room: " + cchats[position].roomId),
-                      ),
-                    );
-                  });
-            } else {
-              return Text("Loading...");
-            }
-          }),
+      body: Column(
+        children: [
+          // A stream builder to indicate that the user info is not received yet from the broker
+        StreamBuilder(stream: AppData.instance()!.usersHandler.getLocalUserAsync(), builder: (context, snapshot){
+          if(snapshot.hasData && snapshot.data != null){
+            return SizedBox();
+          }
+          else if(snapshot.hasError){
+            return Text(snapshot.error.toString());
+          }
+          return Text("Waiting for User info...");
+        }),
+          Expanded(
+            child: StreamBuilder<List<ContactChat>>(
+                stream: AppData.instance()!.contactsHandler.getContacts(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  if (snapshot.hasData) {
+                    var chats = snapshot.data;
+                    return ListView.builder(
+                        itemCount: chats!.length,
+                        itemBuilder: (context, position) {
+                          return InkWell(
+                            onTap: () {
+                              _openRoom(context, chats[position].roomId);
+                            },
+                            child: ListTile(
+                              title: Text(chats[position].firstName +
+                                  " " +
+                                  chats[position].lastName),
+                              subtitle: Text("Room: " + chats[position].roomId),
+                            ),
+                          );
+                        });
+                  } else {
+                    return Text("Loading...");
+                  }
+                }),
+          ),
+        ],
+      ),
     );
   }
 
