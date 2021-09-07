@@ -39,7 +39,7 @@ dependencies:
   sqlite3_flutter_libs:
   path_provider:
   path:
-  
+
 
 dev_dependencies:
   flutter_test:

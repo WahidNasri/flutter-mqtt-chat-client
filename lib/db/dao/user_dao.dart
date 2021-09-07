@@ -10,11 +10,11 @@ class UserDao extends DatabaseAccessor<MyDatabase> with _$UserDaoMixin {
   UserDao(this.db) : super(db);
   //============Users============//
   Future<int> addUser(DbUser user) {
-    return into(users).insert(user);
+    return into(users).insertOnConflictUpdate(user);
   }
 
-  Future<List<DbUser>> getUser() {
-    return (select(users)..limit(1)).get();
+  Future<DbUser?> getUser() {
+    return (select(users)..limit(1)).getSingleOrNull();
   }
 
   Stream<List<DbUser>> getUserAsync() {
@@ -23,9 +23,8 @@ class UserDao extends DatabaseAccessor<MyDatabase> with _$UserDaoMixin {
 
   Future<void> setClientId(String clientId) async {
     var us = await getUser();
-    if (us.length > 0) {
-      var u = us[0];
-      var nu = u.copyWith(client_id: clientId);
+    if (us == null) {
+      var nu = us!.copyWith(client_id: clientId);
 
       update(users).replace(nu);
     }

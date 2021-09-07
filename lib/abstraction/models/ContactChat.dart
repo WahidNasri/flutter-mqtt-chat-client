@@ -6,7 +6,7 @@ class ContactChat {
   String id;
   String? avatar;
   String roomId;
-  bool isGroup;
+  bool? isGroup;
   ContactChat(
       {required this.firstName,
       required this.lastName,
@@ -17,7 +17,8 @@ class ContactChat {
 
   Map<String, dynamic> toMap() {
     return {
-      'displayName': firstName,
+      'firstName': firstName,
+      'lastName':lastName,
       'id': id,
       'avatar': avatar,
       'roomId': roomId,

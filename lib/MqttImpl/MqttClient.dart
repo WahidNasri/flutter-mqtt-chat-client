@@ -21,7 +21,7 @@ class MqttClient extends ClientHandler {
       required String password,
       String? clientId}) async {
     String cid = clientId ?? getClientId()!;
-    _clientId = clientId;
+    _clientId = cid;
     _client = MqttServerClient.withPort(
         Platform.operatingSystem.toLowerCase() == 'windows'
             ? 'localhost'
@@ -49,6 +49,8 @@ class MqttClient extends ClientHandler {
         .withWillQos(MqttQos.atLeastOnce);
     _client!.connectionMessage = connMessage;
     try {
+      //_messagesController =  StreamController.broadcast();
+
       await _client!.connect();
 
       _subscribeToArchivesTopics();
@@ -65,7 +67,9 @@ class MqttClient extends ClientHandler {
     _client!.subscribe(
         TopicsNamesGenerator.getArchivesRoomsTopic(getClientId()!),
         MqttQos.atLeastOnce);
-    //_client!.subscribe(TopicsNamesGenerator.getArchivesMessagesTopic(getClientId()!), MqttQos.atLeastOnce);
+    _client!.subscribe(
+        TopicsNamesGenerator.getArchivesMessagesTopic(getClientId()!),
+        MqttQos.atLeastOnce);
     _client!.subscribe(
         TopicsNamesGenerator.getArchivesMyIdTopic(getClientId()!),
         MqttQos.atLeastOnce);
@@ -138,8 +142,30 @@ class MqttClient extends ClientHandler {
   }
 
   @override
+  void leaveRoom(String bareRoom) {
+    /*
+     * By joining a room we join to:
+     * Messages topic (for chat messages)
+     * Events topic (for events like typing, chatmarker..)
+     * 
+     */
+    String messagesTopic =
+        TopicsNamesGenerator.getChattingTopicForBareRoom(bareRoom);
+    String eventsTopic =
+        TopicsNamesGenerator.getEventsTopicForBareRoom(bareRoom);
+
+    _client!.unsubscribe(messagesTopic);
+    _client!.unsubscribe(eventsTopic);
+  }
+
+  @override
   void joinContactEvents(String contactId) {
     _client!.subscribe("presence/" + contactId, MqttQos.atLeastOnce);
+  }
+
+  @override
+  void leaveContactEvents(String contactId) {
+    _client!.unsubscribe("presence/" + contactId);
   }
 
   @override

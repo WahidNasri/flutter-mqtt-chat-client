@@ -19,15 +19,14 @@ class ChatApp {
   late ChatEventsSender eventsSender;
   late ArchiveHandler archiveHandler;
 
-  ChatApp._();
   static ChatApp? instance() {
     if (_instance == null) {
-      _instance = ChatApp();
+      _instance = ChatApp._();
     }
     return _instance;
   }
 
-  ChatApp() {
+  ChatApp._() {
     clientHandler = MqttClient();
     messageReader = MqttOnlineReader(clientHandler: clientHandler);
     messageSender = MqttMessageSender(

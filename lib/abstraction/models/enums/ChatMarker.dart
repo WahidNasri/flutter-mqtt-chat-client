@@ -1,1 +1,1 @@
-enum ChatMarker { sent, displayed }
+enum ChatMarker { sent, delivered, displayed }

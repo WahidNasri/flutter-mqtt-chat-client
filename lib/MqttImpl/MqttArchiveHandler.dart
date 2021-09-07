@@ -33,7 +33,7 @@ class MqttArchiveHandler extends ArchiveHandler {
         } catch (e) {
           print(e);
         }
-      } else if (topic.toLowerCase().startsWith("archivesrooms/")) {
+      } else if (topic.toLowerCase().startsWith("archivesmyid/")) {
         User user = User.fromJson(payload);
         _userController.add(user);
       }

@@ -296,12 +296,16 @@ class DbUser extends DataClass implements Insertable<DbUser> {
   final String id;
   final String lastName;
   final String firstName;
+  final String? username;
+  final String? password;
   final String? avatar;
   final String? client_id;
   DbUser(
       {required this.id,
       required this.lastName,
       required this.firstName,
+      this.username,
+      this.password,
       this.avatar,
       this.client_id});
   factory DbUser.fromData(Map<String, dynamic> data, GeneratedDatabase db,
@@ -314,6 +318,10 @@ class DbUser extends DataClass implements Insertable<DbUser> {
           .mapFromDatabaseResponse(data['${effectivePrefix}last_name'])!,
       firstName: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}first_name'])!,
+      username: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}username']),
+      password: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}password']),
       avatar: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}avatar']),
       client_id: const StringType()
@@ -326,6 +334,12 @@ class DbUser extends DataClass implements Insertable<DbUser> {
     map['id'] = Variable<String>(id);
     map['last_name'] = Variable<String>(lastName);
     map['first_name'] = Variable<String>(firstName);
+    if (!nullToAbsent || username != null) {
+      map['username'] = Variable<String?>(username);
+    }
+    if (!nullToAbsent || password != null) {
+      map['password'] = Variable<String?>(password);
+    }
     if (!nullToAbsent || avatar != null) {
       map['avatar'] = Variable<String?>(avatar);
     }
@@ -340,6 +354,12 @@ class DbUser extends DataClass implements Insertable<DbUser> {
       id: Value(id),
       lastName: Value(lastName),
       firstName: Value(firstName),
+      username: username == null && nullToAbsent
+          ? const Value.absent()
+          : Value(username),
+      password: password == null && nullToAbsent
+          ? const Value.absent()
+          : Value(password),
       avatar:
           avatar == null && nullToAbsent ? const Value.absent() : Value(avatar),
       client_id: client_id == null && nullToAbsent
@@ -355,6 +375,8 @@ class DbUser extends DataClass implements Insertable<DbUser> {
       id: serializer.fromJson<String>(json['id']),
       lastName: serializer.fromJson<String>(json['lastName']),
       firstName: serializer.fromJson<String>(json['firstName']),
+      username: serializer.fromJson<String?>(json['username']),
+      password: serializer.fromJson<String?>(json['password']),
       avatar: serializer.fromJson<String?>(json['avatar']),
       client_id: serializer.fromJson<String?>(json['client_id']),
     );
@@ -366,6 +388,8 @@ class DbUser extends DataClass implements Insertable<DbUser> {
       'id': serializer.toJson<String>(id),
       'lastName': serializer.toJson<String>(lastName),
       'firstName': serializer.toJson<String>(firstName),
+      'username': serializer.toJson<String?>(username),
+      'password': serializer.toJson<String?>(password),
       'avatar': serializer.toJson<String?>(avatar),
       'client_id': serializer.toJson<String?>(client_id),
     };
@@ -375,12 +399,16 @@ class DbUser extends DataClass implements Insertable<DbUser> {
           {String? id,
           String? lastName,
           String? firstName,
+          String? username,
+          String? password,
           String? avatar,
           String? client_id}) =>
       DbUser(
         id: id ?? this.id,
         lastName: lastName ?? this.lastName,
         firstName: firstName ?? this.firstName,
+        username: username ?? this.username,
+        password: password ?? this.password,
         avatar: avatar ?? this.avatar,
         client_id: client_id ?? this.client_id,
       );
@@ -390,6 +418,8 @@ class DbUser extends DataClass implements Insertable<DbUser> {
           ..write('id: $id, ')
           ..write('lastName: $lastName, ')
           ..write('firstName: $firstName, ')
+          ..write('username: $username, ')
+          ..write('password: $password, ')
           ..write('avatar: $avatar, ')
           ..write('client_id: $client_id')
           ..write(')'))
@@ -401,8 +431,12 @@ class DbUser extends DataClass implements Insertable<DbUser> {
       id.hashCode,
       $mrjc(
           lastName.hashCode,
-          $mrjc(firstName.hashCode,
-              $mrjc(avatar.hashCode, client_id.hashCode)))));
+          $mrjc(
+              firstName.hashCode,
+              $mrjc(
+                  username.hashCode,
+                  $mrjc(password.hashCode,
+                      $mrjc(avatar.hashCode, client_id.hashCode)))))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -410,6 +444,8 @@ class DbUser extends DataClass implements Insertable<DbUser> {
           other.id == this.id &&
           other.lastName == this.lastName &&
           other.firstName == this.firstName &&
+          other.username == this.username &&
+          other.password == this.password &&
           other.avatar == this.avatar &&
           other.client_id == this.client_id);
 }
@@ -418,12 +454,16 @@ class UsersCompanion extends UpdateCompanion<DbUser> {
   final Value<String> id;
   final Value<String> lastName;
   final Value<String> firstName;
+  final Value<String?> username;
+  final Value<String?> password;
   final Value<String?> avatar;
   final Value<String?> client_id;
   const UsersCompanion({
     this.id = const Value.absent(),
     this.lastName = const Value.absent(),
     this.firstName = const Value.absent(),
+    this.username = const Value.absent(),
+    this.password = const Value.absent(),
     this.avatar = const Value.absent(),
     this.client_id = const Value.absent(),
   });
@@ -431,6 +471,8 @@ class UsersCompanion extends UpdateCompanion<DbUser> {
     required String id,
     required String lastName,
     required String firstName,
+    this.username = const Value.absent(),
+    this.password = const Value.absent(),
     this.avatar = const Value.absent(),
     this.client_id = const Value.absent(),
   })  : id = Value(id),
@@ -440,6 +482,8 @@ class UsersCompanion extends UpdateCompanion<DbUser> {
     Expression<String>? id,
     Expression<String>? lastName,
     Expression<String>? firstName,
+    Expression<String?>? username,
+    Expression<String?>? password,
     Expression<String?>? avatar,
     Expression<String?>? client_id,
   }) {
@@ -447,6 +491,8 @@ class UsersCompanion extends UpdateCompanion<DbUser> {
       if (id != null) 'id': id,
       if (lastName != null) 'last_name': lastName,
       if (firstName != null) 'first_name': firstName,
+      if (username != null) 'username': username,
+      if (password != null) 'password': password,
       if (avatar != null) 'avatar': avatar,
       if (client_id != null) 'client_id': client_id,
     });
@@ -456,12 +502,16 @@ class UsersCompanion extends UpdateCompanion<DbUser> {
       {Value<String>? id,
       Value<String>? lastName,
       Value<String>? firstName,
+      Value<String?>? username,
+      Value<String?>? password,
       Value<String?>? avatar,
       Value<String?>? client_id}) {
     return UsersCompanion(
       id: id ?? this.id,
       lastName: lastName ?? this.lastName,
       firstName: firstName ?? this.firstName,
+      username: username ?? this.username,
+      password: password ?? this.password,
       avatar: avatar ?? this.avatar,
       client_id: client_id ?? this.client_id,
     );
@@ -479,6 +529,12 @@ class UsersCompanion extends UpdateCompanion<DbUser> {
     if (firstName.present) {
       map['first_name'] = Variable<String>(firstName.value);
     }
+    if (username.present) {
+      map['username'] = Variable<String?>(username.value);
+    }
+    if (password.present) {
+      map['password'] = Variable<String?>(password.value);
+    }
     if (avatar.present) {
       map['avatar'] = Variable<String?>(avatar.value);
     }
@@ -494,6 +550,8 @@ class UsersCompanion extends UpdateCompanion<DbUser> {
           ..write('id: $id, ')
           ..write('lastName: $lastName, ')
           ..write('firstName: $firstName, ')
+          ..write('username: $username, ')
+          ..write('password: $password, ')
           ..write('avatar: $avatar, ')
           ..write('client_id: $client_id')
           ..write(')'))
@@ -517,6 +575,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, DbUser> {
   late final GeneratedColumn<String?> firstName = GeneratedColumn<String?>(
       'first_name', aliasedName, false,
       typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _usernameMeta = const VerificationMeta('username');
+  late final GeneratedColumn<String?> username = GeneratedColumn<String?>(
+      'username', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
+  final VerificationMeta _passwordMeta = const VerificationMeta('password');
+  late final GeneratedColumn<String?> password = GeneratedColumn<String?>(
+      'password', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
   final VerificationMeta _avatarMeta = const VerificationMeta('avatar');
   late final GeneratedColumn<String?> avatar = GeneratedColumn<String?>(
       'avatar', aliasedName, true,
@@ -527,7 +593,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, DbUser> {
       typeName: 'TEXT', requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, lastName, firstName, avatar, client_id];
+      [id, lastName, firstName, username, password, avatar, client_id];
   @override
   String get aliasedName => _alias ?? 'users';
   @override
@@ -553,6 +619,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, DbUser> {
           firstName.isAcceptableOrUnknown(data['first_name']!, _firstNameMeta));
     } else if (isInserting) {
       context.missing(_firstNameMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(_usernameMeta,
+          username.isAcceptableOrUnknown(data['username']!, _usernameMeta));
+    }
+    if (data.containsKey('password')) {
+      context.handle(_passwordMeta,
+          password.isAcceptableOrUnknown(data['password']!, _passwordMeta));
     }
     if (data.containsKey('avatar')) {
       context.handle(_avatarMeta,
@@ -593,6 +667,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
   final String? thumbnail;
   final String? originalId;
   final int sendTime;
+  final String status;
   DbMessage(
       {required this.id,
       required this.type,
@@ -606,7 +681,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       this.attachment,
       this.thumbnail,
       this.originalId,
-      required this.sendTime});
+      required this.sendTime,
+      required this.status});
   factory DbMessage.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -637,6 +713,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           .mapFromDatabaseResponse(data['${effectivePrefix}original_id']),
       sendTime: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}send_time'])!,
+      status: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
     );
   }
   @override
@@ -667,6 +745,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       map['original_id'] = Variable<String?>(originalId);
     }
     map['send_time'] = Variable<int>(sendTime);
+    map['status'] = Variable<String>(status);
     return map;
   }
 
@@ -694,6 +773,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           ? const Value.absent()
           : Value(originalId),
       sendTime: Value(sendTime),
+      status: Value(status),
     );
   }
 
@@ -714,6 +794,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       thumbnail: serializer.fromJson<String?>(json['thumbnail']),
       originalId: serializer.fromJson<String?>(json['originalId']),
       sendTime: serializer.fromJson<int>(json['sendTime']),
+      status: serializer.fromJson<String>(json['status']),
     );
   }
   @override
@@ -733,6 +814,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       'thumbnail': serializer.toJson<String?>(thumbnail),
       'originalId': serializer.toJson<String?>(originalId),
       'sendTime': serializer.toJson<int>(sendTime),
+      'status': serializer.toJson<String>(status),
     };
   }
 
@@ -749,7 +831,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           String? attachment,
           String? thumbnail,
           String? originalId,
-          int? sendTime}) =>
+          int? sendTime,
+          String? status}) =>
       DbMessage(
         id: id ?? this.id,
         type: type ?? this.type,
@@ -764,6 +847,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
         thumbnail: thumbnail ?? this.thumbnail,
         originalId: originalId ?? this.originalId,
         sendTime: sendTime ?? this.sendTime,
+        status: status ?? this.status,
       );
   @override
   String toString() {
@@ -780,7 +864,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           ..write('attachment: $attachment, ')
           ..write('thumbnail: $thumbnail, ')
           ..write('originalId: $originalId, ')
-          ..write('sendTime: $sendTime')
+          ..write('sendTime: $sendTime, ')
+          ..write('status: $status')
           ..write(')'))
         .toString();
   }
@@ -810,8 +895,10 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
                                               thumbnail.hashCode,
                                               $mrjc(
                                                   originalId.hashCode,
-                                                  sendTime
-                                                      .hashCode)))))))))))));
+                                                  $mrjc(
+                                                      sendTime.hashCode,
+                                                      status
+                                                          .hashCode))))))))))))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -828,7 +915,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           other.attachment == this.attachment &&
           other.thumbnail == this.thumbnail &&
           other.originalId == this.originalId &&
-          other.sendTime == this.sendTime);
+          other.sendTime == this.sendTime &&
+          other.status == this.status);
 }
 
 class MessagesCompanion extends UpdateCompanion<DbMessage> {
@@ -845,6 +933,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
   final Value<String?> thumbnail;
   final Value<String?> originalId;
   final Value<int> sendTime;
+  final Value<String> status;
   const MessagesCompanion({
     this.id = const Value.absent(),
     this.type = const Value.absent(),
@@ -859,6 +948,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     this.thumbnail = const Value.absent(),
     this.originalId = const Value.absent(),
     this.sendTime = const Value.absent(),
+    this.status = const Value.absent(),
   });
   MessagesCompanion.insert({
     required String id,
@@ -874,6 +964,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     this.thumbnail = const Value.absent(),
     this.originalId = const Value.absent(),
     required int sendTime,
+    this.status = const Value.absent(),
   })  : id = Value(id),
         type = Value(type),
         fromId = Value(fromId),
@@ -895,6 +986,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     Expression<String?>? thumbnail,
     Expression<String?>? originalId,
     Expression<int>? sendTime,
+    Expression<String>? status,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -910,6 +1002,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       if (thumbnail != null) 'thumbnail': thumbnail,
       if (originalId != null) 'original_id': originalId,
       if (sendTime != null) 'send_time': sendTime,
+      if (status != null) 'status': status,
     });
   }
 
@@ -926,7 +1019,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       Value<String?>? attachment,
       Value<String?>? thumbnail,
       Value<String?>? originalId,
-      Value<int>? sendTime}) {
+      Value<int>? sendTime,
+      Value<String>? status}) {
     return MessagesCompanion(
       id: id ?? this.id,
       type: type ?? this.type,
@@ -941,6 +1035,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       thumbnail: thumbnail ?? this.thumbnail,
       originalId: originalId ?? this.originalId,
       sendTime: sendTime ?? this.sendTime,
+      status: status ?? this.status,
     );
   }
 
@@ -986,6 +1081,9 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     if (sendTime.present) {
       map['send_time'] = Variable<int>(sendTime.value);
     }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
     return map;
   }
 
@@ -1004,7 +1102,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
           ..write('attachment: $attachment, ')
           ..write('thumbnail: $thumbnail, ')
           ..write('originalId: $originalId, ')
-          ..write('sendTime: $sendTime')
+          ..write('sendTime: $sendTime, ')
+          ..write('status: $status')
           ..write(')'))
         .toString();
   }
@@ -1068,6 +1167,12 @@ class $MessagesTable extends Messages
   late final GeneratedColumn<int?> sendTime = GeneratedColumn<int?>(
       'send_time', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
+  final VerificationMeta _statusMeta = const VerificationMeta('status');
+  late final GeneratedColumn<String?> status = GeneratedColumn<String?>(
+      'status', aliasedName, false,
+      typeName: 'TEXT',
+      requiredDuringInsert: false,
+      defaultValue: const Constant("pending"));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1082,7 +1187,8 @@ class $MessagesTable extends Messages
         attachment,
         thumbnail,
         originalId,
-        sendTime
+        sendTime,
+        status
       ];
   @override
   String get aliasedName => _alias ?? 'messages';
@@ -1163,6 +1269,10 @@ class $MessagesTable extends Messages
           sendTime.isAcceptableOrUnknown(data['send_time']!, _sendTimeMeta));
     } else if (isInserting) {
       context.missing(_sendTimeMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
     }
     return context;
   }

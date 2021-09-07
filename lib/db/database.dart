@@ -27,8 +27,15 @@ LazyDatabase _openConnection() {
     tables: [Contacts, Users, Messages],
     daos: [UserDao, ContactDao, MessageDao])
 class MyDatabase extends _$MyDatabase {
+  static MyDatabase? _instance;
+  static MyDatabase? instance(){
+    if(_instance == null){
+      _instance = MyDatabase._();
+    }
+    return _instance;
+  }
 // we tell the database where to store the data with this constructor
-  MyDatabase() : super(_openConnection());
+  MyDatabase._() : super(_openConnection());
 
   // you should bump this number whenever you change or add a table definition. Migrations
   // are covered later in this readme.

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
-import 'package:flutter_mqtt/db/AppData.dart';
+import 'package:flutter_mqtt/db/appdata/AppData.dart';
+import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
@@ -23,32 +24,17 @@ class ChatUIDBPage extends StatefulWidget {
 }
 
 class _ChatUIPageState extends State<ChatUIDBPage> {
-  List<types.Message> _messages = [];
   bool isTyping = false;
   final subscriptions = List<StreamSubscription<dynamic>>.empty(growable: true);
-  final _user = ChatApp.instance()!.clientHandler.getUser()!.toUiUser();
-
-  void _addMessage(types.Message message) {
-    setState(() {
-      _messages.insert(0, message);
-    });
-  }
+  types.User? _user;
 
   @override
   void initState() {
-    var s1 = AppData.instance()!.getMessagesByRoom(widget.room).listen((msgs) {
-      //ignore message for other rooms
+    AppData.instance()!
+        .usersHandler
+        .getLocalUser()
+        .then((dbuser) => {_user = dbuser!.toUiUser2()});
 
-      //types.Message conv = msgs..toUiMessage();
-
-      setState(() {
-        //_insert(conv);
-        _messages = msgs
-            .where((m) => m.roomId == widget.room)
-            .map((e) => e.toUiMessage())
-            .toList();
-      });
-    });
     var s2 =
         ChatApp.instance()!.messageReader.getTypingMessages().listen((event) {
       if (event.roomId == widget.room) {
@@ -63,18 +49,8 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
       }
     });
 
-    subscriptions.add(s1);
     subscriptions.add(s2);
     super.initState();
-  }
-
-  void _insert(types.Message msg) {
-    var old = _messages.firstWhereOrNull((element) => element.id == msg.id);
-    if (old != null) {
-      _messages[_messages.indexOf(old)] = msg;
-    } else {
-      _messages.insert(0, msg);
-    }
   }
 
   void _handleAtachmentPressed() {
@@ -129,16 +105,16 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
 
     if (result != null) {
       final message = types.FileMessage(
-        author: _user,
+        author: _user!,
         createdAt: DateTime.now().millisecondsSinceEpoch,
         id: const Uuid().v4(),
-        mimeType: lookupMimeType(result.files.single.path ?? ''),
+        mimeType: lookupMimeType(result.files.single.path),
         name: result.files.single.name,
         size: result.files.single.size,
-        uri: result.files.single.path ?? '',
+        uri: result.files.single.path,
       );
 
-      _addMessage(message);
+      //_addMessage(message);
       //TODO: handle file sending
     }
   }
@@ -155,7 +131,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
       final image = await decodeImageFromList(bytes);
 
       final message = types.ImageMessage(
-        author: _user,
+        author: _user!,
         createdAt: DateTime.now().millisecondsSinceEpoch,
         height: image.height.toDouble(),
         id: const Uuid().v4(),
@@ -183,6 +159,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
     }
   }
 
+/*
   void _handlePreviewDataFetched(
     types.TextMessage message,
     types.PreviewData previewData,
@@ -196,16 +173,16 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
       });
     });
   }
-
+*/
   void _handleSendPressed(types.PartialText message) {
     ChatMessage nm = ChatMessage(
         id: const Uuid().v4(),
         type: MessageType.ChatText,
         text: message.text,
         roomId: widget.room,
-        fromId: _user.id,
+        fromId: _user!.id,
         sendTime: DateTime.now().millisecondsSinceEpoch,
-        fromName: _user.firstName);
+        fromName: _user!.firstName);
     ChatApp.instance()!.messageSender.sendChatMessage(nm, widget.room);
   }
 
@@ -227,17 +204,30 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
           )
         ],
       )),
-      body: Chat(
-        messages: _messages,
-        onAttachmentPressed: _handleAtachmentPressed,
-        onMessageTap: _handleMessageTap,
-        onPreviewDataFetched: _handlePreviewDataFetched,
-        onSendPressed: _handleSendPressed,
-        onTextChanged: _handleTextChanged,
-        showUserNames: true,
-        showUserAvatars: true,
-        user: _user,
-      ),
+      body: StreamBuilder<List<ChatMessage>>(
+          stream: AppData.instance()!
+              .messagesHandler
+              .getMessagesByRoomId(widget.room),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            if (snapshot.hasData) {
+              var data = snapshot.data!.map((e) => e.toUiMessage()).toList();
+              return Chat(
+                messages: data,
+                onAttachmentPressed: _handleAtachmentPressed,
+                onMessageTap: _handleMessageTap,
+                //onPreviewDataFetched: _handlePreviewDataFetched,
+                onSendPressed: _handleSendPressed,
+                onTextChanged: _handleTextChanged,
+                showUserNames: true,
+                showUserAvatars: true,
+                user: _user!,
+              );
+            }
+            return Text("Loading...");
+          }),
     );
   }
 

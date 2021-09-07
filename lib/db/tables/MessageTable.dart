@@ -15,6 +15,7 @@ class Messages extends Table {
   TextColumn get thumbnail => text().nullable()();
   TextColumn get originalId => text().named("original_id").nullable()();
   IntColumn get sendTime => integer().named("send_time")();
+  TextColumn get status => text().withDefault(const Constant("pending"))();
 
   @override
   Set<Column> get primaryKey => {id};

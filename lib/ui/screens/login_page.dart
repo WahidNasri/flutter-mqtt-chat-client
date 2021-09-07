@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mqtt/db/AppData.dart';
+import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
-import 'package:flutter_mqtt/ui/screens/rooms_page.dart';
+import 'package:flutter_mqtt/ui/screens/rooms_db_page.dart';
 
-import 'chat_ui_page.dart';
 
 class LoginPage extends StatelessWidget {
   final _usernameController = TextEditingController();
@@ -167,12 +166,19 @@ class LoginPage extends StatelessWidget {
   _loginTap(BuildContext context) async {
     bool connected = await ChatApp.instance()!.clientHandler.connect(
         username: _usernameController.text, password: _passwordController.text);
-    AppData.instance();
     if (connected) {
-      Navigator.push(
+      AppData.instance()!.usersHandler.storeWaitingCredentials(
+          _usernameController.text, _passwordController.text);
+
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => RoomsPage()),
+        MaterialPageRoute(builder: (context) => RoomsDBPage()),
       );
+    }
+    else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Could not log in"),
+      ));
     }
   }
 }

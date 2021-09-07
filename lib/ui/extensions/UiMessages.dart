@@ -3,6 +3,7 @@ import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_mqtt/abstraction/models/User.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
+import 'package:flutter_mqtt/db/database.dart';
 
 extension MessageConversions on ChatMessage {
   types.Message toUiMessage() {
@@ -27,6 +28,12 @@ extension MessageConversions on ChatMessage {
 
 extension UserConversions on User {
   types.User toUiUser() {
+    return types.User(
+        id: id, firstName: firstName, lastName: lastName, imageUrl: avatar);
+  }
+}
+extension LocalUserConversions on DbUser {
+  types.User toUiUser2() {
     return types.User(
         id: id, firstName: firstName, lastName: lastName, imageUrl: avatar);
   }

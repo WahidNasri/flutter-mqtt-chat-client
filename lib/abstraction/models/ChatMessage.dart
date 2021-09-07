@@ -117,7 +117,7 @@ class ChatMessage {
       originalId: map['originalId'],
       sendTime: map['sendTime'] == null
           ? DateTime.now().millisecondsSinceEpoch
-          : int.tryParse(map['sendTime']) ??
+          : int.tryParse(map['sendTime'].toString()) ??
               DateTime.now().millisecondsSinceEpoch,
       originalMessage: map['originalMessage'],
     );
