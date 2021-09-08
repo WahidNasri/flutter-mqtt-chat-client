@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
+import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
@@ -16,8 +17,8 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_mqtt/ui/extensions/UiMessages.dart';
 
 class ChatUIDBPage extends StatefulWidget {
-  final String room;
-  const ChatUIDBPage({Key? key, required this.room}) : super(key: key);
+  final ContactChat contactChat;
+  const ChatUIDBPage({Key? key, required this.contactChat}) : super(key: key);
 
   @override
   _ChatUIPageState createState() => _ChatUIPageState();
@@ -37,7 +38,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
 
     var s2 =
         ChatApp.instance()!.messageReader.getTypingMessages().listen((event) {
-      if (event.roomId == widget.room && event.fromId != _user!.id) {
+      if (event.roomId == widget.contactChat.roomId && event.fromId != _user!.id) {
         setState(() {
           isTyping = event.isTyping;
         });
@@ -147,9 +148,9 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
           type: MessageType.ChatImage,
           fileLocalPath: result.path,
           fromId: ChatApp.instance()!.clientHandler.getUserId(),
-          toId: widget.room,
+          toId: widget.contactChat.roomId,
           fromName: ChatApp.instance()!.clientHandler.getUserId(),
-          room: widget.room);
+          room: widget.contactChat.roomId);
     }
   }
 
@@ -179,11 +180,11 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
         id: const Uuid().v4(),
         type: MessageType.ChatText,
         text: message.text,
-        roomId: widget.room,
+        roomId: widget.contactChat.roomId,
         fromId: _user!.id,
         sendTime: DateTime.now().millisecondsSinceEpoch,
         fromName: _user!.firstName);
-    ChatApp.instance()!.messageSender.sendChatMessage(nm, widget.room);
+    ChatApp.instance()!.messageSender.sendChatMessage(nm, widget.contactChat.roomId);
   }
 
   @override
@@ -195,7 +196,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.room),
+          Text(widget.contactChat.firstName + " " + widget.contactChat.lastName),
           Visibility(
             child: Text(
               "Typing...",
@@ -208,7 +209,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
       body: StreamBuilder<List<ChatMessage>>(
           stream: AppData.instance()!
               .messagesHandler
-              .getMessagesByRoomId(widget.room),
+              .getMessagesByRoomId(widget.contactChat.roomId),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text(snapshot.error.toString());
@@ -217,6 +218,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
               var data = snapshot.data!.map((e) => e.toUiMessage()).toList();
               return Chat(
                 messages: data,
+                disableImageGallery: true,
                 onAttachmentPressed: _handleAtachmentPressed,
                 onMessageTap: _handleMessageTap,
                 //onPreviewDataFetched: _handlePreviewDataFetched,
@@ -234,7 +236,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
 
   void _handleTextChanged(String text) {
     if (text.length > 0 && text.length % 3 == 0) {
-      ChatApp.instance()!.eventsSender.sendIsTyping(true, widget.room);
+      ChatApp.instance()!.eventsSender.sendIsTyping(true, widget.contactChat.roomId);
     }
   }
 

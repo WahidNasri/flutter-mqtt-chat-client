@@ -58,14 +58,16 @@ class _RoomsPageState extends State<RoomsDBPage> {
                         itemBuilder: (context, position) {
                           return InkWell(
                             onTap: () {
-                              _openRoom(context, chats[position].roomId);
+                              _openRoom(context, chats[position]);
                             },
                             child: ListTile(
                               title: Text(chats[position].firstName +
                                   " " +
                                   chats[position].lastName),
                               subtitle: Text("Room: " + chats[position].roomId),
+                              leading: FlutterLogo(),
                             ),
+
                           );
                         });
                   } else {
@@ -78,10 +80,10 @@ class _RoomsPageState extends State<RoomsDBPage> {
     );
   }
 
-  _openRoom(BuildContext context, String room) {
+  _openRoom(BuildContext context, ContactChat contact) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ChatUIDBPage(room: room)),
+      MaterialPageRoute(builder: (context) => ChatUIDBPage(contactChat: contact)),
     );
   }
 

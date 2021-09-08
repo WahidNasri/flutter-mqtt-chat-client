@@ -63,7 +63,7 @@ class LoginPage extends StatelessWidget {
                           margin: EdgeInsets.only(top: 50),
                           child: Center(
                             child: Text(
-                              "Flutter MQTT",
+                              "Flutter MQTT Chat",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 40,
