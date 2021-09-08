@@ -5,7 +5,9 @@ import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/chat_db_pages.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
-import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart' as cs;
+import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart'
+    as cs;
+
 class RoomsDBPage extends StatefulWidget {
   RoomsDBPage({Key? key}) : super(key: key);
 
@@ -33,15 +35,22 @@ class _RoomsPageState extends State<RoomsDBPage> {
         title: Column(
           children: [
             Text("Rooms"),
-            StreamBuilder<cs.ConnectionState>(stream: ChatApp.instance()!.clientHandler.connectionStateStream(), builder: (context, snapshot){
-              if(snapshot.hasError){
-                return Text(snapshot.error.toString(), style: TextStyle(color: Colors.red, fontSize: 15),);
-              }
-              else if(snapshot.hasData){
-                return Text(snapshot.data.toString().split(".")[1] , style: TextStyle(fontSize: 12));
-              }
-              return Text("Loading Connection State...", style: TextStyle(fontSize: 15));
-            })
+            StreamBuilder<cs.ConnectionState>(
+                stream:
+                    ChatApp.instance()!.clientHandler.connectionStateStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(
+                      snapshot.error.toString(),
+                      style: TextStyle(color: Colors.red, fontSize: 15),
+                    );
+                  } else if (snapshot.hasData) {
+                    return Text(snapshot.data.toString().split(".")[1],
+                        style: TextStyle(fontSize: 12));
+                  }
+                  return Text("Loading Connection State...",
+                      style: TextStyle(fontSize: 15));
+                })
           ],
         ),
         actions: [IconButton(onPressed: _onLogout, icon: Icon(Icons.logout))],
@@ -49,15 +58,16 @@ class _RoomsPageState extends State<RoomsDBPage> {
       body: Column(
         children: [
           // A stream builder to indicate that the user info is not received yet from the broker
-        StreamBuilder(stream: AppData.instance()!.usersHandler.getLocalUserAsync(), builder: (context, snapshot){
-          if(snapshot.hasData && snapshot.data != null){
-            return SizedBox();
-          }
-          else if(snapshot.hasError){
-            return Text(snapshot.error.toString());
-          }
-          return Text("Waiting for User info...");
-        }),
+          StreamBuilder(
+              stream: AppData.instance()!.usersHandler.getLocalUserAsync(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data != null) {
+                  return SizedBox();
+                } else if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+                return Text("Waiting for User info...");
+              }),
           Expanded(
             child: StreamBuilder<List<ContactChat>>(
                 stream: AppData.instance()!.contactsHandler.getContacts(),
@@ -79,9 +89,16 @@ class _RoomsPageState extends State<RoomsDBPage> {
                                   " " +
                                   chats[position].lastName),
                               subtitle: Text("Room: " + chats[position].roomId),
-                              leading: FlutterLogo(),
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(12.5),
+                                child: Image.network(
+                                  chats[position].avatar ??
+                                      "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",
+                                  height: 25,
+                                  width: 25,
+                                ),
+                              ),
                             ),
-
                           );
                         });
                   } else {
@@ -97,7 +114,8 @@ class _RoomsPageState extends State<RoomsDBPage> {
   _openRoom(BuildContext context, ContactChat contact) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ChatUIDBPage(contactChat: contact)),
+      MaterialPageRoute(
+          builder: (context) => ChatUIDBPage(contactChat: contact)),
     );
   }
 
