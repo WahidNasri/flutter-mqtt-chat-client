@@ -1,5 +1,6 @@
 import 'package:flutter_mqtt/abstraction/models/PayloadWithTopic.dart';
 import 'package:flutter_mqtt/abstraction/models/User.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart';
 
 abstract class ClientHandler {
   Future<bool> connect(
@@ -17,6 +18,7 @@ abstract class ClientHandler {
   void sendPayload(String payload, String channel);
 
   Stream<PayloadWithTopic> allMessagesStream();
+  Stream<ConnectionState> connectionStateStream();
 
   User? getUser();
 }

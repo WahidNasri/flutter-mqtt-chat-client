@@ -16,9 +16,14 @@ class MessageDao extends DatabaseAccessor<MyDatabase> with _$MessageDaoMixin {
             ..orderBy([(t) => OrderingTerm(expression: t.sendTime, mode: OrderingMode.desc)]))
         .watch();
   }
+  Stream<List<DbMessage>> getUnseenMessagesByRoomId(String roomId){
+    return (select(messages)
+      ..where((tbl) => tbl.roomId.equals(roomId) & tbl.status.isNotIn(["displayed"]))
+      ..orderBy([(t) => OrderingTerm(expression: t.sendTime, mode: OrderingMode.desc)]))
+        .watch();
+  }
   Stream<List<DbMessage>> getAllMessages() {
     return (select(messages)..orderBy([(t) => OrderingTerm(expression: t.sendTime, mode: OrderingMode.desc)])).watch();
-
   }
 
   Future<int> addMessage(DbMessage msg) {

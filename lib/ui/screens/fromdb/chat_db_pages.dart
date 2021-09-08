@@ -38,7 +38,8 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
 
     var s2 =
         ChatApp.instance()!.messageReader.getTypingMessages().listen((event) {
-      if (event.roomId == widget.contactChat.roomId && event.fromId != _user!.id) {
+      if (event.roomId == widget.contactChat.roomId &&
+          event.fromId != _user!.id) {
         setState(() {
           isTyping = event.isTyping;
         });
@@ -184,28 +185,32 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
         fromId: _user!.id,
         sendTime: DateTime.now().millisecondsSinceEpoch,
         fromName: _user!.firstName);
-    ChatApp.instance()!.messageSender.sendChatMessage(nm, widget.contactChat.roomId);
+    ChatApp.instance()!
+        .messageSender
+        .sendChatMessage(nm, widget.contactChat.roomId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: false,
+          centerTitle: false,
           title: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(widget.contactChat.firstName + " " + widget.contactChat.lastName),
-          Visibility(
-            child: Text(
-              "Typing...",
-              style: TextStyle(fontSize: 11),
-            ),
-            visible: isTyping,
-          )
-        ],
-      )),
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.contactChat.firstName +
+                  " " +
+                  widget.contactChat.lastName),
+              Visibility(
+                child: Text(
+                  "Typing...",
+                  style: TextStyle(fontSize: 11),
+                ),
+                visible: isTyping,
+              )
+            ],
+          )),
       body: StreamBuilder<List<ChatMessage>>(
           stream: AppData.instance()!
               .messagesHandler
@@ -236,7 +241,9 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
 
   void _handleTextChanged(String text) {
     if (text.length > 0 && text.length % 3 == 0) {
-      ChatApp.instance()!.eventsSender.sendIsTyping(true, widget.contactChat.roomId);
+      ChatApp.instance()!
+          .eventsSender
+          .sendIsTyping(true, widget.contactChat.roomId);
     }
   }
 

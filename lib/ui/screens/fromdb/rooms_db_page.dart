@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/chat_db_pages.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
-
+import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart' as cs;
 class RoomsDBPage extends StatefulWidget {
   RoomsDBPage({Key? key}) : super(key: key);
 
@@ -29,7 +30,20 @@ class _RoomsPageState extends State<RoomsDBPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Rooms"),
+        title: Column(
+          children: [
+            Text("Rooms"),
+            StreamBuilder<cs.ConnectionState>(stream: ChatApp.instance()!.clientHandler.connectionStateStream(), builder: (context, snapshot){
+              if(snapshot.hasError){
+                return Text(snapshot.error.toString(), style: TextStyle(color: Colors.red, fontSize: 15),);
+              }
+              else if(snapshot.hasData){
+                return Text(snapshot.data.toString().split(".")[1] , style: TextStyle(fontSize: 12));
+              }
+              return Text("Loading Connection State...", style: TextStyle(fontSize: 15));
+            })
+          ],
+        ),
         actions: [IconButton(onPressed: _onLogout, icon: Icon(Icons.logout))],
       ),
       body: Column(

@@ -6,8 +6,10 @@ import 'package:flutter_mqtt/MqttImpl/topics_generator.dart';
 import 'package:flutter_mqtt/abstraction/ClientHandler.dart';
 import 'package:flutter_mqtt/abstraction/models/PayloadWithTopic.dart';
 import 'package:flutter_mqtt/abstraction/models/User.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:rxdart/rxdart.dart';
 
 class MqttClient extends ClientHandler {
   MqttServerClient? _client;
@@ -15,6 +17,7 @@ class MqttClient extends ClientHandler {
   User? _user;
   StreamController<PayloadWithTopic>? _messagesController =
       StreamController.broadcast();
+  BehaviorSubject<ConnectionState> _cnxBehavior = BehaviorSubject<ConnectionState>();
   @override
   Future<bool> connect(
       {required String username,
@@ -51,7 +54,11 @@ class MqttClient extends ClientHandler {
     try {
       //_messagesController =  StreamController.broadcast();
 
+      _broadcastConnectionState();
+
       await _client!.connect();
+
+      _broadcastConnectionState();
 
       _subscribeToArchivesTopics();
       _listenAndFilter();
@@ -100,6 +107,34 @@ class MqttClient extends ClientHandler {
 
       print('Received message:$payload from topic: ${c[0].topic}>');
     });
+  }
+  _broadcastConnectionState(){
+    if(_client == null){
+      _cnxBehavior.add(ConnectionState.disconnected);
+      return;
+    }
+    if(_client!.connectionStatus == null){
+      _cnxBehavior.add(ConnectionState.disconnected);
+      return;
+    }
+    switch(_client!.connectionStatus!.state){
+
+      case MqttConnectionState.disconnecting:
+        _cnxBehavior.add(ConnectionState.disconnecting);
+        break;
+      case MqttConnectionState.disconnected:
+        _cnxBehavior.add(ConnectionState.disconnected);
+        break;
+      case MqttConnectionState.connecting:
+        _cnxBehavior.add(ConnectionState.connecting);
+        break;
+      case MqttConnectionState.connected:
+        _cnxBehavior.add(ConnectionState.connected);
+        break;
+      case MqttConnectionState.faulted:
+        _cnxBehavior.add(ConnectionState.faulted);
+        break;
+    }
   }
 
   @override
@@ -205,11 +240,13 @@ class MqttClient extends ClientHandler {
 // connection succeeded
   void onConnected() {
     print('Connected');
+    _broadcastConnectionState();
   }
 
 // unconnected
   void onDisconnected() {
     print('Disconnected');
+    _broadcastConnectionState();
     if (_messagesController != null && !_messagesController!.isClosed) {
       _messagesController!.close();
     }
@@ -235,6 +272,7 @@ class MqttClient extends ClientHandler {
 
   //auto reconnect
   void onAutoReconnect() {
+    _broadcastConnectionState();
     print('Auto Reconnect');
   }
 
@@ -262,5 +300,10 @@ class MqttClient extends ClientHandler {
   @override
   User? getUser() {
     return _user;
+  }
+
+  @override
+  Stream<ConnectionState> connectionStateStream() {
+    return _cnxBehavior.stream;
   }
 }
