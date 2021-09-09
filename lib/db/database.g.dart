@@ -667,6 +667,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
   final String? thumbnail;
   final String? originalId;
   final int sendTime;
+  final int size;
   final String status;
   DbMessage(
       {required this.id,
@@ -682,6 +683,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       this.thumbnail,
       this.originalId,
       required this.sendTime,
+      required this.size,
       required this.status});
   factory DbMessage.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
@@ -713,6 +715,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           .mapFromDatabaseResponse(data['${effectivePrefix}original_id']),
       sendTime: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}send_time'])!,
+      size: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}size'])!,
       status: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
     );
@@ -745,6 +749,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       map['original_id'] = Variable<String?>(originalId);
     }
     map['send_time'] = Variable<int>(sendTime);
+    map['size'] = Variable<int>(size);
     map['status'] = Variable<String>(status);
     return map;
   }
@@ -773,6 +778,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           ? const Value.absent()
           : Value(originalId),
       sendTime: Value(sendTime),
+      size: Value(size),
       status: Value(status),
     );
   }
@@ -794,6 +800,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       thumbnail: serializer.fromJson<String?>(json['thumbnail']),
       originalId: serializer.fromJson<String?>(json['originalId']),
       sendTime: serializer.fromJson<int>(json['sendTime']),
+      size: serializer.fromJson<int>(json['size']),
       status: serializer.fromJson<String>(json['status']),
     );
   }
@@ -814,6 +821,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       'thumbnail': serializer.toJson<String?>(thumbnail),
       'originalId': serializer.toJson<String?>(originalId),
       'sendTime': serializer.toJson<int>(sendTime),
+      'size': serializer.toJson<int>(size),
       'status': serializer.toJson<String>(status),
     };
   }
@@ -832,6 +840,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           String? thumbnail,
           String? originalId,
           int? sendTime,
+          int? size,
           String? status}) =>
       DbMessage(
         id: id ?? this.id,
@@ -847,6 +856,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
         thumbnail: thumbnail ?? this.thumbnail,
         originalId: originalId ?? this.originalId,
         sendTime: sendTime ?? this.sendTime,
+        size: size ?? this.size,
         status: status ?? this.status,
       );
   @override
@@ -865,6 +875,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           ..write('thumbnail: $thumbnail, ')
           ..write('originalId: $originalId, ')
           ..write('sendTime: $sendTime, ')
+          ..write('size: $size, ')
           ..write('status: $status')
           ..write(')'))
         .toString();
@@ -897,8 +908,10 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
                                                   originalId.hashCode,
                                                   $mrjc(
                                                       sendTime.hashCode,
-                                                      status
-                                                          .hashCode))))))))))))));
+                                                      $mrjc(
+                                                          size.hashCode,
+                                                          status
+                                                              .hashCode)))))))))))))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -916,6 +929,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           other.thumbnail == this.thumbnail &&
           other.originalId == this.originalId &&
           other.sendTime == this.sendTime &&
+          other.size == this.size &&
           other.status == this.status);
 }
 
@@ -933,6 +947,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
   final Value<String?> thumbnail;
   final Value<String?> originalId;
   final Value<int> sendTime;
+  final Value<int> size;
   final Value<String> status;
   const MessagesCompanion({
     this.id = const Value.absent(),
@@ -948,6 +963,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     this.thumbnail = const Value.absent(),
     this.originalId = const Value.absent(),
     this.sendTime = const Value.absent(),
+    this.size = const Value.absent(),
     this.status = const Value.absent(),
   });
   MessagesCompanion.insert({
@@ -964,6 +980,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     this.thumbnail = const Value.absent(),
     this.originalId = const Value.absent(),
     required int sendTime,
+    this.size = const Value.absent(),
     this.status = const Value.absent(),
   })  : id = Value(id),
         type = Value(type),
@@ -986,6 +1003,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     Expression<String?>? thumbnail,
     Expression<String?>? originalId,
     Expression<int>? sendTime,
+    Expression<int>? size,
     Expression<String>? status,
   }) {
     return RawValuesInsertable({
@@ -1002,6 +1020,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       if (thumbnail != null) 'thumbnail': thumbnail,
       if (originalId != null) 'original_id': originalId,
       if (sendTime != null) 'send_time': sendTime,
+      if (size != null) 'size': size,
       if (status != null) 'status': status,
     });
   }
@@ -1020,6 +1039,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       Value<String?>? thumbnail,
       Value<String?>? originalId,
       Value<int>? sendTime,
+      Value<int>? size,
       Value<String>? status}) {
     return MessagesCompanion(
       id: id ?? this.id,
@@ -1035,6 +1055,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       thumbnail: thumbnail ?? this.thumbnail,
       originalId: originalId ?? this.originalId,
       sendTime: sendTime ?? this.sendTime,
+      size: size ?? this.size,
       status: status ?? this.status,
     );
   }
@@ -1081,6 +1102,9 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     if (sendTime.present) {
       map['send_time'] = Variable<int>(sendTime.value);
     }
+    if (size.present) {
+      map['size'] = Variable<int>(size.value);
+    }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
@@ -1103,6 +1127,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
           ..write('thumbnail: $thumbnail, ')
           ..write('originalId: $originalId, ')
           ..write('sendTime: $sendTime, ')
+          ..write('size: $size, ')
           ..write('status: $status')
           ..write(')'))
         .toString();
@@ -1167,6 +1192,12 @@ class $MessagesTable extends Messages
   late final GeneratedColumn<int?> sendTime = GeneratedColumn<int?>(
       'send_time', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
+  final VerificationMeta _sizeMeta = const VerificationMeta('size');
+  late final GeneratedColumn<int?> size = GeneratedColumn<int?>(
+      'size', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   final VerificationMeta _statusMeta = const VerificationMeta('status');
   late final GeneratedColumn<String?> status = GeneratedColumn<String?>(
       'status', aliasedName, false,
@@ -1188,6 +1219,7 @@ class $MessagesTable extends Messages
         thumbnail,
         originalId,
         sendTime,
+        size,
         status
       ];
   @override
@@ -1269,6 +1301,10 @@ class $MessagesTable extends Messages
           sendTime.isAcceptableOrUnknown(data['send_time']!, _sendTimeMeta));
     } else if (isInserting) {
       context.missing(_sendTimeMeta);
+    }
+    if (data.containsKey('size')) {
+      context.handle(
+          _sizeMeta, size.isAcceptableOrUnknown(data['size']!, _sizeMeta));
     }
     if (data.containsKey('status')) {
       context.handle(_statusMeta,

@@ -14,12 +14,20 @@ extension MessageConversions on ChatMessage {
             id: id, text: text, createdAt: sendTime, author: author);
       case MessageType.ChatImage:
         return types.ImageMessage(
-            author: author, id: id, name: "Image", uri: attachment!, size: 10);
+            author: author,
+            id: id,
+            name: "Image",
+            uri: attachment!,
+            size: size ?? 0);
       case MessageType.ChatVideo:
       case MessageType.ChatAudio:
       case MessageType.ChatDocument:
         return types.FileMessage(
-            author: author, id: id, name: text, uri: attachment!, size: 100);
+            author: author,
+            id: id,
+            name: text,
+            uri: attachment!,
+            size: size ?? 0);
       default:
         return types.UnsupportedMessage(id: id, author: author);
     }
@@ -32,6 +40,7 @@ extension UserConversions on User {
         id: id, firstName: firstName, lastName: lastName, imageUrl: avatar);
   }
 }
+
 extension LocalUserConversions on DbUser {
   types.User toUiUser2() {
     return types.User(
