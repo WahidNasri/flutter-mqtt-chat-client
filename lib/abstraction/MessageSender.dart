@@ -17,48 +17,9 @@ abstract class MessageSender {
   void sendChatMessage(ChatMessage message, String room);
   //TODO: handle showing message until it's uploaded and sent
   void sendFileChatMessage(
-      {required String uploadUrl,
-      required MessageType type,
+      {required MessageType type,
       required String fileLocalPath,
-      required String fromId,
-      required String toId,
-      required String fromName,
-      required String room}) {
-    String id = Uuid().v4();
-    //===================
-
-    ChatMessage message = ChatMessage(
-        id: id,
-        type: type,
-        text: "File",
-        roomId: room,
-        attachment: fileLocalPath,
-        fromId: fromId,
-        fromName: fromName,
-        toId: toId,
-        sendTime: DateTime.now().millisecondsSinceEpoch,
-        originality: MessageOriginality.Original);
-
-    sendChatMessage(message, room);
-    //===================
-    uploader.uploadFile(uploadUrl, fileLocalPath).then((downloadUrl) {
-      if (downloadUrl != null) {
-        ChatMessage message = ChatMessage(
-            id: id,
-            type: type,
-            text: "File",
-            roomId: room,
-            attachment: downloadUrl,
-            fromId: fromId,
-            fromName: fromName,
-            toId: toId,
-            sendTime: DateTime.now().millisecondsSinceEpoch,
-            originality: MessageOriginality.Original);
-
-        sendChatMessage(message, room);
-      }
-    });
-  }
+      required String room});
 
   void forwardChatMessage(
       ChatMessage toForwardMessage, String toId, String toName, String toRoom) {

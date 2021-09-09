@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -10,6 +11,7 @@ import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:mime/mime.dart';
 
 class MqttClient extends ClientHandler {
   MqttServerClient? _client;
@@ -17,7 +19,8 @@ class MqttClient extends ClientHandler {
   User? _user;
   StreamController<PayloadWithTopic>? _messagesController =
       StreamController.broadcast();
-  BehaviorSubject<ConnectionState> _cnxBehavior = BehaviorSubject<ConnectionState>();
+  BehaviorSubject<ConnectionState> _cnxBehavior =
+      BehaviorSubject<ConnectionState>();
   @override
   Future<bool> connect(
       {required String username,
@@ -71,7 +74,7 @@ class MqttClient extends ClientHandler {
   }
 
   void _subscribeToArchivesTopics() {
-    Future.delayed(Duration(seconds: 3), (){
+    Future.delayed(Duration(seconds: 3), () {
       _client!.subscribe(
           TopicsNamesGenerator.getArchivesRoomsTopic(getClientId()!),
           MqttQos.atLeastOnce);
@@ -108,17 +111,17 @@ class MqttClient extends ClientHandler {
       print('Received message:$payload from topic: ${c[0].topic}>');
     });
   }
-  _broadcastConnectionState(){
-    if(_client == null){
-      _cnxBehavior.add(ConnectionState.disconnected);
-      return;
-    }
-    if(_client!.connectionStatus == null){
-      _cnxBehavior.add(ConnectionState.disconnected);
-      return;
-    }
-    switch(_client!.connectionStatus!.state){
 
+  _broadcastConnectionState() {
+    if (_client == null) {
+      _cnxBehavior.add(ConnectionState.disconnected);
+      return;
+    }
+    if (_client!.connectionStatus == null) {
+      _cnxBehavior.add(ConnectionState.disconnected);
+      return;
+    }
+    switch (_client!.connectionStatus!.state) {
       case MqttConnectionState.disconnecting:
         _cnxBehavior.add(ConnectionState.disconnecting);
         break;
@@ -191,7 +194,7 @@ class MqttClient extends ClientHandler {
     String eventsTopic =
         TopicsNamesGenerator.getEventsTopicForBareRoom(bareRoom);
 
-    if(_client == null){
+    if (_client == null) {
       return;
     }
     _client!.unsubscribe(messagesTopic);
@@ -205,7 +208,7 @@ class MqttClient extends ClientHandler {
 
   @override
   void leaveContactEvents(String contactId) {
-    if(_client == null){
+    if (_client == null) {
       return;
     }
     _client!.unsubscribe("presence/" + contactId);
@@ -216,6 +219,19 @@ class MqttClient extends ClientHandler {
     final builder = MqttClientPayloadBuilder();
     builder.addString(payload);
     _client!.publishMessage(channel, MqttQos.atLeastOnce, builder.payload!);
+  }
+
+  @override
+  void sendFilePayload(File file, String channel) {
+    final bytes = file.readAsBytesSync();
+    var parts = file.path.split(".");
+
+    var mime = lookupMimeType(file.path);
+    //var mime = "video/mp4";
+    String base64Image =
+        "data:" + (mime ?? "text/plain") + ";base64," + base64Encode(bytes);
+
+    sendPayload(base64Image, channel);
   }
 
   @override

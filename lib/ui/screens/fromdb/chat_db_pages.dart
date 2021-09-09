@@ -106,18 +106,11 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
     );
 
     if (result != null) {
-      final message = types.FileMessage(
-        author: _user!,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        id: const Uuid().v4(),
-        mimeType: lookupMimeType(result.files.single.path),
-        name: result.files.single.name,
-        size: result.files.single.size,
-        uri: result.files.single.path,
-      );
-
-      //_addMessage(message);
-      //TODO: handle file sending
+      String path = result.files.single.path;
+      ChatApp.instance()!.messageSender.sendFileChatMessage(
+          type: MessageType.ChatImage,
+          fileLocalPath: path,
+          room: widget.contactChat.roomId);
     }
   }
 
@@ -129,28 +122,9 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
     );
 
     if (result != null) {
-      final bytes = await result.readAsBytes();
-      final image = await decodeImageFromList(bytes);
-
-      final message = types.ImageMessage(
-        author: _user!,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        height: image.height.toDouble(),
-        id: const Uuid().v4(),
-        name: result.name,
-        size: bytes.length,
-        uri: result.path,
-        width: image.width.toDouble(),
-      );
-
-      //ChatApp.instance()!.messageSender.sendChatMessage(msg, widget.room);
       ChatApp.instance()!.messageSender.sendFileChatMessage(
-          uploadUrl: "URL",
           type: MessageType.ChatImage,
           fileLocalPath: result.path,
-          fromId: ChatApp.instance()!.clientHandler.getUserId(),
-          toId: widget.contactChat.roomId,
-          fromName: ChatApp.instance()!.clientHandler.getUserId(),
           room: widget.contactChat.roomId);
     }
   }

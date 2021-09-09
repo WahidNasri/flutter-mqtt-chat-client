@@ -164,12 +164,8 @@ class _ChatUIPageState extends State<ChatUIPage> {
 
       //ChatApp.instance()!.messageSender.sendChatMessage(msg, widget.room);
       ChatApp.instance()!.messageSender.sendFileChatMessage(
-          uploadUrl: "URL",
           type: MessageType.ChatImage,
           fileLocalPath: result.path,
-          fromId: ChatApp.instance()!.clientHandler.getUserId(),
-          toId: widget.room,
-          fromName: ChatApp.instance()!.clientHandler.getUserId(),
           room: widget.room);
     }
   }

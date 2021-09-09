@@ -6,7 +6,6 @@ import 'package:flutter_mqtt/abstraction/MessageOnlineReaderHandler.dart';
 import 'package:flutter_mqtt/abstraction/models/BaseMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMarkerMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
-import 'package:flutter_mqtt/abstraction/models/PayloadWithTopic.dart';
 import 'package:flutter_mqtt/abstraction/models/PresenceMesssage.dart';
 import 'package:flutter_mqtt/abstraction/models/TypingMessage.dart';
 

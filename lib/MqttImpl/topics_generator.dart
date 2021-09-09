@@ -15,6 +15,10 @@ class TopicsNamesGenerator {
     return "messages/" + bareRoom;
   }
 
+  static String getFileChattingTopicForBareRoom(String bareRoom) {
+    return "filemessages/" + bareRoom;
+  }
+
   static String getArchivesRoomsTopic(String clientId) {
     return "archivesrooms/" + clientId;
   }

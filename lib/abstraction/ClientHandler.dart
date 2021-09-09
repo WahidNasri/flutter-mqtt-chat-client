@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_mqtt/abstraction/models/PayloadWithTopic.dart';
 import 'package:flutter_mqtt/abstraction/models/User.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart';
@@ -16,6 +18,7 @@ abstract class ClientHandler {
   void leaveRoom(String bareRoom);
   void leaveContactEvents(String contactId);
   void sendPayload(String payload, String channel);
+  void sendFilePayload(File file, String channel);
 
   Stream<PayloadWithTopic> allMessagesStream();
   Stream<ConnectionState> connectionStateStream();
