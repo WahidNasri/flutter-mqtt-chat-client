@@ -11,7 +11,7 @@ The Broker should install [HiveMQ Chat-Extension](https://github.com/WahidNasri/
 - [x] Login
 - [x] Send & receive messages
 - [x] Typing indicator
+- [x] Send Files (Upload not implemented yet)
 - [x] Persist User, Messages and rooms using local database
 - [ ] ChatMarker (server side implemented)
-- [ ] Send Files (Upload not implemented yet)
 - [ ] Presence
