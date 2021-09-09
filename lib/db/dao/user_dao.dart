@@ -9,7 +9,13 @@ class UserDao extends DatabaseAccessor<MyDatabase> with _$UserDaoMixin {
 
   UserDao(this.db) : super(db);
   //============Users============//
-  Future<int> addUser(DbUser user) {
+  Future<int> addUser(DbUser user) async {
+    var oldUser = await getUser();
+    if (oldUser != null) {
+      var nuser =
+          user.copyWith(username: oldUser.username, password: oldUser.password);
+      return into(users).insertOnConflictUpdate(nuser);
+    }
     return into(users).insertOnConflictUpdate(user);
   }
 
