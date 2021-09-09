@@ -224,10 +224,8 @@ class MqttClient extends ClientHandler {
   @override
   void sendFilePayload(File file, String channel) {
     final bytes = file.readAsBytesSync();
-    var parts = file.path.split(".");
 
     var mime = lookupMimeType(file.path);
-    //var mime = "video/mp4";
     String base64Image =
         "data:" + (mime ?? "text/plain") + ";base64," + base64Encode(bytes);
 
