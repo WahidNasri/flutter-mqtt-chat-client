@@ -669,6 +669,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
   final int sendTime;
   final int size;
   final String status;
+  final String? mime;
   DbMessage(
       {required this.id,
       required this.type,
@@ -684,7 +685,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       this.originalId,
       required this.sendTime,
       required this.size,
-      required this.status});
+      required this.status,
+      this.mime});
   factory DbMessage.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -719,6 +721,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           .mapFromDatabaseResponse(data['${effectivePrefix}size'])!,
       status: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
+      mime: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}mime']),
     );
   }
   @override
@@ -751,6 +755,9 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
     map['send_time'] = Variable<int>(sendTime);
     map['size'] = Variable<int>(size);
     map['status'] = Variable<String>(status);
+    if (!nullToAbsent || mime != null) {
+      map['mime'] = Variable<String?>(mime);
+    }
     return map;
   }
 
@@ -780,6 +787,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       sendTime: Value(sendTime),
       size: Value(size),
       status: Value(status),
+      mime: mime == null && nullToAbsent ? const Value.absent() : Value(mime),
     );
   }
 
@@ -802,6 +810,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       sendTime: serializer.fromJson<int>(json['sendTime']),
       size: serializer.fromJson<int>(json['size']),
       status: serializer.fromJson<String>(json['status']),
+      mime: serializer.fromJson<String?>(json['mime']),
     );
   }
   @override
@@ -823,6 +832,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       'sendTime': serializer.toJson<int>(sendTime),
       'size': serializer.toJson<int>(size),
       'status': serializer.toJson<String>(status),
+      'mime': serializer.toJson<String?>(mime),
     };
   }
 
@@ -841,7 +851,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           String? originalId,
           int? sendTime,
           int? size,
-          String? status}) =>
+          String? status,
+          String? mime}) =>
       DbMessage(
         id: id ?? this.id,
         type: type ?? this.type,
@@ -858,6 +869,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
         sendTime: sendTime ?? this.sendTime,
         size: size ?? this.size,
         status: status ?? this.status,
+        mime: mime ?? this.mime,
       );
   @override
   String toString() {
@@ -876,7 +888,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           ..write('originalId: $originalId, ')
           ..write('sendTime: $sendTime, ')
           ..write('size: $size, ')
-          ..write('status: $status')
+          ..write('status: $status, ')
+          ..write('mime: $mime')
           ..write(')'))
         .toString();
   }
@@ -910,8 +923,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
                                                       sendTime.hashCode,
                                                       $mrjc(
                                                           size.hashCode,
-                                                          status
-                                                              .hashCode)))))))))))))));
+                                                          $mrjc(status.hashCode,
+                                                              mime.hashCode))))))))))))))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -930,7 +943,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           other.originalId == this.originalId &&
           other.sendTime == this.sendTime &&
           other.size == this.size &&
-          other.status == this.status);
+          other.status == this.status &&
+          other.mime == this.mime);
 }
 
 class MessagesCompanion extends UpdateCompanion<DbMessage> {
@@ -949,6 +963,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
   final Value<int> sendTime;
   final Value<int> size;
   final Value<String> status;
+  final Value<String?> mime;
   const MessagesCompanion({
     this.id = const Value.absent(),
     this.type = const Value.absent(),
@@ -965,6 +980,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     this.sendTime = const Value.absent(),
     this.size = const Value.absent(),
     this.status = const Value.absent(),
+    this.mime = const Value.absent(),
   });
   MessagesCompanion.insert({
     required String id,
@@ -982,6 +998,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     required int sendTime,
     this.size = const Value.absent(),
     this.status = const Value.absent(),
+    this.mime = const Value.absent(),
   })  : id = Value(id),
         type = Value(type),
         fromId = Value(fromId),
@@ -1005,6 +1022,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     Expression<int>? sendTime,
     Expression<int>? size,
     Expression<String>? status,
+    Expression<String?>? mime,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1022,6 +1040,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       if (sendTime != null) 'send_time': sendTime,
       if (size != null) 'size': size,
       if (status != null) 'status': status,
+      if (mime != null) 'mime': mime,
     });
   }
 
@@ -1040,7 +1059,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       Value<String?>? originalId,
       Value<int>? sendTime,
       Value<int>? size,
-      Value<String>? status}) {
+      Value<String>? status,
+      Value<String?>? mime}) {
     return MessagesCompanion(
       id: id ?? this.id,
       type: type ?? this.type,
@@ -1057,6 +1077,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       sendTime: sendTime ?? this.sendTime,
       size: size ?? this.size,
       status: status ?? this.status,
+      mime: mime ?? this.mime,
     );
   }
 
@@ -1108,6 +1129,9 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
+    if (mime.present) {
+      map['mime'] = Variable<String?>(mime.value);
+    }
     return map;
   }
 
@@ -1128,7 +1152,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
           ..write('originalId: $originalId, ')
           ..write('sendTime: $sendTime, ')
           ..write('size: $size, ')
-          ..write('status: $status')
+          ..write('status: $status, ')
+          ..write('mime: $mime')
           ..write(')'))
         .toString();
   }
@@ -1204,6 +1229,10 @@ class $MessagesTable extends Messages
       typeName: 'TEXT',
       requiredDuringInsert: false,
       defaultValue: const Constant("pending"));
+  final VerificationMeta _mimeMeta = const VerificationMeta('mime');
+  late final GeneratedColumn<String?> mime = GeneratedColumn<String?>(
+      'mime', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1220,7 +1249,8 @@ class $MessagesTable extends Messages
         originalId,
         sendTime,
         size,
-        status
+        status,
+        mime
       ];
   @override
   String get aliasedName => _alias ?? 'messages';
@@ -1309,6 +1339,10 @@ class $MessagesTable extends Messages
     if (data.containsKey('status')) {
       context.handle(_statusMeta,
           status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('mime')) {
+      context.handle(
+          _mimeMeta, mime.isAcceptableOrUnknown(data['mime']!, _mimeMeta));
     }
     return context;
   }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
+import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/chat_db_pages.dart';
+import 'package:flutter_mqtt/ui/screens/fromdb/profile_page.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart'
     as cs;
@@ -32,6 +34,24 @@ class _RoomsPageState extends State<RoomsDBPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: StreamBuilder<DbUser?>(
+            stream: AppData.instance()!.usersHandler.getLocalUserAsync(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data != null) {
+                return InkWell(
+                  onTap: _openProfile,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                      foregroundImage: NetworkImage(snapshot.data!.avatar ??
+                          "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"),
+
+                    ),
+                  ),
+                );
+              }
+              return SizedBox(height: 0, width: 0,);
+            }),
         title: Column(
           children: [
             Text("Rooms"),
@@ -118,7 +138,12 @@ class _RoomsPageState extends State<RoomsDBPage> {
           builder: (context) => ChatUIDBPage(contactChat: contact)),
     );
   }
-
+  _openProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProfilePage()),
+    );
+  }
   _onLogout() {
     showDialog<String>(
       context: context,

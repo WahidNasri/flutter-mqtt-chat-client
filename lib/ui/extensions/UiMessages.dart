@@ -27,6 +27,7 @@ extension MessageConversions on ChatMessage {
             id: id,
             name: text,
             uri: attachment!,
+            mimeType: mime,
             size: size ?? 0);
       default:
         return types.UnsupportedMessage(id: id, author: author);

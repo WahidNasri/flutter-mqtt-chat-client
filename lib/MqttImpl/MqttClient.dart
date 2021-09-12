@@ -16,7 +16,6 @@ import 'package:mime/mime.dart';
 class MqttClient extends ClientHandler {
   MqttServerClient? _client;
   String? _clientId;
-  User? _user;
   StreamController<PayloadWithTopic>? _messagesController =
       StreamController.broadcast();
   BehaviorSubject<ConnectionState> _cnxBehavior =
@@ -32,6 +31,7 @@ class MqttClient extends ClientHandler {
         Platform.operatingSystem.toLowerCase() == 'windows'
             ? 'localhost'
             : '172.16.14.99',
+            //: '192.168.100.11',
         cid,
         1883);
     // _client = MqttServerClient.withPort('broker.emqx.io', resource, 1883
@@ -97,17 +97,6 @@ class MqttClient extends ClientHandler {
       _messagesController!
           .add(PayloadWithTopic(payload: payload, topic: topic));
 
-      if (topic.toLowerCase().startsWith("archivesmyid/")) {
-        try {
-          String id = topic.split("/")[1];
-          if (id == getClientId()) {
-            _user = User.fromJson(payload);
-          }
-        } catch (e) {
-          print("XXX Could not parse my id");
-        }
-      }
-
       print('Received message:$payload from topic: ${c[0].topic}>');
     });
   }
@@ -138,11 +127,6 @@ class MqttClient extends ClientHandler {
         _cnxBehavior.add(ConnectionState.faulted);
         break;
     }
-  }
-
-  @override
-  String getUserId() {
-    return _client!.clientIdentifier;
   }
 
   @override
@@ -241,7 +225,6 @@ class MqttClient extends ClientHandler {
     }
     _client = null;
     _clientId = null;
-    _user = null;
   }
 
   @override
@@ -264,7 +247,6 @@ class MqttClient extends ClientHandler {
     if (_messagesController != null && !_messagesController!.isClosed) {
       _messagesController!.close();
     }
-    _user = null;
     _client = null;
     _clientId = null;
   }
@@ -309,11 +291,6 @@ class MqttClient extends ClientHandler {
     Random _rnd = Random();
     return String.fromCharCodes(Iterable.generate(
         length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-  }
-
-  @override
-  User? getUser() {
-    return _user;
   }
 
   @override

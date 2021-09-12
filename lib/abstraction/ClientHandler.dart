@@ -11,7 +11,6 @@ abstract class ClientHandler {
   bool isConnected();
   bool isConnecting();
 
-  String getUserId();
   String? getClientId();
   void joinRoom(String room); //similar to subscribe to topic
   void joinContactEvents(String contactId);
@@ -22,6 +21,4 @@ abstract class ClientHandler {
 
   Stream<PayloadWithTopic> allMessagesStream();
   Stream<ConnectionState> connectionStateStream();
-
-  User? getUser();
 }

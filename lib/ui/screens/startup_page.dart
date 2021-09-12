@@ -4,7 +4,6 @@ import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/rooms_db_page.dart';
-import 'package:flutter_mqtt/ui/screens/live/rooms_page.dart';
 
 class StartupPage extends StatefulWidget {
   const StartupPage({Key? key}) : super(key: key);
@@ -40,11 +39,13 @@ class _StartupPageState extends State<StartupPage> {
     if (_user == null) {
       return Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("No logged in user"),
-            ElevatedButton(
+            SizedBox(height: 20,),
+            FloatingActionButton.extended(
                 onPressed: _onLogin,
-                child: Text("Log in"))
+                label: Text("Log in"))
           ],
         ),
       );

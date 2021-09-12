@@ -20,6 +20,7 @@ class ChatMessage {
   String? originalMessage;
   late int sendTime;
   int? size;
+  String? mime;
   List<String>? additionalFields;
   ChatMessage(
       {required this.id,
@@ -37,6 +38,7 @@ class ChatMessage {
       this.originalMessage,
       required this.sendTime,
       this.size,
+      this.mime,
       this.additionalFields});
 
   ChatMessage copyWith({
@@ -55,6 +57,7 @@ class ChatMessage {
     String? originalMessage,
     int? sendTime,
     int? size,
+    String? mime,
     List<String>? additionalFields,
   }) {
     return ChatMessage(
@@ -73,6 +76,7 @@ class ChatMessage {
         originalMessage: originalMessage ?? this.originalMessage,
         sendTime: sendTime ?? DateTime.now().millisecondsSinceEpoch,
         size: size ?? 0,
+        mime: mime ?? this.mime,
         additionalFields: additionalFields ?? this.additionalFields);
   }
 
@@ -97,6 +101,7 @@ class ChatMessage {
       'originalMessage': originalMessage,
       'sendTime': sendTime,
       'size': size ?? 0,
+      'mime': mime,
       'additionalFields': additionalFields.toString()
     };
   }
@@ -125,6 +130,7 @@ class ChatMessage {
           : int.tryParse(map['sendTime'].toString()) ??
               DateTime.now().millisecondsSinceEpoch,
       size: map['size'] == null ? 0 : int.tryParse(map['size'].toString()),
+      mime: map['mime'],
       originalMessage: map['originalMessage'],
     );
   }

@@ -15,10 +15,8 @@ class UsersHandler {
         username: _waitingUsername,
         password: _waitingPassword);
 
-    MyDatabase.instance()!
-        .userDao
-        .deleteAllUsers()
-        .then((value) => MyDatabase.instance()!.userDao.addUser(dbUser));
+    insertOrUpdateUser(dbUser);
+
   }
 
   Future<DbUser?> getLocalUser() {
@@ -32,6 +30,17 @@ class UsersHandler {
       }
       else{
         return users[0];
+      }
+    });
+  }
+  void insertOrUpdateUser(DbUser user){
+    getLocalUser().then((oldUser) {
+      if(oldUser != null){
+        DbUser newRecord = user.copyWith(username: oldUser.username, password: oldUser.password);
+        MyDatabase.instance()!.userDao.addUser(newRecord);
+      }
+      else{
+        MyDatabase.instance()!.userDao.addUser(user);
       }
     });
   }
