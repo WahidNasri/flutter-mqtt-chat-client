@@ -35,6 +35,41 @@ extension MessageConversions on ChatMessage {
   }
 }
 
+extension DbMessageConversions on DbMessage {
+  types.Message toUiMessage() {
+    var author = types.User(id: fromId , firstName: fromName);
+    switch (type) {
+      case "ChatText":
+        return types.TextMessage(
+            id: id,
+            text: textClm,
+            createdAt: sendTime,
+            author: author,
+            status: getStatus(status));
+      case "ChatImage":
+        return types.ImageMessage(
+            author: author,
+            id: id,
+            name: "Image",
+            uri: attachment!,
+            size: size);
+      case "ChatVideo":
+      case "ChatAudio":
+      case "ChatDocument":
+        return types.FileMessage(
+            author: author,
+            id: id,
+            name: textClm,
+            uri: attachment!,
+            mimeType: mime,
+            size: size,
+            status: getStatus(status));
+      default:
+        return types.UnsupportedMessage(id: id, author: author);
+    }
+  }
+}
+
 extension UserConversions on User {
   types.User toUiUser() {
     return types.User(
@@ -56,4 +91,16 @@ extension IterableExtension<T> on Iterable<T> {
     }
     return null;
   }
+}
+
+types.Status getStatus(String status) {
+  if (status.toLowerCase() == "delivered") {
+    return types.Status.delivered;
+  } else if (status.toLowerCase() == "sent") {
+    return types.Status.sent;
+  } else if (status.toLowerCase() == "displayed" ||
+      status.toLowerCase() == "seen") {
+    return types.Status.seen;
+  }
+  return types.Status.error;
 }

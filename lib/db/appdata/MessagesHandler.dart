@@ -5,9 +5,8 @@ import 'package:flutter_mqtt/db/appdata/extensions/MessagesExtensions.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MessagesHandler {
-  Stream<List<ChatMessage>> getMessagesByRoomId(String bareRoom) {
-    return MyDatabase.instance()!.messageDao.getMessagesByRoomId(bareRoom).map(
-        (dbMessages) => dbMessages.map((dm) => dm.toChatMessage()).toList());
+  Stream<List<DbMessage>> getMessagesByRoomId(String bareRoom) {
+    return MyDatabase.instance()!.messageDao.getMessagesByRoomId(bareRoom);
   }
 
   Stream<int> getUnseenMessagesCountByRoomId(String roomId) {

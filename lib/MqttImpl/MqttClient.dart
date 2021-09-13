@@ -245,7 +245,7 @@ class MqttClient extends ClientHandler {
     print('Disconnected');
     _broadcastConnectionState();
     if (_messagesController != null && !_messagesController!.isClosed) {
-      _messagesController!.close();
+      //_messagesController!.close();
     }
     _client = null;
     _clientId = null;

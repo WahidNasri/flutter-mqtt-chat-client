@@ -257,21 +257,21 @@ packages:
       name: flutter_chat_types
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.1.2"
   flutter_chat_ui:
     dependency: "direct main"
     description:
       name: flutter_chat_ui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.2"
+    version: "1.4.1"
   flutter_link_previewer:
     dependency: transitive
     description:
       name: flutter_link_previewer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.1"
+    version: "2.5.2"
   flutter_linkify:
     dependency: transitive
     description:

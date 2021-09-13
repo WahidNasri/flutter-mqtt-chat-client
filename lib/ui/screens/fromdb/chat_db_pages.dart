@@ -185,7 +185,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
               )
             ],
           )),
-      body: StreamBuilder<List<ChatMessage>>(
+      body: StreamBuilder<List<DbMessage>>(
           stream: AppData.instance()!
               .messagesHandler
               .getMessagesByRoomId(widget.contactChat.roomId),
@@ -205,6 +205,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
                 onTextChanged: _handleTextChanged,
                 showUserNames: true,
                 showUserAvatars: true,
+
                 user: _user!,
               );
             }

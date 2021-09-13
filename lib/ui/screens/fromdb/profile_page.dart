@@ -16,8 +16,8 @@ class ProfilePage extends StatelessWidget {
               if (snapshot.hasData && snapshot.data != null) {
                 var user = snapshot.data;
                 var fnameController = TextEditingController(text: user!.firstName);
-                var lnameController = TextEditingController(text: user!.lastName);
-                var uname = TextEditingController(text: user!.username);
+                var lnameController = TextEditingController(text: user.lastName);
+                var uname = TextEditingController(text: user.username);
                 return Column(
                   //crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -25,7 +25,7 @@ class ProfilePage extends StatelessWidget {
                       height: 50,
                     ),
                     CircleAvatar(
-                      foregroundImage: NetworkImage(user!.avatar ?? ""),
+                      foregroundImage: NetworkImage(user.avatar ?? ""),
                       radius: 100,
                     ),
                     SizedBox(

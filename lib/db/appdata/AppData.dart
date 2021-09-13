@@ -43,6 +43,8 @@ class AppData {
     ChatApp.instance()!.messageReader.getChatMessages().listen((message) {
       var dbMessage = message.toDbMessage();
       MyDatabase.instance()!.messageDao.addMessage(dbMessage);
+      //SEND CHAT MARKER
+      ChatApp.instance()!.eventsSender.sendChatMarker(message.id, ChatMarker.delivered, message.roomId);
     });
     //============Chat Marker==========//
     ChatApp.instance()!

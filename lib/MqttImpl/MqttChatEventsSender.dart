@@ -1,6 +1,7 @@
 import 'package:flutter_mqtt/MqttImpl/topics_generator.dart';
 import 'package:flutter_mqtt/abstraction/ChatEventsSender.dart';
 import 'package:flutter_mqtt/abstraction/ClientHandler.dart';
+import 'package:flutter_mqtt/abstraction/models/ChatMarkerMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ChatMarker.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 import 'package:flutter_mqtt/abstraction/models/TypingMessage.dart';
@@ -13,6 +14,9 @@ class MqttChatEventsSender extends ChatEventsSender {
   @override
   void sendChatMarker(String messageId, ChatMarker marker, String bareRoom) {
     String topic = TopicsNamesGenerator.getEventsTopicForBareRoom(bareRoom);
+
+    ChatMarkerMessage msg = ChatMarkerMessage(id: Uuid().v4(), type: MessageType.ChatMarker, fromId: "", referenceId: messageId, status: marker);
+    clientHandler.sendPayload(msg.toJson(), topic);
   }
 
   @override

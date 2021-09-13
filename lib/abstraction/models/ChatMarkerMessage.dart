@@ -45,7 +45,7 @@ class ChatMarkerMessage {
       roomId: map['roomId'],
       referenceId: map['referenceId'],
       status: ChatMarker.values
-          .where((e) => describeEnum(e) == map['marker'])
+          .where((e) => describeEnum(e) == map['status'])
           .first,
     );
   }
