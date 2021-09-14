@@ -34,6 +34,7 @@ class _MainScreenState extends State<MainScreen> {
     return ColoredSafeArea(
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: false,
           leading: StreamBuilder<DbUser?>(
               stream: AppData.instance()!.usersHandler.getLocalUserAsync(),
               builder: (context, snapshot) {
