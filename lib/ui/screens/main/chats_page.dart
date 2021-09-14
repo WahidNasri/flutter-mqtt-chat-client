@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/db/tables/ExtendedDbContact.dart';
+import 'package:intl/intl.dart';
 
 class ChatsPage extends StatelessWidget {
   const ChatsPage({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class ChatsPage extends StatelessWidget {
             return ListView.builder(
                 itemCount: chats!.length,
                 itemBuilder: (context, position) {
+                  var dt = DateTime.fromMillisecondsSinceEpoch(chats[position].send_time);
                   return InkWell(
                     onTap: () {
                       //_openRoom(context, chats[position]);
@@ -36,7 +38,7 @@ class ChatsPage extends StatelessWidget {
                           width: 25,
                         ),
                       ),
-                      trailing: Text(chats[position].send_time.toString()),
+                      trailing: Text(DateFormat('HH:mm').format(dt)),//TODO: need more detailed formatting
                     ),
                   );
                 });
