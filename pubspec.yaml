@@ -40,6 +40,7 @@ dependencies:
   path_provider:
   path:
   rxdart:
+  salomon_bottom_bar: ^3.1.0
 
 
 dev_dependencies:

@@ -54,7 +54,7 @@ class _RoomsPageState extends State<RoomsDBPage> {
             }),
         title: Column(
           children: [
-            Text("Rooms"),
+            Text("Flutter MQTT Chat"),
             StreamBuilder<cs.ConnectionState>(
                 stream:
                     ChatApp.instance()!.clientHandler.connectionStateStream(),
@@ -73,7 +73,7 @@ class _RoomsPageState extends State<RoomsDBPage> {
                 })
           ],
         ),
-        actions: [IconButton(onPressed: _onLogout, icon: Icon(Icons.logout))],
+        actions: [IconButton(onPressed: (){}, icon: Icon(Icons.logout))],
       ),
       body: Column(
         children: [
@@ -144,30 +144,5 @@ class _RoomsPageState extends State<RoomsDBPage> {
       MaterialPageRoute(builder: (context) => ProfilePage()),
     );
   }
-  _onLogout() {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Do you want to logout?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'No'),
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, 'Yes');
-              AppData.instance()!.deleteAllAndDisconnect();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-            },
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
-    );
-  }
+
 }

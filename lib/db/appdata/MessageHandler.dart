@@ -2,6 +2,7 @@ import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
 import 'package:flutter_mqtt/db/database.dart';
 
 import 'package:flutter_mqtt/db/appdata/extensions/MessagesExtensions.dart';
+import 'package:flutter_mqtt/db/tables/ExtendedDbContact.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MessagesHandler {
@@ -23,6 +24,10 @@ class MessagesHandler {
 
   void addMessage(ChatMessage chatmessage) {
     MyDatabase.instance()!.messageDao.addMessage(chatmessage.toDbMessage());
+  }
+
+  Stream<List<ExtendedDbContact>> getRecentMessages(){
+    return MyDatabase.instance()!.messageDao.getConversations();
   }
 
   Future deleteAll() {

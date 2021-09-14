@@ -169,20 +169,28 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
     return Scaffold(
       appBar: AppBar(
           centerTitle: false,
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          title: Row(
             children: [
-              Text(widget.contactChat.firstName +
-                  " " +
-                  widget.contactChat.lastName),
-              Visibility(
-                child: Text(
-                  "Typing...",
-                  style: TextStyle(fontSize: 11),
-                ),
-                visible: isTyping,
-              )
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: CircleAvatar(foregroundImage: NetworkImage(widget.contactChat.avatar??""), radius: 15),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.contactChat.firstName +
+                      " " +
+                      widget.contactChat.lastName),
+                  Visibility(
+                    child: Text(
+                      "Typing...",
+                      style: TextStyle(fontSize: 11),
+                    ),
+                    visible: isTyping,
+                  )
+                ],
+              ),
             ],
           )),
       body: StreamBuilder<List<DbMessage>>(

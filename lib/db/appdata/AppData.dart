@@ -1,6 +1,6 @@
 import 'package:flutter_mqtt/abstraction/models/enums/ChatMarker.dart';
 import 'package:flutter_mqtt/db/appdata/ContactsHandler.dart';
-import 'package:flutter_mqtt/db/appdata/MessagesHandler.dart';
+import 'package:flutter_mqtt/db/appdata/MessageHandler.dart';
 import 'package:flutter_mqtt/db/appdata/UsersHandler.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';

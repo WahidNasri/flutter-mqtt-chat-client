@@ -4,6 +4,7 @@ import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/rooms_db_page.dart';
+import 'package:flutter_mqtt/ui/screens/main/main_screen.dart';
 
 class StartupPage extends StatefulWidget {
   const StartupPage({Key? key}) : super(key: key);
@@ -77,7 +78,7 @@ class _StartupPageState extends State<StartupPage> {
     });
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => RoomsDBPage()),
+      MaterialPageRoute(builder: (context) => MainScreen()),
     );
   }
   void _onLogin(){

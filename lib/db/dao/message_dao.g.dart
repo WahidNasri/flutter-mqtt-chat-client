@@ -8,4 +8,5 @@ part of 'message_dao.dart';
 
 mixin _$MessageDaoMixin on DatabaseAccessor<MyDatabase> {
   $MessagesTable get messages => attachedDatabase.messages;
+  $ContactsTable get contacts => attachedDatabase.contacts;
 }

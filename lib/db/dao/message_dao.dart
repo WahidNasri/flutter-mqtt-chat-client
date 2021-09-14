@@ -1,10 +1,12 @@
 import 'package:flutter_mqtt/db/database.dart';
+import 'package:flutter_mqtt/db/tables/ContactTable.dart';
+import 'package:flutter_mqtt/db/tables/ExtendedDbContact.dart';
 import 'package:flutter_mqtt/db/tables/MessageTable.dart';
 import 'package:flutter_mqtt/db/tables/UserTable.dart';
 import 'package:moor/moor.dart';
 part 'message_dao.g.dart';
 
-@UseDao(tables: [Messages])
+@UseDao(tables: [Messages, Contacts])
 class MessageDao extends DatabaseAccessor<MyDatabase> with _$MessageDaoMixin {
   final MyDatabase db;
 
@@ -49,5 +51,19 @@ class MessageDao extends DatabaseAccessor<MyDatabase> with _$MessageDaoMixin {
 
   Future deleteAllMessages() {
     return (delete(messages)).go();
+  }
+
+  // then, in the database class:
+  Stream<List<ExtendedDbContact>> getConversations() {
+    return customSelect(
+      'SELECT c.id, c.first_name, c.last_name, c.avatar, c.room_id, m.mtype as message_type, m.mid as message_id, m.text as message_text, m.moriginality as message_originality, m.send_time '
+          'FROM (select id as mid, type as mtype, from_id as mfrom_id, originality as moriginality, room_id as mroom_id, text, send_time from messages order by send_time desc) m JOIN contacts c on c.room_id = m.mroom_id '
+          'GROUP BY room_id ORDER BY send_time DESC',
+      readsFrom: {messages, contacts}, // used for the stream: the stream will update when either table changes
+    ).watch().map((rows) {
+      return rows
+          .map((row) => ExtendedDbContact.fromJson(row.data))
+          .toList();
+    });
   }
 }
