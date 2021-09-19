@@ -31,7 +31,7 @@ class ChatsPage extends StatelessWidget {
                       title: Text(chats[position].first_name +
                           " " +
                           chats[position].last_name),
-                      subtitle: Text(chats[position].message_text),
+                      subtitle: _subtitle(chats[position]),
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(12.5),
                         child: Image.network(
@@ -49,6 +49,15 @@ class ChatsPage extends StatelessWidget {
 
           return Text("Loading..");
         });
+  }
+  Widget _subtitle(ExtendedDbContact chat){
+    if(chat.message_type == "ChatImage"){
+      return Row(children: [Icon(Icons.image, size: 15,), Text("Image")]);
+    }
+    else if(chat.message_type == "ChatDocument"){
+      return Row(children: [Icon(Icons.attach_file_rounded, size: 15,), Text("File")]);
+    }
+    return Text(chat.message_text, maxLines: 1,);
   }
   _openRoom(BuildContext context, ContactChat contact) {
     Navigator.push(

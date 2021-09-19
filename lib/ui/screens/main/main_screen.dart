@@ -129,43 +129,46 @@ class _MainScreenState extends State<MainScreen> {
   void _showRoomsSheet() {
     showModalBottomSheet(
         context: context,
-        builder: (context) => StreamBuilder<List<ContactChat>>(
-            stream: AppData.instance()!.contactsHandler.getContacts(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              }
-              if (snapshot.hasData) {
-                var chats = snapshot.data;
-                return ListView.builder(
-                    itemCount: chats!.length,
-                    itemBuilder: (context, position) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          _openRoom(context, chats[position]);
-                        },
-                        child: ListTile(
-                          title: Text(chats[position].firstName +
-                              " " +
-                              chats[position].lastName),
-                          subtitle: Text("Room: " + chats[position].roomId),
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(12.5),
-                            child: Image.network(
-                              chats[position].avatar ??
-                                  "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",
-                              height: 25,
-                              width: 25,
+        builder: (context) => Scaffold(
+          appBar: AppBar(title: Text("New Chat"),elevation: 0,leading: SizedBox(),),
+          body: StreamBuilder<List<ContactChat>>(
+              stream: AppData.instance()!.contactsHandler.getContacts(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+                if (snapshot.hasData) {
+                  var chats = snapshot.data;
+                  return ListView.builder(
+                      itemCount: chats!.length,
+                      itemBuilder: (context, position) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                            _openRoom(context, chats[position]);
+                          },
+                          child: ListTile(
+                            title: Text(chats[position].firstName +
+                                " " +
+                                chats[position].lastName),
+                            subtitle: Text("Room: " + chats[position].roomId),
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.5),
+                              child: Image.network(
+                                chats[position].avatar ??
+                                    "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",
+                                height: 25,
+                                width: 25,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    });
-              } else {
-                return Text("Loading...");
-              }
-            }));
+                        );
+                      });
+                } else {
+                  return Text("Loading...");
+                }
+              }),
+        ));
   }
 
   _openRoom(BuildContext context, ContactChat contact) {
