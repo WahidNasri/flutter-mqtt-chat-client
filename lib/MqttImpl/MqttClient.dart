@@ -10,6 +10,7 @@ import 'package:flutter_mqtt/abstraction/models/User.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:mime/mime.dart';
 
@@ -211,7 +212,7 @@ class MqttClient extends ClientHandler {
 
     var mime = lookupMimeType(file.path);
     String base64Image =
-        "data:" + (mime ?? "text/plain") + ";base64," + base64Encode(bytes);
+        "data:" + (mime ?? "text/plain") + ";base64," + base64Encode(bytes) + "," + basename(file.path);
 
     sendPayload(base64Image, channel);
   }

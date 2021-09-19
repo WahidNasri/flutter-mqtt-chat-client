@@ -9,6 +9,7 @@ import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
+import 'package:flutter_mqtt/ui/viewers/document_viewer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
@@ -130,9 +131,17 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
   }
 
   void _handleMessageTap(types.Message message) async {
-    if (message is types.FileMessage) {
-      await OpenFile.open(message.uri);
+    //Handle PDF
+    if (message is types.FileMessage && message.mimeType!.contains("pdf")) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DocumentViewer(docUrl: message.uri, title: message.name,)),
+      );
     }
+    //TODO: Handle DOC/DOCX/ODT/...
+    //TODO: Handle TXT
+    //TODO: HANDLE IMAGES
   }
 
 /*
