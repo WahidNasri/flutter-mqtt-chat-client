@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/db/tables/ExtendedDbContact.dart';
+import 'package:flutter_mqtt/ui/extensions/UiMessages.dart';
+import 'package:flutter_mqtt/ui/screens/fromdb/chat_db_pages.dart';
 import 'package:intl/intl.dart';
 
 class ChatsPage extends StatelessWidget {
@@ -22,7 +25,7 @@ class ChatsPage extends StatelessWidget {
                   var dt = DateTime.fromMillisecondsSinceEpoch(chats[position].send_time);
                   return InkWell(
                     onTap: () {
-                      //_openRoom(context, chats[position]);
+                      _openRoom(context, chats[position].toContactChat());
                     },
                     child: ListTile(
                       title: Text(chats[position].first_name +
@@ -46,5 +49,12 @@ class ChatsPage extends StatelessWidget {
 
           return Text("Loading..");
         });
+  }
+  _openRoom(BuildContext context, ContactChat contact) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ChatUIDBPage(contactChat: contact)),
+    );
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
 
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/abstraction/models/User.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 import 'package:flutter_mqtt/db/database.dart';
+import 'package:flutter_mqtt/db/tables/ExtendedDbContact.dart';
 
 extension MessageConversions on ChatMessage {
   types.Message toUiMessage() {
@@ -81,6 +83,14 @@ extension LocalUserConversions on DbUser {
   types.User toUiUser2() {
     return types.User(
         id: id, firstName: firstName, lastName: lastName, imageUrl: avatar);
+  }
+}
+extension ExtendedExtensions on ExtendedDbContact{
+  DbContact toDbContact(){
+    return DbContact(id: id, lastName: last_name, firstName: first_name, roomId: room_id, avatar: avatar);
+  }
+  ContactChat toContactChat(){
+    return ContactChat(firstName: first_name, lastName: last_name, id: id, avatar: avatar, roomId: room_id, isGroup: false);
   }
 }
 
