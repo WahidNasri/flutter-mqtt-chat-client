@@ -10,6 +10,7 @@ import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/viewers/document_viewer.dart';
+import 'package:flutter_mqtt/ui/viewers/media_viewer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
@@ -136,7 +137,19 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => DocumentViewer(docUrl: message.uri, title: message.name,)),
+            builder: (context) => DocumentViewer(
+                  docUrl: message.uri,
+                  title: message.name,
+                )),
+      );
+    } else if (message is types.ImageMessage) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MediaViewerPage(
+                  roomId: widget.contactChat.roomId,
+                  messageId: message.id,
+                )),
       );
     }
     //TODO: Handle DOC/DOCX/ODT/...
@@ -182,7 +195,10 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: CircleAvatar(foregroundImage: NetworkImage(widget.contactChat.avatar??""), radius: 15),
+                child: CircleAvatar(
+                    foregroundImage:
+                        NetworkImage(widget.contactChat.avatar ?? ""),
+                    radius: 15),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,

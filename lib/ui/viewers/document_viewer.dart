@@ -5,7 +5,8 @@ class DocumentViewer extends StatefulWidget {
   final String docUrl;
   final String? title;
 
-  DocumentViewer({Key? key, required this.docUrl, this.title}) : super(key: key);
+  DocumentViewer({Key? key, required this.docUrl, this.title})
+      : super(key: key);
 
   @override
   _DocumentViewerState createState() => _DocumentViewerState();
@@ -18,26 +19,27 @@ class _DocumentViewerState extends State<DocumentViewer> {
   void initState() {
     PDFDocument.fromURL(
       widget.docUrl,
+    ).then((value) {
+      setState(() {
+        document = value;
+      });
+    });
 
-      /* cacheManager: CacheManager(
-          Config(
-            "customCacheKey",
-            stalePeriod: const Duration(days: 2),
-            maxNrOfCacheObjects: 10,
-          ),
-        ), */
-    ).then((value) {setState(() {
-      document = value;
-    });});
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title ?? "Document Viewer"),
       ),
-      body: document == null ? Text("Loading...") :  PDFViewer(document: document!, zoomSteps: 1, scrollDirection: Axis.vertical),
+      body: document == null
+          ? Text("Loading...")
+          : PDFViewer(
+              document: document!,
+              zoomSteps: 1,
+              scrollDirection: Axis.vertical),
     );
   }
 }

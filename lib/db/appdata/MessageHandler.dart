@@ -22,11 +22,19 @@ class MessagesHandler {
         (dbMessages) => dbMessages.map((dm) => dm.toChatMessage()).toList());
   }
 
+  Stream<List<ChatMessage>> getMediaMessagesByRoomId(String roomId) {
+    return MyDatabase.instance()!
+        .messageDao
+        .getMediaMessagesByRoomId(roomId)
+        .map((dbMessages) =>
+            dbMessages.map((dm) => dm.toChatMessage()).toList());
+  }
+
   void addMessage(ChatMessage chatmessage) {
     MyDatabase.instance()!.messageDao.addMessage(chatmessage.toDbMessage());
   }
 
-  Stream<List<ExtendedDbContact>> getRecentMessages(){
+  Stream<List<ExtendedDbContact>> getRecentMessages() {
     return MyDatabase.instance()!.messageDao.getConversations();
   }
 
