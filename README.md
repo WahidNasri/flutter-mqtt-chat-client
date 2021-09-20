@@ -16,5 +16,5 @@ The Broker should install [HiveMQ Chat-Extension](https://github.com/WahidNasri/
 - [x] ChatMarker (In Progress)
 - [ ] Group Chat
 - [ ] Presence
-- [ ] File Previews
+- [ ] File Previews (PDF and images Done)
 - [ ] Push Notifications When App is in Background.
