@@ -1366,8 +1366,13 @@ class DbInvitation extends DataClass implements Insertable<DbInvitation> {
   final String fromId;
   final String? fromName;
   final String? fromAvatar;
+  final int sendTime;
   DbInvitation(
-      {required this.id, required this.fromId, this.fromName, this.fromAvatar});
+      {required this.id,
+      required this.fromId,
+      this.fromName,
+      this.fromAvatar,
+      required this.sendTime});
   factory DbInvitation.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -1380,6 +1385,8 @@ class DbInvitation extends DataClass implements Insertable<DbInvitation> {
           .mapFromDatabaseResponse(data['${effectivePrefix}from_name']),
       fromAvatar: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}from_avatar']),
+      sendTime: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}send_time'])!,
     );
   }
   @override
@@ -1393,6 +1400,7 @@ class DbInvitation extends DataClass implements Insertable<DbInvitation> {
     if (!nullToAbsent || fromAvatar != null) {
       map['from_avatar'] = Variable<String?>(fromAvatar);
     }
+    map['send_time'] = Variable<int>(sendTime);
     return map;
   }
 
@@ -1406,6 +1414,7 @@ class DbInvitation extends DataClass implements Insertable<DbInvitation> {
       fromAvatar: fromAvatar == null && nullToAbsent
           ? const Value.absent()
           : Value(fromAvatar),
+      sendTime: Value(sendTime),
     );
   }
 
@@ -1417,6 +1426,7 @@ class DbInvitation extends DataClass implements Insertable<DbInvitation> {
       fromId: serializer.fromJson<String>(json['fromId']),
       fromName: serializer.fromJson<String?>(json['fromName']),
       fromAvatar: serializer.fromJson<String?>(json['fromAvatar']),
+      sendTime: serializer.fromJson<int>(json['sendTime']),
     );
   }
   @override
@@ -1427,16 +1437,22 @@ class DbInvitation extends DataClass implements Insertable<DbInvitation> {
       'fromId': serializer.toJson<String>(fromId),
       'fromName': serializer.toJson<String?>(fromName),
       'fromAvatar': serializer.toJson<String?>(fromAvatar),
+      'sendTime': serializer.toJson<int>(sendTime),
     };
   }
 
   DbInvitation copyWith(
-          {String? id, String? fromId, String? fromName, String? fromAvatar}) =>
+          {String? id,
+          String? fromId,
+          String? fromName,
+          String? fromAvatar,
+          int? sendTime}) =>
       DbInvitation(
         id: id ?? this.id,
         fromId: fromId ?? this.fromId,
         fromName: fromName ?? this.fromName,
         fromAvatar: fromAvatar ?? this.fromAvatar,
+        sendTime: sendTime ?? this.sendTime,
       );
   @override
   String toString() {
@@ -1444,14 +1460,19 @@ class DbInvitation extends DataClass implements Insertable<DbInvitation> {
           ..write('id: $id, ')
           ..write('fromId: $fromId, ')
           ..write('fromName: $fromName, ')
-          ..write('fromAvatar: $fromAvatar')
+          ..write('fromAvatar: $fromAvatar, ')
+          ..write('sendTime: $sendTime')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode,
-      $mrjc(fromId.hashCode, $mrjc(fromName.hashCode, fromAvatar.hashCode))));
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode,
+      $mrjc(
+          fromId.hashCode,
+          $mrjc(fromName.hashCode,
+              $mrjc(fromAvatar.hashCode, sendTime.hashCode)))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1459,7 +1480,8 @@ class DbInvitation extends DataClass implements Insertable<DbInvitation> {
           other.id == this.id &&
           other.fromId == this.fromId &&
           other.fromName == this.fromName &&
-          other.fromAvatar == this.fromAvatar);
+          other.fromAvatar == this.fromAvatar &&
+          other.sendTime == this.sendTime);
 }
 
 class InvitationsCompanion extends UpdateCompanion<DbInvitation> {
@@ -1467,30 +1489,36 @@ class InvitationsCompanion extends UpdateCompanion<DbInvitation> {
   final Value<String> fromId;
   final Value<String?> fromName;
   final Value<String?> fromAvatar;
+  final Value<int> sendTime;
   const InvitationsCompanion({
     this.id = const Value.absent(),
     this.fromId = const Value.absent(),
     this.fromName = const Value.absent(),
     this.fromAvatar = const Value.absent(),
+    this.sendTime = const Value.absent(),
   });
   InvitationsCompanion.insert({
     required String id,
     required String fromId,
     this.fromName = const Value.absent(),
     this.fromAvatar = const Value.absent(),
+    required int sendTime,
   })  : id = Value(id),
-        fromId = Value(fromId);
+        fromId = Value(fromId),
+        sendTime = Value(sendTime);
   static Insertable<DbInvitation> custom({
     Expression<String>? id,
     Expression<String>? fromId,
     Expression<String?>? fromName,
     Expression<String?>? fromAvatar,
+    Expression<int>? sendTime,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (fromId != null) 'from_id': fromId,
       if (fromName != null) 'from_name': fromName,
       if (fromAvatar != null) 'from_avatar': fromAvatar,
+      if (sendTime != null) 'send_time': sendTime,
     });
   }
 
@@ -1498,12 +1526,14 @@ class InvitationsCompanion extends UpdateCompanion<DbInvitation> {
       {Value<String>? id,
       Value<String>? fromId,
       Value<String?>? fromName,
-      Value<String?>? fromAvatar}) {
+      Value<String?>? fromAvatar,
+      Value<int>? sendTime}) {
     return InvitationsCompanion(
       id: id ?? this.id,
       fromId: fromId ?? this.fromId,
       fromName: fromName ?? this.fromName,
       fromAvatar: fromAvatar ?? this.fromAvatar,
+      sendTime: sendTime ?? this.sendTime,
     );
   }
 
@@ -1522,6 +1552,9 @@ class InvitationsCompanion extends UpdateCompanion<DbInvitation> {
     if (fromAvatar.present) {
       map['from_avatar'] = Variable<String?>(fromAvatar.value);
     }
+    if (sendTime.present) {
+      map['send_time'] = Variable<int>(sendTime.value);
+    }
     return map;
   }
 
@@ -1531,7 +1564,8 @@ class InvitationsCompanion extends UpdateCompanion<DbInvitation> {
           ..write('id: $id, ')
           ..write('fromId: $fromId, ')
           ..write('fromName: $fromName, ')
-          ..write('fromAvatar: $fromAvatar')
+          ..write('fromAvatar: $fromAvatar, ')
+          ..write('sendTime: $sendTime')
           ..write(')'))
         .toString();
   }
@@ -1558,8 +1592,13 @@ class $InvitationsTable extends Invitations
   late final GeneratedColumn<String?> fromAvatar = GeneratedColumn<String?>(
       'from_avatar', aliasedName, true,
       typeName: 'TEXT', requiredDuringInsert: false);
+  final VerificationMeta _sendTimeMeta = const VerificationMeta('sendTime');
+  late final GeneratedColumn<int?> sendTime = GeneratedColumn<int?>(
+      'send_time', aliasedName, false,
+      typeName: 'INTEGER', requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, fromId, fromName, fromAvatar];
+  List<GeneratedColumn> get $columns =>
+      [id, fromId, fromName, fromAvatar, sendTime];
   @override
   String get aliasedName => _alias ?? 'invitations';
   @override
@@ -1589,6 +1628,12 @@ class $InvitationsTable extends Invitations
           _fromAvatarMeta,
           fromAvatar.isAcceptableOrUnknown(
               data['from_avatar']!, _fromAvatarMeta));
+    }
+    if (data.containsKey('send_time')) {
+      context.handle(_sendTimeMeta,
+          sendTime.isAcceptableOrUnknown(data['send_time']!, _sendTimeMeta));
+    } else if (isInserting) {
+      context.missing(_sendTimeMeta);
     }
     return context;
   }

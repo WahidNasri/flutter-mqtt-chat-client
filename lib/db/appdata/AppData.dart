@@ -1,6 +1,7 @@
 import 'package:flutter_mqtt/abstraction/models/enums/ChatMarker.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/InvitationMessageType.dart';
 import 'package:flutter_mqtt/db/appdata/ContactsHandler.dart';
+import 'package:flutter_mqtt/db/appdata/InvitationsHandler.dart';
 import 'package:flutter_mqtt/db/appdata/MessageHandler.dart';
 import 'package:flutter_mqtt/db/appdata/UsersHandler.dart';
 import 'package:flutter_mqtt/db/database.dart';
@@ -19,11 +20,13 @@ class AppData {
   late MessagesHandler messagesHandler;
   late ContactsHandler contactsHandler;
   late UsersHandler usersHandler;
+  late InvitationsHandler invitationsHandler;
 
   AppData() {
     messagesHandler = MessagesHandler();
     contactsHandler = ContactsHandler();
     usersHandler = UsersHandler();
+    invitationsHandler = InvitationsHandler();
     //================ROOMS================//
     ChatApp.instance()!.archiveHandler.getAllConversations().listen((rooms) {
       var list = rooms.map((e) {

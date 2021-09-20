@@ -39,6 +39,10 @@ extension ContactChatConversions on ContactChat {
 extension InvitationConversions on InvitationMessage {
   DbInvitation toDbInvitation() {
     return DbInvitation(
-        id: id, fromId: fromId!, fromName: fromName, fromAvatar: fromAvatar);
+        id: id,
+        fromId: fromId!,
+        fromName: fromName,
+        fromAvatar: fromAvatar,
+        sendTime: sendTime);
   }
 }

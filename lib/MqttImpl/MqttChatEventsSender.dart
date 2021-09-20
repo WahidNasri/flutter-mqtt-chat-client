@@ -49,9 +49,11 @@ class MqttChatEventsSender extends ChatEventsSender {
     InvitationMessage message = InvitationMessage(
         id: invitationId ?? Uuid().v4(),
         type: MessageType.EventInvitationRequest,
-        invitationMessageType: InvitationMessageType.REQUEST_RESPONSE);
+        invitationMessageType: InvitationMessageType.REQUEST_RESPONSE,
+        sendTime: DateTime.now().millisecondsSinceEpoch);
 
     String topic = "invitations/" + username;
+    var js = message.toJson();
     clientHandler.sendPayload(message.toJson().toString(), topic);
   }
 }

@@ -14,6 +14,7 @@ The Broker should install [HiveMQ Chat-Extension](https://github.com/WahidNasri/
 - [x] Send Files
 - [x] Persist User, Messages and rooms using local database
 - [x] ChatMarker (In Progress)
+- [x] Invite a user to chat
 - [ ] Group Chat
 - [ ] Presence
 - [ ] File Previews (PDF and images Done)

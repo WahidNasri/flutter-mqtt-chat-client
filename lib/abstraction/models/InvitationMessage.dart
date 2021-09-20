@@ -10,6 +10,7 @@ class InvitationMessage {
   String? fromId;
   String? fromName;
   String? fromAvatar;
+  late int sendTime;
 
   InvitationMessage(
       {required this.id,
@@ -18,7 +19,8 @@ class InvitationMessage {
       this.text,
       this.fromId,
       this.fromName,
-      this.fromAvatar});
+      this.fromAvatar,
+      required this.sendTime});
 
   InvitationMessage.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,17 +34,23 @@ class InvitationMessage {
     fromId = json['fromId'];
     fromName = json['fromName'];
     fromAvatar = json['fromAvatar'];
+    sendTime = json['sendTime'] == null
+        ? DateTime.now().millisecondsSinceEpoch
+        : int.tryParse(json['sendTime'].toString()) ??
+            DateTime.now().millisecondsSinceEpoch;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['type'] = this.type;
-    data['invitationMessageType'] = this.invitationMessageType;
+    data['type'] = this.type.toString().split(".")[1];
+    data['invitationMessageType'] =
+        this.invitationMessageType.toString().split(".")[1];
     data['text'] = this.text;
     data['fromId'] = this.fromId;
     data['fromName'] = this.fromName;
     data['fromAvatar'] = this.fromAvatar;
+    data['sendTime'] = this.sendTime;
     return data;
   }
 }

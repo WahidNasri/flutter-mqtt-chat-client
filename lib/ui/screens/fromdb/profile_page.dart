@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
+import 'package:flutter_mqtt/ui/screens/fromdb/invitations_page.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -41,54 +42,23 @@ class ProfilePage extends StatelessWidget {
                     SizedBox(
                       height: 50,
                     ),
-                    Expanded(
-                        child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(50),
-                                    topRight: Radius.circular(50))),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 20, left: 10, right: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  TextField(
-                                    keyboardType: TextInputType.emailAddress,
-                                    textInputAction: TextInputAction.next,
-                                    controller: uname,
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: "Email",
-                                        hintStyle:
-                                            TextStyle(color: Colors.grey[400])),
-                                  ),
-                                  Divider(),
-                                  TextField(
-                                    keyboardType: TextInputType.emailAddress,
-                                    textInputAction: TextInputAction.next,
-                                    controller: fnameController,
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: "First Name",
-                                        hintStyle:
-                                            TextStyle(color: Colors.grey[400])),
-                                  ),
-                                  Divider(),
-                                  TextField(
-                                    keyboardType: TextInputType.emailAddress,
-                                    textInputAction: TextInputAction.next,
-                                    controller: lnameController,
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: "Last Name",
-                                        hintStyle:
-                                            TextStyle(color: Colors.grey[400])),
-                                  ),
-                                  Divider()
-                                ],
-                              ),
-                            )))
+                    Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50),
+                                topRight: Radius.circular(50))),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 20, left: 10, right: 10),
+                          child: Column(
+                            children: [
+                              _profileInfoWidget(
+                                  uname, fnameController, lnameController),
+                              Divider(),
+                              _invitationsWidget()
+                            ],
+                          ),
+                        ))
                   ],
                 );
               }
@@ -96,6 +66,66 @@ class ProfilePage extends StatelessWidget {
             }),
       ),
     );
+  }
+
+  Widget _profileInfoWidget(
+      TextEditingController uname,
+      TextEditingController fnameController,
+      TextEditingController lnameController) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TextField(
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          controller: uname,
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "Email",
+              hintStyle: TextStyle(color: Colors.grey[400])),
+        ),
+        Divider(),
+        TextField(
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          controller: fnameController,
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "First Name",
+              hintStyle: TextStyle(color: Colors.grey[400])),
+        ),
+        Divider(),
+        TextField(
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          controller: lnameController,
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "Last Name",
+              hintStyle: TextStyle(color: Colors.grey[400])),
+        ),
+      ],
+    );
+  }
+
+  Widget _invitationsWidget() {
+    return StreamBuilder<int>(
+        stream: AppData.instance()!.invitationsHandler.getInvitationsCount(),
+        builder: (context, snapshot) {
+          return ListTile(
+            title: Text("Invitations"),
+            trailing: Text(
+              snapshot.hasData ? snapshot.data.toString() : "0",
+              style: TextStyle(color: Colors.red),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => InvitationsPage()),
+              );
+            },
+          );
+        });
   }
 
   _onLogout(BuildContext context) {
