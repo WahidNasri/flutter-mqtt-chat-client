@@ -10,5 +10,5 @@ abstract class ChatEventsSender {
   }
 
   void sendInvitation(String username, String? invitationId);
-  void respondToInvitation(String sednderId, bool accept);
+  void respondToInvitation(String invitationId, String senderId, bool accept);
 }

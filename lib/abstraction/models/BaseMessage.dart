@@ -45,7 +45,8 @@ class BaseMessage {
 
   bool isInvitationEvent() {
     return type == MessageType.EventInvitationRequest ||
-        type == MessageType.EventInvitationResponse;
+        type == MessageType.EventInvitationResponseAccept ||
+        type == MessageType.EventInvitationResponseReject;
   }
 
   bool isChatMarkerEvent() {

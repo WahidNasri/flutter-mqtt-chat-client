@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
+import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:intl/intl.dart';
 
 class InvitationsPage extends StatelessWidget {
@@ -38,25 +39,42 @@ class InvitationsPage extends StatelessWidget {
     var dt = DateTime.fromMillisecondsSinceEpoch(inv.sendTime);
 
     return ListTile(
-      title: Text(inv.fromName ?? inv.fromId),
-      subtitle: Text("Sent at: " + DateFormat('dd/MM/yyyy HH:mm').format(dt)),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.check,
-                color: Colors.green,
-              )),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.close,
-                color: Colors.red,
-              ))
-        ],
+      leading: Icon(
+        inv.incoming ? Icons.arrow_circle_down_outlined : Icons.outbond,
+        size: 20,
       ),
+      title: Text(inv.fromName ?? inv.fromId),
+      subtitle: Text((inv.incoming ? "Received at: " : "Sent at: ") +
+          DateFormat('dd/MM/yyyy HH:mm').format(dt)),
+      trailing: !inv.incoming || inv.status == "accepted" || inv.status == "rejected"
+          ? null
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      ChatApp.instance()!
+                          .eventsSender
+                          .respondToInvitation(inv.id, inv.fromId,  true);
+                      AppData.instance()!.invitationsHandler.updateInvitationStatus(inv.id, "accepted");
+                    },
+                    icon: Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    )),
+                IconButton(
+                    onPressed: () {
+                      ChatApp.instance()!
+                          .eventsSender
+                          .respondToInvitation(inv.id, inv.fromId,  false);
+                      AppData.instance()!.invitationsHandler.updateInvitationStatus(inv.id, "rejected");
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ))
+              ],
+            ),
     );
   }
 }

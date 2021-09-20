@@ -1,5 +1,6 @@
 import 'package:flutter_mqtt/abstraction/models/enums/ChatMarker.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/InvitationMessageType.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 import 'package:flutter_mqtt/db/appdata/ContactsHandler.dart';
 import 'package:flutter_mqtt/db/appdata/InvitationsHandler.dart';
 import 'package:flutter_mqtt/db/appdata/MessageHandler.dart';
@@ -73,16 +74,28 @@ class AppData {
         .invitationHandler
         .newInvitationsStream()
         .listen((invitation) {
-      MyDatabase.instance()!
-          .invitationDao
-          .addInvitation(invitation.toDbInvitation());
+          if(invitation.type == MessageType.EventInvitationRequest) {
+            //new invitation request
+            MyDatabase.instance()!
+                .invitationDao
+                .addInvitation(invitation.toDbInvitation());
+          }
+          if(invitation.type == MessageType.EventInvitationResponseAccept || invitation.type == MessageType.EventInvitationResponseReject) {
+            //responded to invitation, update the local record and wait the server to sync the new contact (if accepted)
+            invitationsHandler.updateInvitationStatus(invitation.id, invitation.type == MessageType.EventInvitationResponseAccept ? "accepted" : "rejected");
+          }
     });
 
     ChatApp.instance()!
         .invitationHandler
         .invitationUpdatesStream()
         .listen((invitation) {
-      if (invitation.invitationMessageType == InvitationMessageType.INFO) {}
+      if (invitation.invitationMessageType == InvitationMessageType.INFO) {
+        invitationsHandler.updateInvitationStatus(invitation.id, "confirmed");
+      }
+      else if (invitation.invitationMessageType == InvitationMessageType.ERROR) {
+        invitationsHandler.deleteInvitation(invitation.id);
+      }
     });
   }
 
@@ -99,5 +112,6 @@ class AppData {
     await usersHandler.deleteAll();
     await messagesHandler.deleteAll();
     await contactsHandler.deleteAll();
+    invitationsHandler.deleteAll();
   }
 }

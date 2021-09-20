@@ -15,4 +15,18 @@ class InvitationDao extends DatabaseAccessor<MyDatabase>
   Stream<List<DbInvitation>> getAllInvitations() {
     return select(invitations).watch();
   }
+
+  Future<int> updateInvitationStatus(String id, String status) {
+    return (update(invitations)..where((t) => t.id.equals(id))).write(
+      InvitationsCompanion(
+        status: Value(status),
+      ),
+    );
+  }
+  void deleteInvitation(String id){
+    (delete(invitations)..where((tbl) => tbl.id.equals(id))).go();
+  }
+  void deleteAllInvitations(){
+    (delete(invitations)).go();
+  }
 }

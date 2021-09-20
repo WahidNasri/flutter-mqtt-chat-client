@@ -8,7 +8,8 @@ enum MessageType {
   ChatContact,
 
   EventInvitationRequest,
-  EventInvitationResponse,
+  EventInvitationResponseAccept,
+  EventInvitationResponseReject,
 
   Presence,
 

@@ -40,8 +40,14 @@ class MqttChatEventsSender extends ChatEventsSender {
   }
 
   @override
-  void respondToInvitation(String sednderId, bool accept) {
-    // TODO: implement respondToInvitation
+  void respondToInvitation(String invitationId, String senderId, bool accept) {
+    InvitationMessage invitationMessage = InvitationMessage(
+        id: invitationId,
+        type: accept ? MessageType.EventInvitationResponseAccept : MessageType.EventInvitationResponseReject,
+        invitationMessageType: InvitationMessageType.REQUEST_RESPONSE,
+        sendTime: DateTime.now().millisecondsSinceEpoch);
+
+    clientHandler.sendPayload(invitationMessage.toJson().toString(), "personalevents/" + senderId);
   }
 
   @override

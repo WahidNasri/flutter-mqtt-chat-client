@@ -43,6 +43,8 @@ extension InvitationConversions on InvitationMessage {
         fromId: fromId!,
         fromName: fromName,
         fromAvatar: fromAvatar,
-        sendTime: sendTime);
+        sendTime: sendTime,
+        incoming: true,
+        status: "confirmed");
   }
 }

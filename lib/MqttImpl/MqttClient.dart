@@ -31,8 +31,8 @@ class MqttClient extends ClientHandler {
     _client = MqttServerClient.withPort(
         Platform.operatingSystem.toLowerCase() == 'windows'
             ? 'localhost'
-            : '172.16.14.99',
-        //: '192.168.100.11',
+            //: '172.16.14.99',
+        : '192.168.100.11',
         cid,
         1883);
     // _client = MqttServerClient.withPort('broker.emqx.io', resource, 1883
@@ -195,6 +195,9 @@ class MqttClient extends ClientHandler {
   void joinMyEvents(String myId) {
     _client!.subscribe(TopicsNamesGenerator.getPersonalEventsForBareId(myId),
         MqttQos.atLeastOnce);
+
+    _client!.subscribe(TopicsNamesGenerator.getArchivesRoomsTopic(myId), MqttQos.atLeastOnce);
+    _client!.subscribe(TopicsNamesGenerator.getArchivesMessagesTopic(myId), MqttQos.atLeastOnce);
   }
 
   @override

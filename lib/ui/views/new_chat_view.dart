@@ -144,6 +144,8 @@ class _NewChatViewState extends State<NewChatView> {
         .eventsSender
         .sendInvitation(_usernameController.text, id);
 
+    AppData.instance()!.invitationsHandler.addInvitationRequest(id);
+
     ChatApp.instance()!
         .invitationHandler
         .invitationUpdatesStream()
