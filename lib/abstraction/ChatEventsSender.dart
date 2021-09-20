@@ -8,4 +8,7 @@ abstract class ChatEventsSender {
       ChatMessage message, ChatMarker marker, String bareRoom) {
     sendChatMarker(message.id, marker, bareRoom);
   }
+
+  void sendInvitation(String username, String? invitationId);
+  void respondToInvitation(String sednderId, bool accept);
 }

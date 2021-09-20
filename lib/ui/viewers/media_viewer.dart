@@ -29,7 +29,7 @@ class MediaViewerPage extends StatelessWidget {
                       .indexWhere((element) => element.id == messageId));
               return PageView(
                   controller: controller,
-                  children: messages!
+                  children: messages
                       .map((msg) => Image.network(msg.attachment ?? ""))
                       .toList());
             } else {

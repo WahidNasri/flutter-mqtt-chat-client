@@ -1,5 +1,6 @@
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
+import 'package:flutter_mqtt/abstraction/models/InvitationMessage.dart';
 import 'package:flutter_mqtt/db/database.dart';
 
 extension DbMessageConversions on DbMessage {
@@ -32,5 +33,12 @@ extension ContactChatConversions on ContactChat {
     var map = toMap();
     DbContact dbc = DbContact.fromJson(map);
     return dbc;
+  }
+}
+
+extension InvitationConversions on InvitationMessage {
+  DbInvitation toDbInvitation() {
+    return DbInvitation(
+        id: id, fromId: fromId!, fromName: fromName, fromAvatar: fromAvatar);
   }
 }

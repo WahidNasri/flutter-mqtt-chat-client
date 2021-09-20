@@ -14,6 +14,7 @@ abstract class ClientHandler {
   String? getClientId();
   void joinRoom(String room); //similar to subscribe to topic
   void joinContactEvents(String contactId);
+  void joinMyEvents(String myId);
   void leaveRoom(String bareRoom);
   void leaveContactEvents(String contactId);
   void sendPayload(String payload, String channel);

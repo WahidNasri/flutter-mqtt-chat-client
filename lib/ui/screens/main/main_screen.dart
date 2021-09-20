@@ -7,9 +7,11 @@ import 'package:flutter_mqtt/ui/screens/fromdb/chat_db_pages.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/profile_page.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/rooms_db_page.dart';
 import 'package:flutter_mqtt/ui/screens/main/chats_page.dart';
+import 'package:flutter_mqtt/ui/views/new_chat_view.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart'
-as cs;
+    as cs;
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -40,20 +42,24 @@ class _MainScreenState extends State<MainScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.data != null) {
                   return InkWell(
-                    onTap: (){setState(() {
-                      _currentIndex = 3;
-                    });},
+                    onTap: () {
+                      setState(() {
+                        _currentIndex = 3;
+                      });
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CircleAvatar(
                         foregroundImage: NetworkImage(snapshot.data!.avatar ??
                             "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"),
-
                       ),
                     ),
                   );
                 }
-                return SizedBox(height: 0, width: 0,);
+                return SizedBox(
+                  height: 0,
+                  width: 0,
+                );
               }),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
               Text("Flutter MQTT Chat"),
               StreamBuilder<cs.ConnectionState>(
                   stream:
-                  ChatApp.instance()!.clientHandler.connectionStateStream(),
+                      ChatApp.instance()!.clientHandler.connectionStateStream(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Text(
@@ -129,46 +135,11 @@ class _MainScreenState extends State<MainScreen> {
   void _showRoomsSheet() {
     showModalBottomSheet(
         context: context,
-        builder: (context) => Scaffold(
-          appBar: AppBar(title: Text("New Chat"),elevation: 0,leading: SizedBox(),),
-          body: StreamBuilder<List<ContactChat>>(
-              stream: AppData.instance()!.contactsHandler.getContacts(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                }
-                if (snapshot.hasData) {
-                  var chats = snapshot.data;
-                  return ListView.builder(
-                      itemCount: chats!.length,
-                      itemBuilder: (context, position) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                            _openRoom(context, chats[position]);
-                          },
-                          child: ListTile(
-                            title: Text(chats[position].firstName +
-                                " " +
-                                chats[position].lastName),
-                            subtitle: Text("Room: " + chats[position].roomId),
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.5),
-                              child: Image.network(
-                                chats[position].avatar ??
-                                    "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",
-                                height: 25,
-                                width: 25,
-                              ),
-                            ),
-                          ),
-                        );
-                      });
-                } else {
-                  return Text("Loading...");
-                }
-              }),
-        ));
+        builder: (context) => NewChatView(
+              openRoom: (contact) {
+                _openRoom(context, contact);
+              },
+            ));
   }
 
   _openRoom(BuildContext context, ContactChat contact) {

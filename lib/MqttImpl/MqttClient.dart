@@ -32,7 +32,7 @@ class MqttClient extends ClientHandler {
         Platform.operatingSystem.toLowerCase() == 'windows'
             ? 'localhost'
             : '172.16.14.99',
-            //: '192.168.100.11',
+        //: '192.168.100.11',
         cid,
         1883);
     // _client = MqttServerClient.withPort('broker.emqx.io', resource, 1883
@@ -192,6 +192,12 @@ class MqttClient extends ClientHandler {
   }
 
   @override
+  void joinMyEvents(String myId) {
+    _client!.subscribe(TopicsNamesGenerator.getPersonalEventsForBareId(myId),
+        MqttQos.atLeastOnce);
+  }
+
+  @override
   void leaveContactEvents(String contactId) {
     if (_client == null) {
       return;
@@ -211,8 +217,12 @@ class MqttClient extends ClientHandler {
     final bytes = file.readAsBytesSync();
 
     var mime = lookupMimeType(file.path);
-    String base64Image =
-        "data:" + (mime ?? "text/plain") + ";base64," + base64Encode(bytes) + "," + basename(file.path);
+    String base64Image = "data:" +
+        (mime ?? "text/plain") +
+        ";base64," +
+        base64Encode(bytes) +
+        "," +
+        basename(file.path);
 
     sendPayload(base64Image, channel);
   }

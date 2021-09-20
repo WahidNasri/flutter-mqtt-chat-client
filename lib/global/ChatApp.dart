@@ -2,11 +2,13 @@ import 'package:flutter_mqtt/MqttImpl/FakeUploader.dart';
 import 'package:flutter_mqtt/MqttImpl/MqttArchiveHandler.dart';
 import 'package:flutter_mqtt/MqttImpl/MqttChatEventsSender.dart';
 import 'package:flutter_mqtt/MqttImpl/MqttClient.dart';
+import 'package:flutter_mqtt/MqttImpl/MqttInvitationHandler.dart';
 import 'package:flutter_mqtt/MqttImpl/MqttMessageSender.dart';
 import 'package:flutter_mqtt/MqttImpl/MqttOnlineReader.dart';
 import 'package:flutter_mqtt/abstraction/ArchiveHandler.dart';
 import 'package:flutter_mqtt/abstraction/ChatEventsSender.dart';
 import 'package:flutter_mqtt/abstraction/ClientHandler.dart';
+import 'package:flutter_mqtt/abstraction/InvitationsHandler.dart';
 import 'package:flutter_mqtt/abstraction/MessageOnlineReaderHandler.dart';
 import 'package:flutter_mqtt/abstraction/MessageSender.dart';
 
@@ -18,6 +20,7 @@ class ChatApp {
   late MessageSender messageSender;
   late ChatEventsSender eventsSender;
   late ArchiveHandler archiveHandler;
+  late InvitationHandler invitationHandler;
 
   static ChatApp? instance() {
     if (_instance == null) {
@@ -33,6 +36,7 @@ class ChatApp {
         clientHandler: clientHandler, uploader: FakeUploader());
     eventsSender = MqttChatEventsSender(clientHandler: clientHandler);
     archiveHandler = MqttArchiveHandler(clientHandler: clientHandler);
+    invitationHandler = MqttInvitationHandler(clientHandler);
   }
   void disconnect() {
     clientHandler.disconnect();

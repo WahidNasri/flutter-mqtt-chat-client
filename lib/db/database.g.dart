@@ -1361,17 +1361,265 @@ class $MessagesTable extends Messages
   }
 }
 
+class DbInvitation extends DataClass implements Insertable<DbInvitation> {
+  final String id;
+  final String fromId;
+  final String? fromName;
+  final String? fromAvatar;
+  DbInvitation(
+      {required this.id, required this.fromId, this.fromName, this.fromAvatar});
+  factory DbInvitation.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return DbInvitation(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      fromId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}from_id'])!,
+      fromName: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}from_name']),
+      fromAvatar: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}from_avatar']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['from_id'] = Variable<String>(fromId);
+    if (!nullToAbsent || fromName != null) {
+      map['from_name'] = Variable<String?>(fromName);
+    }
+    if (!nullToAbsent || fromAvatar != null) {
+      map['from_avatar'] = Variable<String?>(fromAvatar);
+    }
+    return map;
+  }
+
+  InvitationsCompanion toCompanion(bool nullToAbsent) {
+    return InvitationsCompanion(
+      id: Value(id),
+      fromId: Value(fromId),
+      fromName: fromName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fromName),
+      fromAvatar: fromAvatar == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fromAvatar),
+    );
+  }
+
+  factory DbInvitation.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return DbInvitation(
+      id: serializer.fromJson<String>(json['id']),
+      fromId: serializer.fromJson<String>(json['fromId']),
+      fromName: serializer.fromJson<String?>(json['fromName']),
+      fromAvatar: serializer.fromJson<String?>(json['fromAvatar']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'fromId': serializer.toJson<String>(fromId),
+      'fromName': serializer.toJson<String?>(fromName),
+      'fromAvatar': serializer.toJson<String?>(fromAvatar),
+    };
+  }
+
+  DbInvitation copyWith(
+          {String? id, String? fromId, String? fromName, String? fromAvatar}) =>
+      DbInvitation(
+        id: id ?? this.id,
+        fromId: fromId ?? this.fromId,
+        fromName: fromName ?? this.fromName,
+        fromAvatar: fromAvatar ?? this.fromAvatar,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('DbInvitation(')
+          ..write('id: $id, ')
+          ..write('fromId: $fromId, ')
+          ..write('fromName: $fromName, ')
+          ..write('fromAvatar: $fromAvatar')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(id.hashCode,
+      $mrjc(fromId.hashCode, $mrjc(fromName.hashCode, fromAvatar.hashCode))));
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DbInvitation &&
+          other.id == this.id &&
+          other.fromId == this.fromId &&
+          other.fromName == this.fromName &&
+          other.fromAvatar == this.fromAvatar);
+}
+
+class InvitationsCompanion extends UpdateCompanion<DbInvitation> {
+  final Value<String> id;
+  final Value<String> fromId;
+  final Value<String?> fromName;
+  final Value<String?> fromAvatar;
+  const InvitationsCompanion({
+    this.id = const Value.absent(),
+    this.fromId = const Value.absent(),
+    this.fromName = const Value.absent(),
+    this.fromAvatar = const Value.absent(),
+  });
+  InvitationsCompanion.insert({
+    required String id,
+    required String fromId,
+    this.fromName = const Value.absent(),
+    this.fromAvatar = const Value.absent(),
+  })  : id = Value(id),
+        fromId = Value(fromId);
+  static Insertable<DbInvitation> custom({
+    Expression<String>? id,
+    Expression<String>? fromId,
+    Expression<String?>? fromName,
+    Expression<String?>? fromAvatar,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (fromId != null) 'from_id': fromId,
+      if (fromName != null) 'from_name': fromName,
+      if (fromAvatar != null) 'from_avatar': fromAvatar,
+    });
+  }
+
+  InvitationsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? fromId,
+      Value<String?>? fromName,
+      Value<String?>? fromAvatar}) {
+    return InvitationsCompanion(
+      id: id ?? this.id,
+      fromId: fromId ?? this.fromId,
+      fromName: fromName ?? this.fromName,
+      fromAvatar: fromAvatar ?? this.fromAvatar,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (fromId.present) {
+      map['from_id'] = Variable<String>(fromId.value);
+    }
+    if (fromName.present) {
+      map['from_name'] = Variable<String?>(fromName.value);
+    }
+    if (fromAvatar.present) {
+      map['from_avatar'] = Variable<String?>(fromAvatar.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvitationsCompanion(')
+          ..write('id: $id, ')
+          ..write('fromId: $fromId, ')
+          ..write('fromName: $fromName, ')
+          ..write('fromAvatar: $fromAvatar')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $InvitationsTable extends Invitations
+    with TableInfo<$InvitationsTable, DbInvitation> {
+  final GeneratedDatabase _db;
+  final String? _alias;
+  $InvitationsTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _fromIdMeta = const VerificationMeta('fromId');
+  late final GeneratedColumn<String?> fromId = GeneratedColumn<String?>(
+      'from_id', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _fromNameMeta = const VerificationMeta('fromName');
+  late final GeneratedColumn<String?> fromName = GeneratedColumn<String?>(
+      'from_name', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
+  final VerificationMeta _fromAvatarMeta = const VerificationMeta('fromAvatar');
+  late final GeneratedColumn<String?> fromAvatar = GeneratedColumn<String?>(
+      'from_avatar', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [id, fromId, fromName, fromAvatar];
+  @override
+  String get aliasedName => _alias ?? 'invitations';
+  @override
+  String get actualTableName => 'invitations';
+  @override
+  VerificationContext validateIntegrity(Insertable<DbInvitation> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('from_id')) {
+      context.handle(_fromIdMeta,
+          fromId.isAcceptableOrUnknown(data['from_id']!, _fromIdMeta));
+    } else if (isInserting) {
+      context.missing(_fromIdMeta);
+    }
+    if (data.containsKey('from_name')) {
+      context.handle(_fromNameMeta,
+          fromName.isAcceptableOrUnknown(data['from_name']!, _fromNameMeta));
+    }
+    if (data.containsKey('from_avatar')) {
+      context.handle(
+          _fromAvatarMeta,
+          fromAvatar.isAcceptableOrUnknown(
+              data['from_avatar']!, _fromAvatarMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DbInvitation map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return DbInvitation.fromData(data, _db,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $InvitationsTable createAlias(String alias) {
+    return $InvitationsTable(_db, alias);
+  }
+}
+
 abstract class _$MyDatabase extends GeneratedDatabase {
   _$MyDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $ContactsTable contacts = $ContactsTable(this);
   late final $UsersTable users = $UsersTable(this);
   late final $MessagesTable messages = $MessagesTable(this);
+  late final $InvitationsTable invitations = $InvitationsTable(this);
   late final UserDao userDao = UserDao(this as MyDatabase);
   late final ContactDao contactDao = ContactDao(this as MyDatabase);
   late final MessageDao messageDao = MessageDao(this as MyDatabase);
+  late final InvitationDao invitationDao = InvitationDao(this as MyDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [contacts, users, messages];
+      [contacts, users, messages, invitations];
 }

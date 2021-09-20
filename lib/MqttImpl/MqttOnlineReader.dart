@@ -47,7 +47,7 @@ class MqttOnlineReader extends MessageOnlineReaderHandler {
           TypingMessage tMsg = TypingMessage.fromJson(payload);
           _typingController.add(tMsg);
         }
-      } else if (topic.toLowerCase().startsWith("archives")) {}
+      }
     });
   }
 

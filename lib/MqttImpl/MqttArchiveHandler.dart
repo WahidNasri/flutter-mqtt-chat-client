@@ -35,6 +35,7 @@ class MqttArchiveHandler extends ArchiveHandler {
         }
       } else if (topic.toLowerCase().startsWith("archivesmyid/")) {
         User user = User.fromJson(payload);
+        clientHandler.joinMyEvents(user.id);
         _userController.add(user);
       }
     });

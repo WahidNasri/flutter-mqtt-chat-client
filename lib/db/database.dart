@@ -1,7 +1,9 @@
 import 'package:flutter_mqtt/db/dao/contact_dao.dart';
+import 'package:flutter_mqtt/db/dao/invitation_dao.dart';
 import 'package:flutter_mqtt/db/dao/message_dao.dart';
 import 'package:flutter_mqtt/db/dao/user_dao.dart';
 import 'package:flutter_mqtt/db/tables/ContactTable.dart';
+import 'package:flutter_mqtt/db/tables/InvitationTable.dart';
 import 'package:flutter_mqtt/db/tables/MessageTable.dart';
 import 'package:flutter_mqtt/db/tables/UserTable.dart';
 import 'package:moor/moor.dart';
@@ -24,16 +26,17 @@ LazyDatabase _openConnection() {
 }
 
 @UseMoor(
-    tables: [Contacts, Users, Messages],
-    daos: [UserDao, ContactDao, MessageDao])
+    tables: [Contacts, Users, Messages, Invitations],
+    daos: [UserDao, ContactDao, MessageDao, InvitationDao])
 class MyDatabase extends _$MyDatabase {
   static MyDatabase? _instance;
-  static MyDatabase? instance(){
-    if(_instance == null){
+  static MyDatabase? instance() {
+    if (_instance == null) {
       _instance = MyDatabase._();
     }
     return _instance;
   }
+
 // we tell the database where to store the data with this constructor
   MyDatabase._() : super(_openConnection());
 

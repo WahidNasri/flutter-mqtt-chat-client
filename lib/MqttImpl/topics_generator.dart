@@ -8,7 +8,7 @@ class TopicsNamesGenerator {
   }
 
   static String getPersonalEventsForBareId(String bareId) {
-    return "events/" + bareId;
+    return "personalevents/" + bareId;
   }
 
   static String getChattingTopicForBareRoom(String bareRoom) {

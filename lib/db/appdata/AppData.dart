@@ -1,4 +1,5 @@
 import 'package:flutter_mqtt/abstraction/models/enums/ChatMarker.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/InvitationMessageType.dart';
 import 'package:flutter_mqtt/db/appdata/ContactsHandler.dart';
 import 'package:flutter_mqtt/db/appdata/MessageHandler.dart';
 import 'package:flutter_mqtt/db/appdata/UsersHandler.dart';
@@ -44,7 +45,9 @@ class AppData {
       var dbMessage = message.toDbMessage();
       MyDatabase.instance()!.messageDao.addMessage(dbMessage);
       //SEND CHAT MARKER
-      ChatApp.instance()!.eventsSender.sendChatMarker(message.id, ChatMarker.delivered, message.roomId);
+      ChatApp.instance()!
+          .eventsSender
+          .sendChatMarker(message.id, ChatMarker.delivered, message.roomId);
     });
     //============Chat Marker==========//
     ChatApp.instance()!
@@ -61,6 +64,23 @@ class AppData {
             .setMessageDelivered(markerMessage.referenceId);
       }
     });
+
+    //========== Invitations =========//
+    ChatApp.instance()!
+        .invitationHandler
+        .newInvitationsStream()
+        .listen((invitation) {
+      MyDatabase.instance()!
+          .invitationDao
+          .addInvitation(invitation.toDbInvitation());
+    });
+
+    ChatApp.instance()!
+        .invitationHandler
+        .invitationUpdatesStream()
+        .listen((invitation) {
+      if (invitation.invitationMessageType == InvitationMessageType.INFO) {}
+    });
   }
 
   Future deleteAllAndDisconnect() async {
@@ -71,6 +91,7 @@ class AppData {
     ChatApp.instance()!.disconnect();
     await deleteAll();
   }
+
   Future deleteAll() async {
     await usersHandler.deleteAll();
     await messagesHandler.deleteAll();
