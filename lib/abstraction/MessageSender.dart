@@ -15,7 +15,6 @@ abstract class MessageSender {
   );
 
   void sendChatMessage(ChatMessage message, String room);
-  //TODO: handle showing message until it's uploaded and sent
   void sendFileChatMessage(
       {required MessageType type,
       required String fileLocalPath,

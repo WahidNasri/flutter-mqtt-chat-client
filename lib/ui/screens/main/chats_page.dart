@@ -34,11 +34,13 @@ class ChatsPage extends StatelessWidget {
                       subtitle: _subtitle(chats[position]),
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(12.5),
-                        child: Image.network(
-                          chats[position].avatar ??
-                              "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",
-                          height: 25,
-                          width: 25,
+
+                        child: Hero(
+                          tag: "avatar_" + chats[position].id,
+                          child: CircleAvatar(
+                            foregroundImage: NetworkImage( chats[position].avatar ??
+                                "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",)
+                          ),
                         ),
                       ),
                       trailing: Text(DateFormat('HH:mm').format(dt)),//TODO: need more detailed formatting

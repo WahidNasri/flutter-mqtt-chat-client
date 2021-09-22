@@ -3,6 +3,8 @@ import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/invitations_page.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
+import 'package:flutter_mqtt/ui/widgets/menu_action_item.dart';
+import 'package:flutter_mqtt/ui/widgets/menu_action_item_switch.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -40,7 +42,11 @@ class ProfilePage extends StatelessWidget {
                       radius: 100,
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 20,
+                    ),
+                    Text(user.username!, style: TextStyle(fontSize: 24),),
+                    SizedBox(
+                      height: 20,
                     ),
                     Card(
                         shape: RoundedRectangleBorder(
@@ -53,9 +59,11 @@ class ProfilePage extends StatelessWidget {
                           child: Column(
                             children: [
                               _profileInfoWidget(
-                                  uname, fnameController, lnameController),
+                                  fnameController, lnameController),
                               Divider(),
-                              _invitationsWidget()
+                              _invitationsWidget(),
+                              Divider(),
+                              _allowInvitationsWidget()
                             ],
                           ),
                         ))
@@ -69,22 +77,12 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _profileInfoWidget(
-      TextEditingController uname,
       TextEditingController fnameController,
       TextEditingController lnameController) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TextField(
-          keyboardType: TextInputType.emailAddress,
-          textInputAction: TextInputAction.next,
-          controller: uname,
-          decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: "Email",
-              hintStyle: TextStyle(color: Colors.grey[400])),
-        ),
-        Divider(),
+
         TextField(
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
@@ -112,12 +110,10 @@ class ProfilePage extends StatelessWidget {
     return StreamBuilder<int>(
         stream: AppData.instance()!.invitationsHandler.getInvitationsCount(),
         builder: (context, snapshot) {
-          return ListTile(
-            title: Text("Invitations"),
-            trailing: Text(
-              snapshot.hasData ? snapshot.data.toString() : "0",
-              style: TextStyle(color: Colors.red),
-            ),
+          return MenuActionItem(
+            title: "Invitations",
+            trailingText: snapshot.hasData ? snapshot.data.toString() : "0",
+            leading: Icon(Icons.wb_incandescent_outlined),
             onTap: () {
               Navigator.push(
                 context,
@@ -126,6 +122,9 @@ class ProfilePage extends StatelessWidget {
             },
           );
         });
+  }
+  Widget _allowInvitationsWidget(){
+    return MenuSwitchItem(title: "Allow others to invite me", active: true, onChanged: (v){}, leading: Icon(Icons.door_sliding_outlined),);
   }
 
   _onLogout(BuildContext context) {

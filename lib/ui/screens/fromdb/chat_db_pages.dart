@@ -9,6 +9,7 @@ import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
+import 'package:flutter_mqtt/ui/screens/fromdb/contact_page.dart';
 import 'package:flutter_mqtt/ui/viewers/document_viewer.dart';
 import 'package:flutter_mqtt/ui/viewers/media_viewer.dart';
 import 'package:image_picker/image_picker.dart';
@@ -191,32 +192,44 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
     return Scaffold(
       appBar: AppBar(
           centerTitle: false,
-          title: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: CircleAvatar(
-                    foregroundImage:
-                        NetworkImage(widget.contactChat.avatar ?? ""),
-                    radius: 15),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.contactChat.firstName +
-                      " " +
-                      widget.contactChat.lastName),
-                  Visibility(
-                    child: Text(
-                      "Typing...",
-                      style: TextStyle(fontSize: 11),
-                    ),
-                    visible: isTyping,
-                  )
-                ],
-              ),
-            ],
+          title: InkWell(
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ContactDetailsPage(contactChat: widget.contactChat)),
+              );
+            },
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Hero(
+                    tag: "avatar_" + widget.contactChat.id,
+                    child: CircleAvatar(
+                        foregroundImage:
+                            NetworkImage(widget.contactChat.avatar ?? ""),
+                        radius: 15),
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.contactChat.firstName +
+                        " " +
+                        widget.contactChat.lastName),
+                    Visibility(
+                      child: Text(
+                        "Typing...",
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      visible: isTyping,
+                    )
+                  ],
+                ),
+              ],
+            ),
           )),
       body: StreamBuilder<List<DbMessage>>(
           stream: AppData.instance()!

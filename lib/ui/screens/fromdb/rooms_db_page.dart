@@ -97,6 +97,7 @@ class _RoomsPageState extends State<RoomsDBPage> {
                   }
                   if (snapshot.hasData) {
                     var chats = snapshot.data;
+
                     return ListView.builder(
                         itemCount: chats!.length,
                         itemBuilder: (context, position) {
