@@ -5,6 +5,8 @@ The Broker should install [HiveMQ Chat-Extension](https://github.com/WahidNasri/
 | Login      | Rooms      | Chat
 |:------------:|:-------------:|:-------:
 | ![A test image,](screenshots/sc1.png) | ![A test image,](screenshots/sc2.png) |![A test image,](screenshots/sc3.png)
+|Profile | Contact details | Media messages
+| ![A test image,](screenshots/sc4.png) | ![A test image,](screenshots/sc5.png) |![A test image,](screenshots/sc6.png)
 
 
 ## Features
