@@ -6,7 +6,7 @@ import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart';
 
 abstract class ClientHandler {
   Future<bool> connect(
-      {required String username, required String password, String? clientId});
+      {required host, required String username, required String password, String? clientId, int? port});
   void disconnect();
   bool isConnected();
   bool isConnecting();

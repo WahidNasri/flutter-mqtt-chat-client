@@ -23,18 +23,14 @@ class MqttClient extends ClientHandler {
       BehaviorSubject<ConnectionState>();
   @override
   Future<bool> connect(
-      {required String username,
+      {required host,
+      required String username,
       required String password,
-      String? clientId}) async {
+      String? clientId,
+      int? port}) async {
     String cid = clientId ?? getClientId()!;
     _clientId = cid;
-    _client = MqttServerClient.withPort(
-        Platform.operatingSystem.toLowerCase() == 'windows'
-            ? 'localhost'
-            : '172.16.14.99',
-        //: '192.168.100.11',
-        cid,
-        1883);
+    _client = MqttServerClient.withPort(host, cid, port ?? 1883);
     // _client = MqttServerClient.withPort('broker.emqx.io', resource, 1883
 
     _client!.logging(on: true);
@@ -155,7 +151,7 @@ class MqttClient extends ClientHandler {
      * By joining a room we join to:
      * Messages topic (for chat messages)
      * Events topic (for events like typing, chatmarker..)
-     * 
+     *
      */
     String messagesTopic =
         TopicsNamesGenerator.getChattingTopicForBareRoom(bareRoom);
@@ -172,7 +168,7 @@ class MqttClient extends ClientHandler {
      * By joining a room we join to:
      * Messages topic (for chat messages)
      * Events topic (for events like typing, chatmarker..)
-     * 
+     *
      */
     String messagesTopic =
         TopicsNamesGenerator.getChattingTopicForBareRoom(bareRoom);
@@ -196,8 +192,10 @@ class MqttClient extends ClientHandler {
     _client!.subscribe(TopicsNamesGenerator.getPersonalEventsForBareId(myId),
         MqttQos.atLeastOnce);
 
-    _client!.subscribe(TopicsNamesGenerator.getArchivesRoomsTopic(myId), MqttQos.atLeastOnce);
-    _client!.subscribe(TopicsNamesGenerator.getArchivesMessagesTopic(myId), MqttQos.atLeastOnce);
+    _client!.subscribe(
+        TopicsNamesGenerator.getArchivesRoomsTopic(myId), MqttQos.atLeastOnce);
+    _client!.subscribe(TopicsNamesGenerator.getArchivesMessagesTopic(myId),
+        MqttQos.atLeastOnce);
   }
 
   @override
