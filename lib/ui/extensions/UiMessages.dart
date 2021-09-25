@@ -11,6 +11,48 @@ import 'package:flutter_mqtt/db/tables/ExtendedDbContact.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 
+extension UIMessageExtensions on types.Message {
+  Widget toRespondedWidget(Function() onDelete) {
+    String imageUri = "";
+    String text = "File";
+    if (this is types.ImageMessage) {
+      imageUri = (this as types.ImageMessage).uri;
+      text = "Image";
+    } else if (this is types.TextMessage) {
+      text = (this as types.TextMessage).text;
+    }
+    return Container(
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          color: Color(0xE0E0E2E8),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IconButton(onPressed: onDelete, icon: Icon(Icons.close)),
+          imageUri.isNotEmpty
+              ? CircleAvatar(
+                  foregroundImage: NetworkImage(imageUri.toString()),
+                  radius: 20)
+              : SizedBox(),
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                author.firstName ?? "",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(text)
+            ],
+          ))
+        ],
+      ),
+    );
+  }
+}
+
 extension MessageConversions on ChatMessage {
   types.Message toUiMessage() {
     var author = types.User(id: fromId ?? "", firstName: fromName);
@@ -53,7 +95,7 @@ extension MessageConversions on ChatMessage {
     return SizedBox();
   }
 
-  Widget toPagerItem(){
+  Widget toPagerItem() {
     if (type == MessageType.ChatImage) {
       return CachedNetworkImage(
         progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -67,8 +109,9 @@ extension MessageConversions on ChatMessage {
     return SizedBox();
   }
 
-  String formatDate(String format){
-    return DateFormat(format).format(DateTime.fromMillisecondsSinceEpoch(sendTime));
+  String formatDate(String format) {
+    return DateFormat(format)
+        .format(DateTime.fromMillisecondsSinceEpoch(sendTime));
   }
 }
 

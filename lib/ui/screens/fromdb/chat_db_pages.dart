@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/contact_page.dart';
 import 'package:flutter_mqtt/ui/viewers/document_viewer.dart';
 import 'package:flutter_mqtt/ui/viewers/media_viewer.dart';
+import 'package:flutter_mqtt/ui/widgets/message_typing.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
@@ -31,6 +33,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
   bool isTyping = false;
   final subscriptions = List<StreamSubscription<dynamic>>.empty(growable: true);
   types.User? _user;
+  types.Message? respondToMessage;
 
   @override
   void initState() {
@@ -155,7 +158,6 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
     }
     //TODO: Handle DOC/DOCX/ODT/...
     //TODO: Handle TXT
-    //TODO: HANDLE IMAGES
   }
 
 /*
@@ -182,9 +184,26 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
         fromId: _user!.id,
         sendTime: DateTime.now().millisecondsSinceEpoch,
         fromName: _user!.firstName);
-    ChatApp.instance()!
-        .messageSender
-        .sendChatMessage(nm, widget.contactChat.roomId);
+    if (respondToMessage == null) {
+      ChatApp.instance()!
+          .messageSender
+          .sendChatMessage(nm, widget.contactChat.roomId);
+    } else {
+      final rep = ChatMessage(
+          id: respondToMessage!.id,
+          text: (respondToMessage! is types.TextMessage)
+              ? (respondToMessage! as types.TextMessage).text
+              : "File",
+          type: MessageType.ChatText,
+          sendTime: respondToMessage!.createdAt ?? 0,
+          roomId: widget.contactChat.roomId);
+      ChatApp.instance()!
+          .messageSender
+          .replyToMessage(rep, nm, widget.contactChat.roomId);
+      setState(() {
+        respondToMessage = null;
+      });
+    }
   }
 
   @override
@@ -193,11 +212,12 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
       appBar: AppBar(
           centerTitle: false,
           title: InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ContactDetailsPage(contactChat: widget.contactChat)),
+                    builder: (context) =>
+                        ContactDetailsPage(contactChat: widget.contactChat)),
               );
             },
             child: Row(
@@ -249,15 +269,30 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
                 //onPreviewDataFetched: _handlePreviewDataFetched,
                 onSendPressed: _handleSendPressed,
                 onTextChanged: _handleTextChanged,
+                onMessageLongPress: _handleLongPress,
                 showUserNames: true,
                 showUserAvatars: true,
-
+                customBottomWidget: bottom(),
                 user: _user!,
               );
             }
             return Text("Loading...");
           }),
     );
+  }
+
+  Widget bottom() {
+    return MessageTyping(
+        topWidget: respondToMessage != null
+            ? respondToMessage!.toRespondedWidget(() => {
+                  setState(() {
+                    respondToMessage = null;
+                  })
+                })
+            : null,
+        onSendPressed: _handleSendPressed,
+        onTextChanged: _handleTextChanged,
+        onAttachmentPressed: _handleAtachmentPressed);
   }
 
   void _handleTextChanged(String text) {
@@ -274,5 +309,38 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
       element.cancel();
     });
     super.dispose();
+  }
+
+  void _handleLongPress(types.Message message) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Title'),
+        message: const Text('Message'),
+        actions: <CupertinoActionSheetAction>[
+          CupertinoActionSheetAction(
+            child: const Text('Reply'),
+            onPressed: () {
+              setState(() {
+                respondToMessage = message;
+              });
+              Navigator.pop(context);
+            },
+          ),
+          CupertinoActionSheetAction(
+            child: const Text('Forward'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          CupertinoActionSheetAction(
+            child: const Text('Delete'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      ),
+    );
   }
 }
