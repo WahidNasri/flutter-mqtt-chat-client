@@ -17,6 +17,7 @@ class AppData {
     }
     return _instance;
   }
+  DbUser? user;
 
   late MessagesHandler messagesHandler;
   late ContactsHandler contactsHandler;
@@ -28,6 +29,10 @@ class AppData {
     contactsHandler = ContactsHandler();
     usersHandler = UsersHandler();
     invitationsHandler = InvitationsHandler();
+
+    usersHandler.getLocalUserAsync().listen((event) {
+      user = event;
+    });
     //================ROOMS================//
     ChatApp.instance()!.archiveHandler.getAllConversations().listen((rooms) {
       var list = rooms.map((e) {
@@ -49,9 +54,12 @@ class AppData {
       var dbMessage = message.toDbMessage();
       MyDatabase.instance()!.messageDao.addMessage(dbMessage);
       //SEND CHAT MARKER
-      ChatApp.instance()!
-          .eventsSender
-          .sendChatMarker(message.id, ChatMarker.delivered, message.roomId);
+      bool mine = user != null && message.fromId == user!.id;
+      if(!mine) {
+        ChatApp.instance()!
+            .eventsSender
+            .sendChatMarker(message.id, ChatMarker.delivered, message.roomId);
+      }
     });
     //============Chat Marker==========//
     ChatApp.instance()!
