@@ -37,9 +37,12 @@ class ProfilePage extends StatelessWidget {
                     SizedBox(
                       height: 50,
                     ),
-                    CircleAvatar(
-                      foregroundImage: NetworkImage(user.avatar ?? ""),
-                      radius: 100,
+                    Hero(
+                      tag: "my_avatar",
+                      child: CircleAvatar(
+                        foregroundImage: NetworkImage(user.avatar ?? ""),
+                        radius: 100,
+                      ),
                     ),
                     SizedBox(
                       height: 20,

@@ -49,9 +49,12 @@ class _MainScreenState extends State<MainScreen> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        foregroundImage: NetworkImage(snapshot.data!.avatar ??
-                            "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"),
+                      child: Hero(
+                        tag: "my_avatar",
+                        child: CircleAvatar(
+                          foregroundImage: NetworkImage(snapshot.data!.avatar ??
+                              "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"),
+                        ),
                       ),
                     ),
                   );

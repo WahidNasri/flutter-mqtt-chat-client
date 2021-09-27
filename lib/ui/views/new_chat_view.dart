@@ -3,6 +3,7 @@ import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/InvitationMessageType.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
+import 'package:flutter_mqtt/ui/screens/fromdb/create_group_page.dart';
 import 'package:uuid/uuid.dart';
 
 enum ViewState { CONTACTS, INVITATIONS }
@@ -121,7 +122,13 @@ class _NewChatViewState extends State<NewChatView> {
     );
   }
 
-  void _createGroupTap() {}
+  void _createGroupTap() {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CreateGroupPage()),
+    );
+  }
 
   void _inviteTap() {
     setState(() {
