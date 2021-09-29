@@ -15,5 +15,10 @@ enum MessageType {
 
   ChatMarker,
 
-  Typing
+  Typing,
+
+  CreateGroup,
+  RemoveGroup,
+  AddUsersToGroup,
+  RemoveGroupMembers,
 }
