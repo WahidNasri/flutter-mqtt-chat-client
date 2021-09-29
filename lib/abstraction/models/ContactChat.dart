@@ -33,7 +33,7 @@ class ContactChat {
       id: map['id'],
       avatar: map['avatar'],
       roomId: map['roomId'],
-      isGroup: map['isGroup'] != null && map['isGroup'] == 'true',
+      isGroup: map['isGroup'] != null && map['isGroup'] == true,
     );
   }
 

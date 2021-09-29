@@ -24,6 +24,8 @@ extension ChatMessageConversions on ChatMessage {
 
 extension DbContactConversions on DbContact {
   ContactChat toContactChat() {
+    var x = this;
+
     return ContactChat.fromMap(toJson());
   }
 }

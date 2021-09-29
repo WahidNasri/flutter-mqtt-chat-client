@@ -19,7 +19,8 @@ class MqttArchiveHandler extends ArchiveHandler {
       String payload = payloadEvent.payload;
       if (topic.toLowerCase().startsWith("archivesrooms/")) {
         try {
-          Iterable l = jsonDecode(payload);
+          Iterable l =
+          jsonDecode(payload);
           List<ContactChat> contacts = List<ContactChat>.from(
               l.map((model) => ContactChat.fromMap(model)));
           for (var contact in contacts) {

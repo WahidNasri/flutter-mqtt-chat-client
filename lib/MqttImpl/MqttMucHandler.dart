@@ -12,16 +12,16 @@ class MqttMucHandler extends MucHandler{
   MqttMucHandler(this.clientHandler);
   @override
   void addUsersToGroup(String groupId, List<String> userIds, bool showPreviousHistory) {
-    ChatMessage msg = ChatMessage(id: groupId, type: MessageType.AddUsersToGroup, text: '', roomId: '', sendTime: 0, additionalFields: userIds);
+    ChatMessage msg = ChatMessage(id: groupId, type: MessageType.AddUsersToGroup, text: '', roomId: groupId, sendTime: 0, additionalFields: userIds);
 
     String topic = "muc/" + groupId;
     clientHandler.sendPayload(msg.toMap().toString(), topic);
   }
 
   @override
-  void createGroup(String name, List<String> membersIds, String? password) {
+  void createGroup({required String name, required List<String> members, String? password}) {
     String id = Uuid().v4();
-    ChatMessage msg = ChatMessage(id: id, type: MessageType.CreateGroup, text: name, roomId: '', sendTime: 0, additionalFields: membersIds);
+    ChatMessage msg = ChatMessage(id: id, type: MessageType.CreateGroup, text: name, roomId: id, sendTime: 0, additionalFields: members);
 
     String topic = "muc/" + id;
     clientHandler.sendPayload(msg.toMap().toString(), topic);

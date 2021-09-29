@@ -9,6 +9,7 @@ class ExtendedDbContact {
   final String message_text;
   final String message_originality;
   final int send_time;
+  final bool is_group;
 
   ExtendedDbContact(
       {required this.id,
@@ -20,7 +21,8 @@ class ExtendedDbContact {
       required this.message_id,
         required this.message_text,
       required this.message_originality,
-      required this.send_time});
+      required this.send_time,
+      required this.is_group});
 
   factory ExtendedDbContact.fromJson(Map<String, dynamic> json) {
     return ExtendedDbContact(
@@ -34,6 +36,7 @@ class ExtendedDbContact {
       message_text: json["message_text"],
       message_originality: json["message_originality"],
       send_time: int.parse(json["send_time"].toString()),
+      is_group: json["is_group"] == true,
     );
   }
 
@@ -49,6 +52,7 @@ class ExtendedDbContact {
       "message_text": this.message_text,
       "message_originality": this.message_originality,
       "send_time": this.send_time,
+      "is_group": this.is_group,
     };
   }
 //

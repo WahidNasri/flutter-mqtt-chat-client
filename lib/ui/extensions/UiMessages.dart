@@ -171,7 +171,8 @@ extension ExtendedExtensions on ExtendedDbContact {
         lastName: last_name,
         firstName: first_name,
         roomId: room_id,
-        avatar: avatar);
+        avatar: avatar,
+        isGroup: is_group);
   }
 
   ContactChat toContactChat() {

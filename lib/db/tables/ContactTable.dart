@@ -8,6 +8,7 @@ class Contacts extends Table {
   TextColumn get roomId => text().named("room_id")();
   //TextColumn get isGroup => text()();
   TextColumn get avatar => text().nullable()();
+  BoolColumn get isGroup => boolean().named("is_group")();
   @override
   Set<Column> get primaryKey => {id};
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
+import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/widgets/avatar_cancellable.dart';
 
 class CreateGroupPage extends StatefulWidget {
@@ -42,10 +43,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       ),
       floatingActionButton: Visibility(
           child: FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: _addGroup,
               label: Text("Continue"),
               icon: Icon(Icons.arrow_right_alt_outlined)),
-          visible: selected.length > 0),
+          visible: selected.length > 0 && _groupNameController.text.isNotEmpty),
     );
   }
 
@@ -187,5 +188,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         selected.add(contactChat);
       });
     }
+  }
+  _addGroup(){
+    ChatApp.instance()!.mucHandler.createGroup(name: _groupNameController.text, members: selected.map((e) => e.id).toList());
+    Navigator.pop(context);
   }
 }

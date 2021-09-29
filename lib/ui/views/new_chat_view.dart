@@ -67,7 +67,7 @@ class _NewChatViewState extends State<NewChatView> {
                       title: Text(chats[position].firstName +
                           " " +
                           chats[position].lastName),
-                      subtitle: Text("Room: " + chats[position].roomId),
+                      subtitle: Row(children:[ (chats[position].isGroup??false ? Icon(Icons.group) : SizedBox()), Text("Room: " + chats[position].roomId)]),
                       leading: CircleAvatar(
                         foregroundImage: NetworkImage(
                           chats[position].avatar ??

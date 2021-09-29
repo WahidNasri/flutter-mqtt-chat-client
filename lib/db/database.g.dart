@@ -13,12 +13,14 @@ class DbContact extends DataClass implements Insertable<DbContact> {
   final String firstName;
   final String roomId;
   final String? avatar;
+  final bool isGroup;
   DbContact(
       {required this.id,
       required this.lastName,
       required this.firstName,
       required this.roomId,
-      this.avatar});
+      this.avatar,
+      required this.isGroup});
   factory DbContact.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -33,6 +35,8 @@ class DbContact extends DataClass implements Insertable<DbContact> {
           .mapFromDatabaseResponse(data['${effectivePrefix}room_id'])!,
       avatar: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}avatar']),
+      isGroup: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_group'])!,
     );
   }
   @override
@@ -45,6 +49,7 @@ class DbContact extends DataClass implements Insertable<DbContact> {
     if (!nullToAbsent || avatar != null) {
       map['avatar'] = Variable<String?>(avatar);
     }
+    map['is_group'] = Variable<bool>(isGroup);
     return map;
   }
 
@@ -56,6 +61,7 @@ class DbContact extends DataClass implements Insertable<DbContact> {
       roomId: Value(roomId),
       avatar:
           avatar == null && nullToAbsent ? const Value.absent() : Value(avatar),
+      isGroup: Value(isGroup),
     );
   }
 
@@ -68,6 +74,7 @@ class DbContact extends DataClass implements Insertable<DbContact> {
       firstName: serializer.fromJson<String>(json['firstName']),
       roomId: serializer.fromJson<String>(json['roomId']),
       avatar: serializer.fromJson<String?>(json['avatar']),
+      isGroup: serializer.fromJson<bool>(json['isGroup']),
     );
   }
   @override
@@ -79,6 +86,7 @@ class DbContact extends DataClass implements Insertable<DbContact> {
       'firstName': serializer.toJson<String>(firstName),
       'roomId': serializer.toJson<String>(roomId),
       'avatar': serializer.toJson<String?>(avatar),
+      'isGroup': serializer.toJson<bool>(isGroup),
     };
   }
 
@@ -87,13 +95,15 @@ class DbContact extends DataClass implements Insertable<DbContact> {
           String? lastName,
           String? firstName,
           String? roomId,
-          String? avatar}) =>
+          String? avatar,
+          bool? isGroup}) =>
       DbContact(
         id: id ?? this.id,
         lastName: lastName ?? this.lastName,
         firstName: firstName ?? this.firstName,
         roomId: roomId ?? this.roomId,
         avatar: avatar ?? this.avatar,
+        isGroup: isGroup ?? this.isGroup,
       );
   @override
   String toString() {
@@ -102,7 +112,8 @@ class DbContact extends DataClass implements Insertable<DbContact> {
           ..write('lastName: $lastName, ')
           ..write('firstName: $firstName, ')
           ..write('roomId: $roomId, ')
-          ..write('avatar: $avatar')
+          ..write('avatar: $avatar, ')
+          ..write('isGroup: $isGroup')
           ..write(')'))
         .toString();
   }
@@ -110,8 +121,12 @@ class DbContact extends DataClass implements Insertable<DbContact> {
   @override
   int get hashCode => $mrjf($mrjc(
       id.hashCode,
-      $mrjc(lastName.hashCode,
-          $mrjc(firstName.hashCode, $mrjc(roomId.hashCode, avatar.hashCode)))));
+      $mrjc(
+          lastName.hashCode,
+          $mrjc(
+              firstName.hashCode,
+              $mrjc(roomId.hashCode,
+                  $mrjc(avatar.hashCode, isGroup.hashCode))))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -120,7 +135,8 @@ class DbContact extends DataClass implements Insertable<DbContact> {
           other.lastName == this.lastName &&
           other.firstName == this.firstName &&
           other.roomId == this.roomId &&
-          other.avatar == this.avatar);
+          other.avatar == this.avatar &&
+          other.isGroup == this.isGroup);
 }
 
 class ContactsCompanion extends UpdateCompanion<DbContact> {
@@ -129,12 +145,14 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
   final Value<String> firstName;
   final Value<String> roomId;
   final Value<String?> avatar;
+  final Value<bool> isGroup;
   const ContactsCompanion({
     this.id = const Value.absent(),
     this.lastName = const Value.absent(),
     this.firstName = const Value.absent(),
     this.roomId = const Value.absent(),
     this.avatar = const Value.absent(),
+    this.isGroup = const Value.absent(),
   });
   ContactsCompanion.insert({
     required String id,
@@ -142,16 +160,19 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
     required String firstName,
     required String roomId,
     this.avatar = const Value.absent(),
+    required bool isGroup,
   })  : id = Value(id),
         lastName = Value(lastName),
         firstName = Value(firstName),
-        roomId = Value(roomId);
+        roomId = Value(roomId),
+        isGroup = Value(isGroup);
   static Insertable<DbContact> custom({
     Expression<String>? id,
     Expression<String>? lastName,
     Expression<String>? firstName,
     Expression<String>? roomId,
     Expression<String?>? avatar,
+    Expression<bool>? isGroup,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -159,6 +180,7 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
       if (firstName != null) 'first_name': firstName,
       if (roomId != null) 'room_id': roomId,
       if (avatar != null) 'avatar': avatar,
+      if (isGroup != null) 'is_group': isGroup,
     });
   }
 
@@ -167,13 +189,15 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
       Value<String>? lastName,
       Value<String>? firstName,
       Value<String>? roomId,
-      Value<String?>? avatar}) {
+      Value<String?>? avatar,
+      Value<bool>? isGroup}) {
     return ContactsCompanion(
       id: id ?? this.id,
       lastName: lastName ?? this.lastName,
       firstName: firstName ?? this.firstName,
       roomId: roomId ?? this.roomId,
       avatar: avatar ?? this.avatar,
+      isGroup: isGroup ?? this.isGroup,
     );
   }
 
@@ -195,6 +219,9 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
     if (avatar.present) {
       map['avatar'] = Variable<String?>(avatar.value);
     }
+    if (isGroup.present) {
+      map['is_group'] = Variable<bool>(isGroup.value);
+    }
     return map;
   }
 
@@ -205,7 +232,8 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
           ..write('lastName: $lastName, ')
           ..write('firstName: $firstName, ')
           ..write('roomId: $roomId, ')
-          ..write('avatar: $avatar')
+          ..write('avatar: $avatar, ')
+          ..write('isGroup: $isGroup')
           ..write(')'))
         .toString();
   }
@@ -236,9 +264,15 @@ class $ContactsTable extends Contacts
   late final GeneratedColumn<String?> avatar = GeneratedColumn<String?>(
       'avatar', aliasedName, true,
       typeName: 'TEXT', requiredDuringInsert: false);
+  final VerificationMeta _isGroupMeta = const VerificationMeta('isGroup');
+  late final GeneratedColumn<bool?> isGroup = GeneratedColumn<bool?>(
+      'is_group', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_group IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns =>
-      [id, lastName, firstName, roomId, avatar];
+      [id, lastName, firstName, roomId, avatar, isGroup];
   @override
   String get aliasedName => _alias ?? 'contacts';
   @override
@@ -274,6 +308,12 @@ class $ContactsTable extends Contacts
     if (data.containsKey('avatar')) {
       context.handle(_avatarMeta,
           avatar.isAcceptableOrUnknown(data['avatar']!, _avatarMeta));
+    }
+    if (data.containsKey('is_group')) {
+      context.handle(_isGroupMeta,
+          isGroup.isAcceptableOrUnknown(data['is_group']!, _isGroupMeta));
+    } else if (isInserting) {
+      context.missing(_isGroupMeta);
     }
     return context;
   }
