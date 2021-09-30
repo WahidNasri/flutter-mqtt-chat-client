@@ -3,6 +3,7 @@ import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/InvitationMessageType.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
+import 'package:flutter_mqtt/ui/items/contact_or_group_item.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/create_group_page.dart';
 import 'package:uuid/uuid.dart';
 
@@ -48,7 +49,7 @@ class _NewChatViewState extends State<NewChatView> {
 
   Widget _contactsView() {
     return StreamBuilder<List<ContactChat>>(
-        stream: AppData.instance()!.contactsHandler.getContacts(),
+        stream: AppData.instance()!.contactsHandler.getContactsAndGroups(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
@@ -58,24 +59,12 @@ class _NewChatViewState extends State<NewChatView> {
             return ListView.builder(
                 itemCount: chats!.length,
                 itemBuilder: (context, position) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                      widget.openRoom!(chats[position]);
-                    },
-                    child: ListTile(
-                      title: Text(chats[position].firstName +
-                          " " +
-                          chats[position].lastName),
-                      subtitle: Row(children:[ (chats[position].isGroup??false ? Icon(Icons.group) : SizedBox()), Text("Room: " + chats[position].roomId)]),
-                      leading: CircleAvatar(
-                        foregroundImage: NetworkImage(
-                          chats[position].avatar ??
-                              "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",
-                        ),
-                      ),
-                    ),
-                  );
+                  return ContactOrGroupItem(
+                      chat: chats[position],
+                      onTap: () {
+                        Navigator.pop(context);
+                        widget.openRoom!(chats[position]);
+                      });
                 });
           } else {
             return Text("Loading...");

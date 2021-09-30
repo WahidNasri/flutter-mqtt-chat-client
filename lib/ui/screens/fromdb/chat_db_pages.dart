@@ -13,6 +13,7 @@ import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/contact_page.dart';
 import 'package:flutter_mqtt/ui/viewers/document_viewer.dart';
 import 'package:flutter_mqtt/ui/viewers/media_viewer.dart';
+import 'package:flutter_mqtt/ui/views/contact_avatar.dart';
 import 'package:flutter_mqtt/ui/widgets/message_typing.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
@@ -226,10 +227,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
                   padding: const EdgeInsets.only(right: 10),
                   child: Hero(
                     tag: "avatar_" + widget.contactChat.id,
-                    child: CircleAvatar(
-                        foregroundImage:
-                            NetworkImage(widget.contactChat.avatar ?? ""),
-                        radius: 15),
+                    child: ContactAvatar(chat: widget.contactChat, radius: 15,),
                   ),
                 ),
                 Column(

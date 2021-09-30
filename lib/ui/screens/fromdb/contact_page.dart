@@ -3,6 +3,7 @@ import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/media_messages_page.dart';
+import 'package:flutter_mqtt/ui/views/contact_avatar.dart';
 import 'package:flutter_mqtt/ui/widgets/menu_action_item.dart';
 import 'package:flutter_mqtt/ui/widgets/menu_action_item_switch.dart';
 
@@ -35,9 +36,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                 tag: "avatar_" + widget.contactChat.id,
                 child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: CircleAvatar(
-                    foregroundImage:
-                        NetworkImage(widget.contactChat.avatar ?? ""),
+                  child: ContactAvatar(
+                    chat:
+                        widget.contactChat,
                     radius: 100,
                   ),
                 ),

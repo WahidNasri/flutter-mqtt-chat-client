@@ -7,6 +7,7 @@ import 'package:flutter_mqtt/ui/screens/fromdb/chat_db_pages.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/profile_page.dart';
 import 'package:flutter_mqtt/ui/screens/fromdb/rooms_db_page.dart';
 import 'package:flutter_mqtt/ui/screens/main/chats_page.dart';
+import 'package:flutter_mqtt/ui/screens/main/groups_page.dart';
 import 'package:flutter_mqtt/ui/views/new_chat_view.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ConnectionState.dart'
@@ -25,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
     ChatsPage(
       key: UniqueKey(),
     ),
-    Center(child: Text("Groups")),
+    Center(child: GroupsPage()),
     Center(child: Text("Calls")),
     ProfilePage(
       key: UniqueKey(),

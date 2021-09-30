@@ -13,13 +13,21 @@ class ContactDao extends DatabaseAccessor<MyDatabase> with _$ContactDaoMixin {
   Future<int> addContact(DbContact cts) {
     return into(contacts).insertOnConflictUpdate(cts);
   }
-
-  Stream<List<DbContact>> getAllContactsAsync() {
+  Stream<List<DbContact>> getAllContactsAndGroupsAsync() {
     return (select(contacts)).watch();
+  }
+  Stream<List<DbContact>> getAllContactsAsync() {
+    return (select(contacts)..where((tbl) => tbl.isGroup.not())).watch();
+  }
+  Stream<List<DbContact>> getAllGroupsAsync() {
+    return (select(contacts)..where((tbl) => tbl.isGroup)).watch();
   }
 
   Future<List<DbContact>> getAllContacts() {
-    return (select(contacts)).get();
+    return (select(contacts)..where((tbl) => tbl.isGroup.not())).get();
+  }
+  Future<List<DbContact>> getAllGroups() {
+    return (select(contacts)..where((tbl) => tbl.isGroup)).get();
   }
 
   Future<void> deleteAllContacts() {
