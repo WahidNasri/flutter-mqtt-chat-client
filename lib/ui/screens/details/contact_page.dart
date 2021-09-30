@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
-import 'package:flutter_mqtt/ui/screens/fromdb/media_messages_page.dart';
+import 'package:flutter_mqtt/ui/screens/chatting/media_messages_page.dart';
 import 'package:flutter_mqtt/ui/views/contact_avatar.dart';
 import 'package:flutter_mqtt/ui/widgets/menu_action_item.dart';
 import 'package:flutter_mqtt/ui/widgets/menu_action_item_switch.dart';

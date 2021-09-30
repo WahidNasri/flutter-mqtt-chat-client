@@ -3,16 +3,14 @@ import 'dart:io';
 
 import 'package:flutter_mqtt/MqttImpl/topics_generator.dart';
 import 'package:flutter_mqtt/abstraction/ClientHandler.dart';
-import 'package:flutter_mqtt/abstraction/FileUploader.dart';
 import 'package:flutter_mqtt/abstraction/MessageSender.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 
 class MqttMessageSender extends MessageSender {
   ClientHandler clientHandler;
-  FileUploader uploader;
-  MqttMessageSender({required this.clientHandler, required this.uploader})
-      : super(uploader);
+  MqttMessageSender({required this.clientHandler})
+      : super();
 
   @override
   void sendChatMessage(ChatMessage message, String bareRoom) {

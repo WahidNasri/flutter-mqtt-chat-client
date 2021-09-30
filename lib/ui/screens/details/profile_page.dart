@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
-import 'package:flutter_mqtt/ui/screens/fromdb/invitations_page.dart';
+import 'package:flutter_mqtt/ui/screens/details/invitations_page.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
 import 'package:flutter_mqtt/ui/widgets/menu_action_item.dart';
 import 'package:flutter_mqtt/ui/widgets/menu_action_item_switch.dart';

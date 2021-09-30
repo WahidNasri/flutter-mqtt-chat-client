@@ -5,7 +5,7 @@ import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/db/tables/ExtendedDbContact.dart';
 import 'package:flutter_mqtt/ui/extensions/UiMessages.dart';
 import 'package:flutter_mqtt/ui/items/contact_or_group_item.dart';
-import 'package:flutter_mqtt/ui/screens/fromdb/chat_db_pages.dart';
+import 'package:flutter_mqtt/ui/screens/chatting/chat_db_pages.dart';
 import 'package:intl/intl.dart';
 
 class ChatsPage extends StatelessWidget {

@@ -39,9 +39,13 @@ class InvitationsPage extends StatelessWidget {
     var dt = DateTime.fromMillisecondsSinceEpoch(inv.sendTime);
 
     return ListTile(
-      leading: Icon(
-        inv.incoming ? Icons.arrow_circle_down_outlined : Icons.outbond,
-        size: 20,
+      leading: CircleAvatar(
+        backgroundColor: inv.incoming ? Colors.red : Colors.green,
+        child: Icon(
+          inv.incoming ? Icons.arrow_downward : Icons.arrow_upward,
+          size: 20,
+          color: Colors.white,
+        ),
       ),
       title: Text(inv.fromName ?? inv.fromId),
       subtitle: Text((inv.incoming ? "Received at: " : "Sent at: ") +

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/ui/items/contact_or_group_item.dart';
-import 'package:flutter_mqtt/ui/screens/fromdb/chat_db_pages.dart';
+import 'package:flutter_mqtt/ui/screens/chatting/chat_db_pages.dart';
 
 class GroupsPage extends StatelessWidget {
   const GroupsPage({Key? key}) : super(key: key);

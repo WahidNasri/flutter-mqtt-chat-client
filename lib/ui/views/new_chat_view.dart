@@ -4,7 +4,7 @@ import 'package:flutter_mqtt/abstraction/models/enums/InvitationMessageType.dart
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/ui/items/contact_or_group_item.dart';
-import 'package:flutter_mqtt/ui/screens/fromdb/create_group_page.dart';
+import 'package:flutter_mqtt/ui/screens/chatting/create_group_page.dart';
 import 'package:uuid/uuid.dart';
 
 enum ViewState { CONTACTS, INVITATIONS }

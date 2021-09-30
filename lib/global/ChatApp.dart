@@ -1,4 +1,3 @@
-import 'package:flutter_mqtt/MqttImpl/FakeUploader.dart';
 import 'package:flutter_mqtt/MqttImpl/MqttArchiveHandler.dart';
 import 'package:flutter_mqtt/MqttImpl/MqttChatEventsSender.dart';
 import 'package:flutter_mqtt/MqttImpl/MqttClient.dart';
@@ -36,7 +35,7 @@ class ChatApp {
     clientHandler = MqttClient();
     messageReader = MqttOnlineReader(clientHandler: clientHandler);
     messageSender = MqttMessageSender(
-        clientHandler: clientHandler, uploader: FakeUploader());
+        clientHandler: clientHandler);
     eventsSender = MqttChatEventsSender(clientHandler: clientHandler);
     archiveHandler = MqttArchiveHandler(clientHandler: clientHandler);
     invitationHandler = MqttInvitationHandler(clientHandler);

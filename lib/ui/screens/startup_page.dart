@@ -4,7 +4,6 @@ import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/preferences.dart';
 import 'package:flutter_mqtt/ui/screens/login_page.dart';
-import 'package:flutter_mqtt/ui/screens/fromdb/rooms_db_page.dart';
 import 'package:flutter_mqtt/ui/screens/main/main_screen.dart';
 
 class StartupPage extends StatefulWidget {

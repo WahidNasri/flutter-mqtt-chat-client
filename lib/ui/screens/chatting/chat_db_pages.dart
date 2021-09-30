@@ -10,7 +10,7 @@ import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
-import 'package:flutter_mqtt/ui/screens/fromdb/contact_page.dart';
+import 'package:flutter_mqtt/ui/screens/details/contact_page.dart';
 import 'package:flutter_mqtt/ui/viewers/document_viewer.dart';
 import 'package:flutter_mqtt/ui/viewers/media_viewer.dart';
 import 'package:flutter_mqtt/ui/views/contact_avatar.dart';

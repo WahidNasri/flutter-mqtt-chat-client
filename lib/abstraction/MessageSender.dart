@@ -2,17 +2,14 @@ import 'dart:io';
 
 import 'package:uuid/uuid.dart';
 
-import 'package:flutter_mqtt/abstraction/FileUploader.dart';
+
 
 import 'models/ChatMessage.dart';
 import 'models/enums/MessageOriginality.dart';
 import 'models/enums/MessageType.dart';
 
 abstract class MessageSender {
-  FileUploader uploader;
-  MessageSender(
-    this.uploader,
-  );
+  MessageSender();
 
   void sendChatMessage(ChatMessage message, String room);
   void sendFileChatMessage(

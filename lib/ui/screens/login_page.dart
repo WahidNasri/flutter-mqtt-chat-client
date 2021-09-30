@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
 import 'package:flutter_mqtt/preferences.dart';
-import 'package:flutter_mqtt/ui/screens/fromdb/rooms_db_page.dart';
 import 'package:flutter_mqtt/ui/screens/main/main_screen.dart';
 
 class LoginPage extends StatefulWidget {
