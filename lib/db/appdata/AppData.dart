@@ -1,6 +1,7 @@
 import 'package:flutter_mqtt/abstraction/models/enums/ChatMarker.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/InvitationMessageType.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/PresenceType.dart';
 import 'package:flutter_mqtt/db/appdata/ContactsHandler.dart';
 import 'package:flutter_mqtt/db/appdata/InvitationsHandler.dart';
 import 'package:flutter_mqtt/db/appdata/MessageHandler.dart';
@@ -111,6 +112,10 @@ class AppData {
     for (var contact in await contactsHandler.getContactsList()) {
       ChatApp.instance()!.clientHandler.leaveRoom(contact.roomId);
       ChatApp.instance()!.clientHandler.leaveContactEvents(contact.id);
+    }
+    if(user != null) {
+      ChatApp.instance()!.eventsSender.sendPresence(
+          PresenceType.Unavailable, user!.id);
     }
     ChatApp.instance()!.disconnect();
     await deleteAll();

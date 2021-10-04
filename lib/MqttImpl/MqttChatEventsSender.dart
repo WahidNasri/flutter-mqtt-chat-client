@@ -3,10 +3,12 @@ import 'package:flutter_mqtt/abstraction/ChatEventsSender.dart';
 import 'package:flutter_mqtt/abstraction/ClientHandler.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMarkerMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/InvitationMessage.dart';
+import 'package:flutter_mqtt/abstraction/models/PresenceMesssage.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ChatMarker.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/InvitationMessageType.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 import 'package:flutter_mqtt/abstraction/models/TypingMessage.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/PresenceType.dart';
 import 'package:uuid/uuid.dart';
 
 class MqttChatEventsSender extends ChatEventsSender {
@@ -59,7 +61,13 @@ class MqttChatEventsSender extends ChatEventsSender {
         sendTime: DateTime.now().millisecondsSinceEpoch);
 
     String topic = "invitations/" + username;
-    var js = message.toJson();
     clientHandler.sendPayload(message.toJson().toString(), topic);
+  }
+
+  @override
+  void sendPresence(PresenceType presenceType, String myId) {
+    PresenceMessage presenceMessage = PresenceMessage(id: Uuid().v4(), type: presenceType, fromId: myId);
+    String payload = presenceMessage.toJson();
+    clientHandler.sendPayload(payload, "presence/" + myId);
   }
 }
