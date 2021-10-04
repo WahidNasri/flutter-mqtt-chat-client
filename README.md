@@ -1,6 +1,8 @@
 # Flutter Chat app using MQTT.
 The Broker should install [HiveMQ Chat-Extension](https://github.com/WahidNasri/hivemq-chat-extension) first.
 
+## Use Flutter-MQTT-Chat-Client as a library
+To use this library inside your project with your custom UI, please refer to [The Wiki](wiki.md)
 ## Screenshots
 | Login      | Rooms      | Chat
 |:------------:|:-------------:|:-------:
