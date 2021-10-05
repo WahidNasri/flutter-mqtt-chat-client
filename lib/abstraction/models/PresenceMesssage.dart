@@ -1,16 +1,19 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 
 import 'enums/PresenceType.dart';
 
 class PresenceMessage {
   late String id;
-  late PresenceType type;
+  late PresenceType presenceType;
+  late MessageType type;
   String? fromId;
   String? fromName;
   PresenceMessage({
     required this.id,
+    required this.presenceType,
     required this.type,
     this.fromId,
     this.fromName,
@@ -22,6 +25,9 @@ class PresenceMessage {
       'type': type
           .toString()
           .substring(type.toString().toString().indexOf('.') + 1),
+      'presenceType': presenceType
+          .toString()
+          .substring(presenceType.toString().toString().indexOf('.') + 1),
       'fromId': fromId,
       'fromName': fromName,
     };
@@ -30,7 +36,10 @@ class PresenceMessage {
   factory PresenceMessage.fromMap(Map<String, dynamic> map) {
     return PresenceMessage(
       id: map['id'],
-      type: PresenceType.values
+      presenceType: PresenceType.values
+          .where((e) => describeEnum(e) == map['presenceType'])
+          .first,
+      type: MessageType.values
           .where((e) => describeEnum(e) == map['type'])
           .first,
       fromId: map['fromId'],

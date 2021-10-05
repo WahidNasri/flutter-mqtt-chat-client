@@ -40,6 +40,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                     chat:
                         widget.contactChat,
                     radius: 100,
+                    borderWidth: widget.contactChat.isGroup! ? 0 : 5,
+                    borderColor: Colors.grey,//fixme: use color for presence
                   ),
                 ),
               ),

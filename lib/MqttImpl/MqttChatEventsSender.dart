@@ -66,7 +66,7 @@ class MqttChatEventsSender extends ChatEventsSender {
 
   @override
   void sendPresence(PresenceType presenceType, String myId) {
-    PresenceMessage presenceMessage = PresenceMessage(id: Uuid().v4(), type: presenceType, fromId: myId);
+    PresenceMessage presenceMessage = PresenceMessage(id: Uuid().v4(), type: MessageType.Presence, presenceType: presenceType, fromId: myId);
     String payload = presenceMessage.toJson();
     clientHandler.sendPayload(payload, "presence/" + myId);
   }

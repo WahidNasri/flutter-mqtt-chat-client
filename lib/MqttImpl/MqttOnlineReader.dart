@@ -29,7 +29,6 @@ class MqttOnlineReader extends MessageOnlineReaderHandler {
         return;
       }
       Map<String, dynamic> payloadMap = jsonDecode(payload);
-      BaseMessage baseMsg = BaseMessage.fromJson(payloadMap);
 
       if (topic.toLowerCase().startsWith("messages/")) {
         ChatMessage chatMessage = ChatMessage.fromJson(payload);
@@ -38,6 +37,7 @@ class MqttOnlineReader extends MessageOnlineReaderHandler {
         PresenceMessage pMsg = PresenceMessage.fromJson(payload);
         _presenceController.add(pMsg);
       } else if (topic.toLowerCase().startsWith("events/")) {
+        BaseMessage baseMsg = BaseMessage.fromJson(payloadMap);
         //handle rooms events
         //String roomId = topic.toLowerCase().split("/")[1];
         if (baseMsg.isChatMarkerEvent()) {

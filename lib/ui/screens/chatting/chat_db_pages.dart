@@ -227,7 +227,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
                   padding: const EdgeInsets.only(right: 10),
                   child: Hero(
                     tag: "avatar_" + widget.contactChat.id,
-                    child: ContactAvatar(chat: widget.contactChat, radius: 15,),
+                    child: ContactAvatar(chat: widget.contactChat, radius: 15, borderWidth: 1,borderColor: Colors.grey),//fixme: use color for presence
                   ),
                 ),
                 Column(
