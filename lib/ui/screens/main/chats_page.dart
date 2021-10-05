@@ -29,6 +29,8 @@ class ChatsPage extends StatelessWidget {
                       chat: chats[position].toContactChat(),
                       subtitle: _subtitle(chats[position]),
                       trailing: Text(DateFormat('HH:mm').format(dt)),
+                      avatarBorderWidth: chats[position].is_group ? 0 : 2,
+                      avatarBorderColor: chats[position].is_group ? null : Colors.grey,//fixme: use color for presence
                       onTap: () {
                         _openRoom(context, chats[position].toContactChat());
                       });

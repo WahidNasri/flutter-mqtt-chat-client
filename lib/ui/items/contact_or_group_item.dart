@@ -8,7 +8,9 @@ class ContactOrGroupItem extends StatelessWidget {
   final Function()? onTap;
   final Widget? subtitle;
   final Widget? trailing;
-  const ContactOrGroupItem({Key? key, required this.chat, this.onTap, this.subtitle, this.trailing})
+  final int? avatarBorderWidth;
+  final Color? avatarBorderColor;
+  const ContactOrGroupItem({Key? key, required this.chat, this.onTap, this.subtitle, this.trailing, this.avatarBorderWidth, this.avatarBorderColor})
       : super(key: key);
 
   @override
@@ -28,7 +30,7 @@ class ContactOrGroupItem extends StatelessWidget {
           ],
         ),
         subtitle: subtitle ?? Text("Room: " + chat.roomId),
-        leading: Hero(tag: "avatar_" + chat.id, child: ContactAvatar(chat: chat)),
+        leading: Hero(tag: "avatar_" + chat.id, child: ContactAvatar(chat: chat, borderColor: avatarBorderColor, borderWidth: avatarBorderWidth)),
         trailing: trailing,
       ),
     );
