@@ -182,7 +182,7 @@ extension ExtendedExtensions on ExtendedDbContact {
         id: id,
         avatar: avatar,
         roomId: room_id,
-        isGroup: false);
+        isGroup: is_group);
   }
 }
 

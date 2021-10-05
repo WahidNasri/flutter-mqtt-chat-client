@@ -36,7 +36,7 @@ class ExtendedDbContact {
       message_text: json["message_text"],
       message_originality: json["message_originality"],
       send_time: int.parse(json["send_time"].toString()),
-      is_group: json["is_group"] == true,
+      is_group: json["is_group"] == 1,
     );
   }
 
