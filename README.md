@@ -11,7 +11,7 @@ To use this library inside your project with your custom UI, please refer to [Th
 | ![A test image,](screenshots/sc4.png) | ![A test image,](screenshots/sc5.png) |![A test image,](screenshots/sc6.png)
 
 
-## Features
+## P0 Features
 - [x] Login
 - [x] Send & receive messages
 - [x] Typing indicator
@@ -23,6 +23,14 @@ To use this library inside your project with your custom UI, please refer to [Th
 - [x] Presence (Testing...)
 - [x] File Previews (PDF and images Done)
 - [ ] Push Notifications When App is in Background.
+
+## P1 Features
+- [ ] Poll Messages
+- [ ] Pinned Messages
+- [ ] Self-Destructive Messages
+- [ ] Request Attention
   
-## Nice to have features
+## P2 Features
 - [ ] Recognize adult content on image message
+- [ ] Blurred content messages
+
