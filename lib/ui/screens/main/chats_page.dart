@@ -30,7 +30,7 @@ class ChatsPage extends StatelessWidget {
                       subtitle: _subtitle(chats[position]),
                       trailing: Text(DateFormat('HH:mm').format(dt)),
                       avatarBorderWidth: chats[position].is_group ? 0 : 2,
-                      avatarBorderColor: chats[position].is_group ? null : Colors.grey,//fixme: use color for presence
+                      avatarBorderColor: chats[position].is_group ? null : chats[position].presence != null ? chats[position].presence!.toColor() : Colors.black,
                       onTap: () {
                         _openRoom(context, chats[position].toContactChat());
                       });
@@ -40,7 +40,6 @@ class ChatsPage extends StatelessWidget {
           return Text("Loading..");
         });
   }
-
   Widget _subtitle(ExtendedDbContact chat) {
     if (chat.message_type == "ChatImage") {
       return Row(children: [

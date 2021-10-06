@@ -6,6 +6,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_mqtt/abstraction/models/ContactChat.dart';
 import 'package:flutter_mqtt/abstraction/models/User.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/PresenceType.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/db/tables/ExtendedDbContact.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -192,6 +193,19 @@ extension IterableExtension<T> on Iterable<T> {
       if (test(element)) return element;
     }
     return null;
+  }
+}
+
+extension PresenceExtension on PresenceType{
+  Color toColor(){
+    switch(this){
+      case PresenceType.Available:
+        return Colors.green;
+      case PresenceType.Unavailable:
+        return Colors.grey;
+      case PresenceType.Away:
+        return Colors.yellow;
+    }
   }
 }
 
