@@ -18,6 +18,7 @@ class AppData {
     }
     return _instance;
   }
+
   DbUser? user;
 
   late MessagesHandler messagesHandler;
@@ -56,7 +57,7 @@ class AppData {
       MyDatabase.instance()!.messageDao.addMessage(dbMessage);
       //SEND CHAT MARKER
       bool mine = user != null && message.fromId == user!.id;
-      if(!mine) {
+      if (!mine) {
         ChatApp.instance()!
             .eventsSender
             .sendChatMarker(message.id, ChatMarker.delivered, message.roomId);
@@ -83,16 +84,28 @@ class AppData {
         .invitationHandler
         .newInvitationsStream()
         .listen((invitation) {
-          if(invitation.type == MessageType.EventInvitationRequest) {
-            //new invitation request
-            MyDatabase.instance()!
-                .invitationDao
-                .addInvitation(invitation.toDbInvitation());
-          }
-          if(invitation.type == MessageType.EventInvitationResponseAccept || invitation.type == MessageType.EventInvitationResponseReject) {
-            //responded to invitation, update the local record and wait the server to sync the new contact (if accepted)
-            invitationsHandler.updateInvitationStatus(invitation.id, invitation.type == MessageType.EventInvitationResponseAccept ? "accepted" : "rejected");
-          }
+      if (invitation.type == MessageType.EventInvitationRequest) {
+        //new invitation request
+        MyDatabase.instance()!
+            .invitationDao
+            .addInvitation(invitation.toDbInvitation());
+      }
+      if (invitation.type == MessageType.EventInvitationResponseAccept ||
+          invitation.type == MessageType.EventInvitationResponseReject) {
+        //responded to invitation, update the local record and wait the server to sync the new contact (if accepted)
+        invitationsHandler.updateInvitationStatus(
+            invitation.id,
+            invitation.type == MessageType.EventInvitationResponseAccept
+                ? "accepted"
+                : "rejected");
+      }
+    });
+
+    //======== Presence ==========//
+    ChatApp.instance()!.messageReader.getPresenceMessages().listen((event) {
+      MyDatabase.instance()!
+          .contactDao
+          .updateContactPresence(event.fromId!, event.presenceType);
     });
 
     ChatApp.instance()!
@@ -101,8 +114,8 @@ class AppData {
         .listen((invitation) {
       if (invitation.invitationMessageType == InvitationMessageType.INFO) {
         invitationsHandler.updateInvitationStatus(invitation.id, "confirmed");
-      }
-      else if (invitation.invitationMessageType == InvitationMessageType.ERROR) {
+      } else if (invitation.invitationMessageType ==
+          InvitationMessageType.ERROR) {
         invitationsHandler.deleteInvitation(invitation.id);
       }
     });
@@ -113,9 +126,10 @@ class AppData {
       ChatApp.instance()!.clientHandler.leaveRoom(contact.roomId);
       ChatApp.instance()!.clientHandler.leaveContactEvents(contact.id);
     }
-    if(user != null) {
-      ChatApp.instance()!.eventsSender.sendPresence(
-          PresenceType.Unavailable, user!.id);
+    if (user != null) {
+      ChatApp.instance()!
+          .eventsSender
+          .sendPresence(PresenceType.Unavailable, user!.id);
     }
     ChatApp.instance()!.disconnect();
     await deleteAll();

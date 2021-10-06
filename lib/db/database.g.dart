@@ -14,13 +14,15 @@ class DbContact extends DataClass implements Insertable<DbContact> {
   final String roomId;
   final String? avatar;
   final bool isGroup;
+  final String? presence;
   DbContact(
       {required this.id,
       required this.lastName,
       required this.firstName,
       required this.roomId,
       this.avatar,
-      required this.isGroup});
+      required this.isGroup,
+      this.presence});
   factory DbContact.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -37,6 +39,8 @@ class DbContact extends DataClass implements Insertable<DbContact> {
           .mapFromDatabaseResponse(data['${effectivePrefix}avatar']),
       isGroup: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_group'])!,
+      presence: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}presence']),
     );
   }
   @override
@@ -50,6 +54,9 @@ class DbContact extends DataClass implements Insertable<DbContact> {
       map['avatar'] = Variable<String?>(avatar);
     }
     map['is_group'] = Variable<bool>(isGroup);
+    if (!nullToAbsent || presence != null) {
+      map['presence'] = Variable<String?>(presence);
+    }
     return map;
   }
 
@@ -62,6 +69,9 @@ class DbContact extends DataClass implements Insertable<DbContact> {
       avatar:
           avatar == null && nullToAbsent ? const Value.absent() : Value(avatar),
       isGroup: Value(isGroup),
+      presence: presence == null && nullToAbsent
+          ? const Value.absent()
+          : Value(presence),
     );
   }
 
@@ -75,6 +85,7 @@ class DbContact extends DataClass implements Insertable<DbContact> {
       roomId: serializer.fromJson<String>(json['roomId']),
       avatar: serializer.fromJson<String?>(json['avatar']),
       isGroup: serializer.fromJson<bool>(json['isGroup']),
+      presence: serializer.fromJson<String?>(json['presence']),
     );
   }
   @override
@@ -87,6 +98,7 @@ class DbContact extends DataClass implements Insertable<DbContact> {
       'roomId': serializer.toJson<String>(roomId),
       'avatar': serializer.toJson<String?>(avatar),
       'isGroup': serializer.toJson<bool>(isGroup),
+      'presence': serializer.toJson<String?>(presence),
     };
   }
 
@@ -96,7 +108,8 @@ class DbContact extends DataClass implements Insertable<DbContact> {
           String? firstName,
           String? roomId,
           String? avatar,
-          bool? isGroup}) =>
+          bool? isGroup,
+          String? presence}) =>
       DbContact(
         id: id ?? this.id,
         lastName: lastName ?? this.lastName,
@@ -104,6 +117,7 @@ class DbContact extends DataClass implements Insertable<DbContact> {
         roomId: roomId ?? this.roomId,
         avatar: avatar ?? this.avatar,
         isGroup: isGroup ?? this.isGroup,
+        presence: presence ?? this.presence,
       );
   @override
   String toString() {
@@ -113,7 +127,8 @@ class DbContact extends DataClass implements Insertable<DbContact> {
           ..write('firstName: $firstName, ')
           ..write('roomId: $roomId, ')
           ..write('avatar: $avatar, ')
-          ..write('isGroup: $isGroup')
+          ..write('isGroup: $isGroup, ')
+          ..write('presence: $presence')
           ..write(')'))
         .toString();
   }
@@ -125,8 +140,10 @@ class DbContact extends DataClass implements Insertable<DbContact> {
           lastName.hashCode,
           $mrjc(
               firstName.hashCode,
-              $mrjc(roomId.hashCode,
-                  $mrjc(avatar.hashCode, isGroup.hashCode))))));
+              $mrjc(
+                  roomId.hashCode,
+                  $mrjc(avatar.hashCode,
+                      $mrjc(isGroup.hashCode, presence.hashCode)))))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -136,7 +153,8 @@ class DbContact extends DataClass implements Insertable<DbContact> {
           other.firstName == this.firstName &&
           other.roomId == this.roomId &&
           other.avatar == this.avatar &&
-          other.isGroup == this.isGroup);
+          other.isGroup == this.isGroup &&
+          other.presence == this.presence);
 }
 
 class ContactsCompanion extends UpdateCompanion<DbContact> {
@@ -146,6 +164,7 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
   final Value<String> roomId;
   final Value<String?> avatar;
   final Value<bool> isGroup;
+  final Value<String?> presence;
   const ContactsCompanion({
     this.id = const Value.absent(),
     this.lastName = const Value.absent(),
@@ -153,6 +172,7 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
     this.roomId = const Value.absent(),
     this.avatar = const Value.absent(),
     this.isGroup = const Value.absent(),
+    this.presence = const Value.absent(),
   });
   ContactsCompanion.insert({
     required String id,
@@ -161,6 +181,7 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
     required String roomId,
     this.avatar = const Value.absent(),
     required bool isGroup,
+    this.presence = const Value.absent(),
   })  : id = Value(id),
         lastName = Value(lastName),
         firstName = Value(firstName),
@@ -173,6 +194,7 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
     Expression<String>? roomId,
     Expression<String?>? avatar,
     Expression<bool>? isGroup,
+    Expression<String?>? presence,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -181,6 +203,7 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
       if (roomId != null) 'room_id': roomId,
       if (avatar != null) 'avatar': avatar,
       if (isGroup != null) 'is_group': isGroup,
+      if (presence != null) 'presence': presence,
     });
   }
 
@@ -190,7 +213,8 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
       Value<String>? firstName,
       Value<String>? roomId,
       Value<String?>? avatar,
-      Value<bool>? isGroup}) {
+      Value<bool>? isGroup,
+      Value<String?>? presence}) {
     return ContactsCompanion(
       id: id ?? this.id,
       lastName: lastName ?? this.lastName,
@@ -198,6 +222,7 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
       roomId: roomId ?? this.roomId,
       avatar: avatar ?? this.avatar,
       isGroup: isGroup ?? this.isGroup,
+      presence: presence ?? this.presence,
     );
   }
 
@@ -222,6 +247,9 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
     if (isGroup.present) {
       map['is_group'] = Variable<bool>(isGroup.value);
     }
+    if (presence.present) {
+      map['presence'] = Variable<String?>(presence.value);
+    }
     return map;
   }
 
@@ -233,7 +261,8 @@ class ContactsCompanion extends UpdateCompanion<DbContact> {
           ..write('firstName: $firstName, ')
           ..write('roomId: $roomId, ')
           ..write('avatar: $avatar, ')
-          ..write('isGroup: $isGroup')
+          ..write('isGroup: $isGroup, ')
+          ..write('presence: $presence')
           ..write(')'))
         .toString();
   }
@@ -270,9 +299,13 @@ class $ContactsTable extends Contacts
       typeName: 'INTEGER',
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (is_group IN (0, 1))');
+  final VerificationMeta _presenceMeta = const VerificationMeta('presence');
+  late final GeneratedColumn<String?> presence = GeneratedColumn<String?>(
+      'presence', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, lastName, firstName, roomId, avatar, isGroup];
+      [id, lastName, firstName, roomId, avatar, isGroup, presence];
   @override
   String get aliasedName => _alias ?? 'contacts';
   @override
@@ -314,6 +347,10 @@ class $ContactsTable extends Contacts
           isGroup.isAcceptableOrUnknown(data['is_group']!, _isGroupMeta));
     } else if (isInserting) {
       context.missing(_isGroupMeta);
+    }
+    if (data.containsKey('presence')) {
+      context.handle(_presenceMeta,
+          presence.isAcceptableOrUnknown(data['presence']!, _presenceMeta));
     }
     return context;
   }

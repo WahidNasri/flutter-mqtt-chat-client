@@ -1,3 +1,4 @@
+import 'package:flutter_mqtt/abstraction/models/enums/PresenceType.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/db/tables/ContactTable.dart';
 import 'package:flutter_mqtt/db/tables/UserTable.dart';
@@ -28,6 +29,13 @@ class ContactDao extends DatabaseAccessor<MyDatabase> with _$ContactDaoMixin {
   }
   Future<List<DbContact>> getAllGroups() {
     return (select(contacts)..where((tbl) => tbl.isGroup)).get();
+  }
+  Future<void> updateContactPresence(String contactId, PresenceType presence){
+    return (update(contacts)..where((t) => t.id.equals(contactId))).write(
+      ContactsCompanion(
+        presence: Value(presence.toString().split(".")[1])
+      ),
+    );
   }
 
   Future<void> deleteAllContacts() {
