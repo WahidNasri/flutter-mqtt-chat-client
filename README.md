@@ -20,7 +20,9 @@ To use this library inside your project with your custom UI, please refer to [Th
 - [x] ChatMarker (In Progress)
 - [x] Invite a user to chat
 - [x] Group Chat
-- [ ] Presence (Done on backend side)
+- [x] Presence (Testing...)
 - [x] File Previews (PDF and images Done)
 - [ ] Push Notifications When App is in Background.
+  
+## Nice to have features
 - [ ] Recognize adult content on image message
