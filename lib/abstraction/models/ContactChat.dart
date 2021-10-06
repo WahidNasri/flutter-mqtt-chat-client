@@ -1,11 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/PresenceType.dart';
+
 class ContactChat {
   String firstName;
   String lastName;
   String id;
   String? avatar;
   String roomId;
+  PresenceType? presence;
   bool? isGroup;
   ContactChat(
       {required this.firstName,
@@ -13,16 +17,18 @@ class ContactChat {
       required this.id,
       required this.avatar,
       required this.roomId,
-      required this.isGroup});
+      required this.isGroup,
+      this.presence});
 
   Map<String, dynamic> toMap() {
     return {
       'firstName': firstName,
-      'lastName':lastName,
+      'lastName': lastName,
       'id': id,
       'avatar': avatar,
       'roomId': roomId,
       'isGroup': isGroup,
+      'presence': presence,
     };
   }
 
@@ -33,6 +39,9 @@ class ContactChat {
       id: map['id'],
       avatar: map['avatar'],
       roomId: map['roomId'],
+      presence: map['presence'] == null ? null :  PresenceType.values
+          .where((e) => describeEnum(e) == map['presence'])
+          .first,
       isGroup: map['isGroup'] != null && map['isGroup'] == true,
     );
   }

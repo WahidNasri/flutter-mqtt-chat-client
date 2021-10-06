@@ -1,9 +1,13 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_mqtt/abstraction/models/enums/PresenceType.dart';
+
 class ExtendedDbContact {
   final String id;
   final String first_name;
   final String last_name;
   final String? avatar;
   final String room_id;
+  final PresenceType? presence;
   final String message_type;
   final String message_id;
   final String message_text;
@@ -22,7 +26,8 @@ class ExtendedDbContact {
         required this.message_text,
       required this.message_originality,
       required this.send_time,
-      required this.is_group});
+      required this.is_group,
+        this.presence});
 
   factory ExtendedDbContact.fromJson(Map<String, dynamic> json) {
     return ExtendedDbContact(
@@ -37,6 +42,9 @@ class ExtendedDbContact {
       message_originality: json["message_originality"],
       send_time: int.parse(json["send_time"].toString()),
       is_group: json["is_group"] == 1,
+      presence: json['presence'] == null ? null :  PresenceType.values
+          .where((e) => describeEnum(e) == json['presence'])
+          .first,
     );
   }
 
@@ -53,6 +61,7 @@ class ExtendedDbContact {
       "message_originality": this.message_originality,
       "send_time": this.send_time,
       "is_group": this.is_group,
+      "presence": this.presence
     };
   }
 //
