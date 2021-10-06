@@ -28,7 +28,7 @@ class ContactChat {
       'avatar': avatar,
       'roomId': roomId,
       'isGroup': isGroup,
-      'presence': presence,
+      'presence': presence == null ? null :  presence.toString().split(".")[1],
     };
   }
 
