@@ -9,8 +9,7 @@ class UsersHandler {
   }
 
   void insertUserFromPayload(User user, String clientId) {
-    var map = user.toMap();
-    DbUser dbUser = DbUser.fromJson(user.toMap()).copyWith(
+    DbUser dbUser = DbUser.fromJson(user.toJson()).copyWith(
         client_id: clientId,
         username: _waitingUsername,
         password: _waitingPassword);

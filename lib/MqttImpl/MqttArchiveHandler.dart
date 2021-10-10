@@ -22,7 +22,7 @@ class MqttArchiveHandler extends ArchiveHandler {
           Iterable l =
           jsonDecode(payload);
           List<ContactChat> contacts = List<ContactChat>.from(
-              l.map((model) => ContactChat.fromMap(model)));
+              l.map((model) => ContactChat.fromJson(model)));
           for (var contact in contacts) {
             //======================================//
             clientHandler.joinRoom(contact.roomId);
@@ -35,7 +35,7 @@ class MqttArchiveHandler extends ArchiveHandler {
           print(e);
         }
       } else if (topic.toLowerCase().startsWith("archivesmyid/")) {
-        User user = User.fromJson(payload);
+        User user = User.fromString(payload);
         clientHandler.joinMyEvents(user.id);
         _userController.add(user);
       }

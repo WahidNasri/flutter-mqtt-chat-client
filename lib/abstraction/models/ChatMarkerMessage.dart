@@ -1,11 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_mqtt/abstraction/models/BaseMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ChatMarker.dart';
 
 import 'enums/MessageType.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
-class ChatMarkerMessage {
+part 'ChatMarkerMessage.g.dart';
+
+@JsonSerializable()
+@CopyWith()
+class ChatMarkerMessage extends BaseMessage{
   late String id;
   late MessageType type;
   late String fromId;
@@ -19,39 +26,10 @@ class ChatMarkerMessage {
     this.roomId,
     required this.referenceId,
     required this.status,
-  });
+  }):super(id: id, fromId: fromId, fromName: "", type: type);
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'type': type
-          .toString()
-          .substring(type.toString().toString().indexOf('.') + 1),
-      'fromId': fromId,
-      'roomId': roomId,
-      'referenceId': referenceId,
-      'status': status
-          .toString()
-          .substring(status.toString().toString().indexOf('.') + 1),
-    };
-  }
+  factory ChatMarkerMessage.fromJson(Map<String, dynamic> json) => _$ChatMarkerMessageFromJson(json);
+  factory ChatMarkerMessage.fromString(String jsonString) => _$ChatMarkerMessageFromJson(json.decode(jsonString));
+  Map<String, dynamic> toJson() => _$ChatMarkerMessageToJson(this);
 
-  factory ChatMarkerMessage.fromMap(Map<String, dynamic> map) {
-    return ChatMarkerMessage(
-      id: map['id'],
-      type:
-          MessageType.values.where((e) => describeEnum(e) == map['type']).first,
-      fromId: map['fromId'],
-      roomId: map['roomId'],
-      referenceId: map['referenceId'],
-      status: ChatMarker.values
-          .where((e) => describeEnum(e) == map['status'])
-          .first,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory ChatMarkerMessage.fromJson(String source) =>
-      ChatMarkerMessage.fromMap(json.decode(source));
 }

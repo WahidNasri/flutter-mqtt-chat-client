@@ -744,7 +744,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
   final String? thumbnail;
   final String? originalId;
   final int sendTime;
-  final int size;
+  final int? size;
   final String status;
   final String? mime;
   DbMessage(
@@ -761,7 +761,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       this.thumbnail,
       this.originalId,
       required this.sendTime,
-      required this.size,
+      this.size,
       required this.status,
       this.mime});
   factory DbMessage.fromData(Map<String, dynamic> data, GeneratedDatabase db,
@@ -795,7 +795,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       sendTime: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}send_time'])!,
       size: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}size'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}size']),
       status: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
       mime: const StringType()
@@ -830,7 +830,9 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       map['original_id'] = Variable<String?>(originalId);
     }
     map['send_time'] = Variable<int>(sendTime);
-    map['size'] = Variable<int>(size);
+    if (!nullToAbsent || size != null) {
+      map['size'] = Variable<int?>(size);
+    }
     map['status'] = Variable<String>(status);
     if (!nullToAbsent || mime != null) {
       map['mime'] = Variable<String?>(mime);
@@ -862,7 +864,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           ? const Value.absent()
           : Value(originalId),
       sendTime: Value(sendTime),
-      size: Value(size),
+      size: size == null && nullToAbsent ? const Value.absent() : Value(size),
       status: Value(status),
       mime: mime == null && nullToAbsent ? const Value.absent() : Value(mime),
     );
@@ -885,7 +887,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       thumbnail: serializer.fromJson<String?>(json['thumbnail']),
       originalId: serializer.fromJson<String?>(json['originalId']),
       sendTime: serializer.fromJson<int>(json['sendTime']),
-      size: serializer.fromJson<int>(json['size']),
+      size: serializer.fromJson<int?>(json['size']),
       status: serializer.fromJson<String>(json['status']),
       mime: serializer.fromJson<String?>(json['mime']),
     );
@@ -907,7 +909,7 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       'thumbnail': serializer.toJson<String?>(thumbnail),
       'originalId': serializer.toJson<String?>(originalId),
       'sendTime': serializer.toJson<int>(sendTime),
-      'size': serializer.toJson<int>(size),
+      'size': serializer.toJson<int?>(size),
       'status': serializer.toJson<String>(status),
       'mime': serializer.toJson<String?>(mime),
     };
@@ -1038,7 +1040,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
   final Value<String?> thumbnail;
   final Value<String?> originalId;
   final Value<int> sendTime;
-  final Value<int> size;
+  final Value<int?> size;
   final Value<String> status;
   final Value<String?> mime;
   const MessagesCompanion({
@@ -1097,7 +1099,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     Expression<String?>? thumbnail,
     Expression<String?>? originalId,
     Expression<int>? sendTime,
-    Expression<int>? size,
+    Expression<int?>? size,
     Expression<String>? status,
     Expression<String?>? mime,
   }) {
@@ -1135,7 +1137,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       Value<String?>? thumbnail,
       Value<String?>? originalId,
       Value<int>? sendTime,
-      Value<int>? size,
+      Value<int?>? size,
       Value<String>? status,
       Value<String?>? mime}) {
     return MessagesCompanion(
@@ -1201,7 +1203,7 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       map['send_time'] = Variable<int>(sendTime.value);
     }
     if (size.present) {
-      map['size'] = Variable<int>(size.value);
+      map['size'] = Variable<int?>(size.value);
     }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
@@ -1296,7 +1298,7 @@ class $MessagesTable extends Messages
       typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _sizeMeta = const VerificationMeta('size');
   late final GeneratedColumn<int?> size = GeneratedColumn<int?>(
-      'size', aliasedName, false,
+      'size', aliasedName, true,
       typeName: 'INTEGER',
       requiredDuringInsert: false,
       defaultValue: const Constant(0));

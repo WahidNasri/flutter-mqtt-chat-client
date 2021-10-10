@@ -6,7 +6,7 @@ import 'package:flutter_mqtt/abstraction/MessageOnlineReaderHandler.dart';
 import 'package:flutter_mqtt/abstraction/models/BaseMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMarkerMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMessage.dart';
-import 'package:flutter_mqtt/abstraction/models/PresenceMesssage.dart';
+import 'package:flutter_mqtt/abstraction/models/PresenceMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/TypingMessage.dart';
 
 class MqttOnlineReader extends MessageOnlineReaderHandler {
@@ -31,20 +31,20 @@ class MqttOnlineReader extends MessageOnlineReaderHandler {
       Map<String, dynamic> payloadMap = jsonDecode(payload);
 
       if (topic.toLowerCase().startsWith("messages/")) {
-        ChatMessage chatMessage = ChatMessage.fromJson(payload);
+        ChatMessage chatMessage = ChatMessage.fromString(payload);
         _chatController.add(chatMessage);
       } else if (topic.toLowerCase().startsWith("presence/")) {
-        PresenceMessage pMsg = PresenceMessage.fromJson(payload);
+        PresenceMessage pMsg = PresenceMessage.fromString(payload);
         _presenceController.add(pMsg);
       } else if (topic.toLowerCase().startsWith("events/")) {
         BaseMessage baseMsg = BaseMessage.fromJson(payloadMap);
         //handle rooms events
         //String roomId = topic.toLowerCase().split("/")[1];
         if (baseMsg.isChatMarkerEvent()) {
-          ChatMarkerMessage cmMsg = ChatMarkerMessage.fromJson(payload);
+          ChatMarkerMessage cmMsg = ChatMarkerMessage.fromString(payload);
           _chatMarkerController.add(cmMsg);
         } else if (baseMsg.isTypingEvent()) {
-          TypingMessage tMsg = TypingMessage.fromJson(payload);
+          TypingMessage tMsg = TypingMessage.fromString(payload);
           _typingController.add(tMsg);
         }
       }

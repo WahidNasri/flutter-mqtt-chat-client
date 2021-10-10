@@ -133,7 +133,7 @@ extension DbMessageConversions on DbMessage {
             id: id,
             name: "Image",
             uri: attachment!,
-            size: size);
+            size: size ?? 0);
       case "ChatVideo":
       case "ChatAudio":
       case "ChatDocument":
@@ -143,7 +143,7 @@ extension DbMessageConversions on DbMessage {
             name: textClm,
             uri: attachment!,
             mimeType: mime,
-            size: size,
+            size: size ?? 0,
             status: getStatus(status));
       default:
         return types.UnsupportedMessage(id: id, author: author);

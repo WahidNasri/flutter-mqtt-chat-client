@@ -7,14 +7,14 @@ extension DbMessageConversions on DbMessage {
   ChatMessage toChatMessage() {
     var map = toJson();
     map.putIfAbsent("text", () => map["textClm"]);
-    var cm = ChatMessage.fromMap(map);
+    var cm = ChatMessage.fromJson(map);
     return cm;
   }
 }
 
 extension ChatMessageConversions on ChatMessage {
   DbMessage toDbMessage({String? status}) {
-    var map = toMap();
+    var map = toJson();
     map.putIfAbsent("textClm", () => map["text"]);
     map["status"] = status ?? "delivered";
     DbMessage msg = DbMessage.fromJson(map);
@@ -24,15 +24,13 @@ extension ChatMessageConversions on ChatMessage {
 
 extension DbContactConversions on DbContact {
   ContactChat toContactChat() {
-    var x = this;
-
-    return ContactChat.fromMap(toJson());
+    return ContactChat.fromJson(toJson());
   }
 }
 
 extension ContactChatConversions on ContactChat {
   DbContact toDbContact() {
-    var map = toMap();
+    var map = toJson();
     DbContact dbc = DbContact.fromJson(map);
     return dbc;
   }

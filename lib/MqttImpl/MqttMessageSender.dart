@@ -14,7 +14,7 @@ class MqttMessageSender extends MessageSender {
 
   @override
   void sendChatMessage(ChatMessage message, String bareRoom) {
-    var messagePayload = jsonEncode(message.toMap());
+    var messagePayload = jsonEncode(message.toJson());
 
     String chatTopic =
         TopicsNamesGenerator.getChattingTopicForBareRoom(bareRoom);

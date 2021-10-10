@@ -1,8 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/PresenceType.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
+part 'ContactChat.g.dart';
+
+@JsonSerializable()
+@CopyWith()
 class ContactChat {
   String firstName;
   String lastName;
@@ -20,34 +25,8 @@ class ContactChat {
       required this.isGroup,
       this.presence});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'firstName': firstName,
-      'lastName': lastName,
-      'id': id,
-      'avatar': avatar,
-      'roomId': roomId,
-      'isGroup': isGroup,
-      'presence': presence == null ? null :  presence.toString().split(".")[1],
-    };
-  }
+  factory ContactChat.fromJson(Map<String, dynamic> json) => _$ContactChatFromJson(json);
+  factory ContactChat.fromString(String jsonString) => _$ContactChatFromJson(json.decode(jsonString));
+  Map<String, dynamic> toJson() => _$ContactChatToJson(this);
 
-  factory ContactChat.fromMap(Map<String, dynamic> map) {
-    return ContactChat(
-      firstName: map['firstName'],
-      lastName: map['lastName'],
-      id: map['id'],
-      avatar: map['avatar'],
-      roomId: map['roomId'],
-      presence: map['presence'] == null ? null :  PresenceType.values
-          .where((e) => describeEnum(e) == map['presence'])
-          .first,
-      isGroup: map['isGroup'] != null && map['isGroup'] == true,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory ContactChat.fromJson(String source) =>
-      ContactChat.fromMap(json.decode(source));
 }

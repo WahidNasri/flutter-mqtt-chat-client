@@ -1,32 +1,25 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
+import 'dart:convert';
 
+import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
+
+part 'BaseMessage.g.dart';
+
+@JsonSerializable()
+@CopyWith()
 class BaseMessage {
-  late String id;
-  late MessageType type;
-  String? fromId;
-  String? fromName;
+  final String id;
+  final MessageType type;
+  final String? fromId;
+  final String? fromName;
 
   BaseMessage(
       {required this.id, required this.type, this.fromId, this.fromName});
 
-  BaseMessage.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    //type = MessageType.values[json['type']];
-    type =
-        MessageType.values.where((e) => describeEnum(e) == json['type']).first;
-    fromId = json['fromId'];
-    fromName = json['fromName'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['fromId'] = this.fromId;
-    data['fromName'] = this.fromName;
-    return data;
-  }
+  factory BaseMessage.fromJson(Map<String, dynamic> json) => _$BaseMessageFromJson(json);
+  factory BaseMessage.fromString(String jsonString) => _$BaseMessageFromJson(json.decode(jsonString));
+  Map<String, dynamic> toJson() => _$BaseMessageToJson(this);
 
   bool isChatMessage() {
     return type == MessageType.ChatAudio ||

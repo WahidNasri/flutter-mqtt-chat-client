@@ -3,7 +3,7 @@ import 'package:flutter_mqtt/abstraction/ChatEventsSender.dart';
 import 'package:flutter_mqtt/abstraction/ClientHandler.dart';
 import 'package:flutter_mqtt/abstraction/models/ChatMarkerMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/InvitationMessage.dart';
-import 'package:flutter_mqtt/abstraction/models/PresenceMesssage.dart';
+import 'package:flutter_mqtt/abstraction/models/PresenceMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/ChatMarker.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/InvitationMessageType.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
@@ -25,7 +25,7 @@ class MqttChatEventsSender extends ChatEventsSender {
         fromId: "",
         referenceId: messageId,
         status: marker);
-    clientHandler.sendPayload(msg.toJson(), topic);
+    clientHandler.sendPayload(msg.toJson().toString(), topic);
   }
 
   @override
@@ -33,12 +33,13 @@ class MqttChatEventsSender extends ChatEventsSender {
     TypingMessage message = TypingMessage(
         id: Uuid().v4(),
         type: MessageType.Typing,
-        fromId: Uuid().v1(), //TODO: use user id
+        fromId: Uuid().v1(), //TODO: use user id, the broker will change this anyway
+        fromName: Uuid().v1(),
         roomId: bareRoom,
         isTyping: isTyping);
 
     String topic = TopicsNamesGenerator.getEventsTopicForBareRoom(bareRoom);
-    clientHandler.sendPayload(message.toJson(), topic);
+    clientHandler.sendPayload(message.toJson().toString(), topic);
   }
 
   @override
@@ -67,7 +68,7 @@ class MqttChatEventsSender extends ChatEventsSender {
   @override
   void sendPresence(PresenceType presenceType, String myId) {
     PresenceMessage presenceMessage = PresenceMessage(id: Uuid().v4(), type: MessageType.Presence, presenceType: presenceType, fromId: myId);
-    String payload = presenceMessage.toJson();
+    String payload = presenceMessage.toJson().toString();
     clientHandler.sendPayload(payload, "presence/" + myId);
   }
 }

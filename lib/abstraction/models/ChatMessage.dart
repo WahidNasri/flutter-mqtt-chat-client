@@ -1,27 +1,35 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_mqtt/abstraction/models/BaseMessage.dart';
 import 'enums/MessageOriginality.dart';
 import 'enums/MessageType.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
-class ChatMessage {
-  late String id;
-  late MessageType type;
-  String? fromId;
-  String? fromName;
-  String? toId;
-  String? toName;
-  late String text;
-  String roomId;
-  MessageOriginality originality;
-  String? attachment;
-  String? thumbnail;
-  String? originalId;
-  String? originalMessage;
-  late int sendTime;
-  int? size;
-  String? mime;
-  List<String>? additionalFields;
+part 'ChatMessage.g.dart';
+
+@JsonSerializable()
+@CopyWith()
+class ChatMessage extends BaseMessage{
+  final String id;
+  final MessageType type;
+  final String? fromId;
+  final String? fromName;
+  final String? toId;
+  final String? toName;
+  final  String text;
+  final String roomId;
+  final MessageOriginality originality;
+  final String? attachment;
+  final String? thumbnail;
+  final String? originalId;
+  final String? originalMessage;
+  @JsonKey(fromJson: _sendTimeFromJson)
+  final int sendTime;
+  final int? size;
+  final String? mime;
+  final List<String>? additionalFields;
   ChatMessage(
       {required this.id,
       required this.type,
@@ -39,140 +47,22 @@ class ChatMessage {
       required this.sendTime,
       this.size,
       this.mime,
-      this.additionalFields});
+      this.additionalFields}):super(id: id, fromId: fromId, fromName:  fromId, type: type);
 
-  ChatMessage copyWith({
-    String? id,
-    MessageType? type,
-    String? fromId,
-    String? fromName,
-    String? toId,
-    String? toName,
-    String? text,
-    String? roomId,
-    MessageOriginality? originality,
-    String? attachment,
-    String? thumbnail,
-    String? originalId,
-    String? originalMessage,
-    int? sendTime,
-    int? size,
-    String? mime,
-    List<String>? additionalFields,
-  }) {
-    return ChatMessage(
-        id: id ?? this.id,
-        type: type ?? this.type,
-        fromId: fromId ?? this.fromId,
-        fromName: fromName ?? this.fromName,
-        toId: toId ?? this.toId,
-        toName: toName ?? this.toName,
-        text: text ?? this.text,
-        roomId: roomId ?? this.roomId,
-        originality: originality ?? this.originality,
-        attachment: attachment ?? this.attachment,
-        thumbnail: thumbnail ?? this.thumbnail,
-        originalId: originalId ?? this.originalId,
-        originalMessage: originalMessage ?? this.originalMessage,
-        sendTime: sendTime ?? DateTime.now().millisecondsSinceEpoch,
-        size: size ?? 0,
-        mime: mime ?? this.mime,
-        additionalFields: additionalFields ?? this.additionalFields);
-  }
+  factory ChatMessage.fromJson(Map<String, dynamic> json) => _$ChatMessageFromJson(json);
+  factory ChatMessage.fromString(String jsonString) => _$ChatMessageFromJson(json.decode(jsonString));
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'type': type
-          .toString()
-          .substring(type.toString().toString().indexOf('.') + 1),
-      'fromId': fromId,
-      'fromName': fromName,
-      'toId': toId,
-      'toName': toName,
-      'text': text,
-      'roomId': roomId,
-      'originality': originality
-          .toString()
-          .substring(originality.toString().toString().indexOf('.') + 1),
-      'attachment': attachment,
-      'thumbnail': thumbnail,
-      'originalId': originalId,
-      'originalMessage': originalMessage,
-      'sendTime': sendTime,
-      'size': size ?? 0,
-      'mime': mime,
-      'additionalFields': additionalFields.toString()
-    };
-  }
+  Map<String, dynamic> toJson() => _$ChatMessageToJson(this);
 
-  factory ChatMessage.fromMap(Map<String, dynamic> map) {
-    return ChatMessage(
-      id: map['id'],
-      type:
-          MessageType.values.where((e) => describeEnum(e) == map['type']).first,
-      fromId: map['fromId'],
-      fromName: map['fromName'],
-      toId: map['toId'],
-      toName: map['toName'],
-      text: map['text'],
-      roomId: map['roomId'],
-      originality: map['originality'] != null
-          ? MessageOriginality.values
-              .where((e) => describeEnum(e) == map['originality'])
-              .first
-          : MessageOriginality.Original,
-      attachment: map['attachment'],
-      thumbnail: map['thumbnail'],
-      originalId: map['originalId'],
-      sendTime: map['sendTime'] == null
-          ? DateTime.now().millisecondsSinceEpoch
-          : int.tryParse(map['sendTime'].toString()) ??
-              DateTime.now().millisecondsSinceEpoch,
-      size: map['size'] == null ? 0 : int.tryParse(map['size'].toString()),
-      mime: map['mime'],
-      originalMessage: map['originalMessage'],
-    );
-  }
-
-  factory ChatMessage.fromJson(String source) =>
-      ChatMessage.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'ChatMessage(id: $id, type: $type, fromId: $fromId, fromName: $fromName, toId: $toId, toName: $toName, text: $text, attachment: $attachment, thumbnail: $thumbnail, originalId: $originalId, originalMessage: $originalMessage)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is ChatMessage &&
-        other.id == id &&
-        other.type == type &&
-        other.fromId == fromId &&
-        other.fromName == fromName &&
-        other.toId == toId &&
-        other.toName == toName &&
-        other.text == text &&
-        other.attachment == attachment &&
-        other.thumbnail == thumbnail &&
-        other.originalId == originalId &&
-        other.originalMessage == originalMessage;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        type.hashCode ^
-        fromId.hashCode ^
-        fromName.hashCode ^
-        toId.hashCode ^
-        toName.hashCode ^
-        text.hashCode ^
-        attachment.hashCode ^
-        thumbnail.hashCode ^
-        originalId.hashCode ^
-        originalMessage.hashCode;
+  static int _sendTimeFromJson(dynamic milliseconds) {
+    if (milliseconds is String) {
+      return int.tryParse(milliseconds) ?? 0;
+    }
+    else if(milliseconds is int){
+      return milliseconds;
+    }
+    else{
+      return int.tryParse(milliseconds) ?? 0;
+    }
   }
 }

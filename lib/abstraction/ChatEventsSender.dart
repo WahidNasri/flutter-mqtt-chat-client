@@ -1,4 +1,4 @@
-import 'package:flutter_mqtt/abstraction/models/PresenceMesssage.dart';
+import 'package:flutter_mqtt/abstraction/models/PresenceMessage.dart';
 import 'package:flutter_mqtt/abstraction/models/enums/PresenceType.dart';
 
 import 'models/enums/ChatMarker.dart';

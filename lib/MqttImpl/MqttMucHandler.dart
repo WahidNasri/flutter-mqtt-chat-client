@@ -15,7 +15,7 @@ class MqttMucHandler extends MucHandler{
     ChatMessage msg = ChatMessage(id: groupId, type: MessageType.AddUsersToGroup, text: '', roomId: groupId, sendTime: 0, additionalFields: userIds);
 
     String topic = "muc/" + groupId;
-    clientHandler.sendPayload(msg.toMap().toString(), topic);
+    clientHandler.sendPayload(msg.toJson().toString(), topic);
   }
 
   @override
@@ -24,7 +24,7 @@ class MqttMucHandler extends MucHandler{
     ChatMessage msg = ChatMessage(id: id, type: MessageType.CreateGroup, text: name, roomId: id, sendTime: 0, additionalFields: members);
 
     String topic = "muc/" + id;
-    clientHandler.sendPayload(msg.toMap().toString(), topic);
+    clientHandler.sendPayload(msg.toJson().toString(), topic);
   }
 
   @override
@@ -32,7 +32,7 @@ class MqttMucHandler extends MucHandler{
     ChatMessage msg = ChatMessage(id: groupId, type: MessageType.RemoveGroup, text: groupId, roomId: '', sendTime: 0);
 
     String topic = "muc/" + groupId;
-    clientHandler.sendPayload(msg.toMap().toString(), topic);
+    clientHandler.sendPayload(msg.toJson().toString(), topic);
   }
 
   @override
@@ -40,7 +40,7 @@ class MqttMucHandler extends MucHandler{
     ChatMessage msg = ChatMessage(id: groupId, type: MessageType.RemoveGroupMembers, text: '', roomId: '', sendTime: 0, additionalFields: memberIds);
 
     String topic = "muc/" + groupId;
-    clientHandler.sendPayload(msg.toMap().toString(), topic);
+    clientHandler.sendPayload(msg.toJson().toString(), topic);
 
   }
 
