@@ -42,12 +42,18 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
-    	<string>Access camera</string>
-    	<key>NSMicrophoneUsageDescription</key>
-    	<string>Access microphone</string>
-    	<key>NSPhotoLibraryAddUsageDescription</key>
-    	<string>Access photos</string>
-    	<key>NSPhotoLibraryUsageDescription</key>
-    	<string>Access photos</string>
+	<string>Access camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Access microphone</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Access photos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access photos</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+    <string>Access location</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Access location to get your location</string>
+    <key>io.flutter.embedded_views_preview</key>
+    <string>YES</string>
 </dict>
 </plist>

@@ -145,6 +145,13 @@ extension DbMessageConversions on DbMessage {
             mimeType: mime,
             size: size ?? 0,
             status: getStatus(status));
+      case "ChatLocation":
+        return types.ImageMessage(
+            author: author,
+            id: id,
+            name: "Image",
+            uri: attachment!,
+            size: size ?? 0);
       default:
         return types.UnsupportedMessage(id: id, author: author);
     }

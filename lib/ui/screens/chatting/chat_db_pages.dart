@@ -21,6 +21,7 @@ import 'package:open_file/open_file.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_mqtt/ui/extensions/UiMessages.dart';
+import 'package:place_picker/place_picker.dart';
 
 class ChatUIDBPage extends StatefulWidget {
   final ContactChat contactChat;
@@ -93,6 +94,16 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
                   ),
                 ),
                 TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _handleLocationSelection();
+                  },
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('File'),
+                  ),
+                ),
+                TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Align(
                     alignment: Alignment.centerLeft,
@@ -119,6 +130,18 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
           fileLocalPath: path,
           room: widget.contactChat.roomId);
     }
+  }
+  void _handleLocationSelection() async {
+    LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            PlacePicker("AIzaSyDs9qcIhAV-aToQiGOIRlVTzFtrbh1z7tU",
+            )));
+
+    // Handle the result in your way
+    if(result != null && result.latLng != null){
+      ChatApp.instance()!.messageSender.sendLocationMessage(result.latLng!.longitude, result.latLng!.latitude, result.formattedAddress, widget.contactChat.roomId);
+    }
+    print(result);
   }
 
   void _handleImageSelection() async {

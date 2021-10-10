@@ -1,8 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_mqtt">
-   <application
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
         android:label="flutter_mqtt"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDs9qcIhAV-aToQiGOIRlVTzFtrbh1z7tU"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -18,6 +18,8 @@ class Messages extends Table {
   IntColumn get size => integer().withDefault(const Constant(0)).nullable()();
   TextColumn get status => text().withDefault(const Constant("pending"))();
   TextColumn get mime => text().nullable()();
+  RealColumn get longitude => real().nullable()();
+  RealColumn get latitude => real().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

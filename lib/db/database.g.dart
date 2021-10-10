@@ -747,6 +747,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
   final int? size;
   final String status;
   final String? mime;
+  final double? longitude;
+  final double? latitude;
   DbMessage(
       {required this.id,
       required this.type,
@@ -763,7 +765,9 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       required this.sendTime,
       this.size,
       required this.status,
-      this.mime});
+      this.mime,
+      this.longitude,
+      this.latitude});
   factory DbMessage.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -800,6 +804,10 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
       mime: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}mime']),
+      longitude: const RealType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}longitude']),
+      latitude: const RealType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}latitude']),
     );
   }
   @override
@@ -837,6 +845,12 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
     if (!nullToAbsent || mime != null) {
       map['mime'] = Variable<String?>(mime);
     }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double?>(longitude);
+    }
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double?>(latitude);
+    }
     return map;
   }
 
@@ -867,6 +881,12 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       size: size == null && nullToAbsent ? const Value.absent() : Value(size),
       status: Value(status),
       mime: mime == null && nullToAbsent ? const Value.absent() : Value(mime),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
     );
   }
 
@@ -890,6 +910,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       size: serializer.fromJson<int?>(json['size']),
       status: serializer.fromJson<String>(json['status']),
       mime: serializer.fromJson<String?>(json['mime']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
     );
   }
   @override
@@ -912,6 +934,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
       'size': serializer.toJson<int?>(size),
       'status': serializer.toJson<String>(status),
       'mime': serializer.toJson<String?>(mime),
+      'longitude': serializer.toJson<double?>(longitude),
+      'latitude': serializer.toJson<double?>(latitude),
     };
   }
 
@@ -931,7 +955,9 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           int? sendTime,
           int? size,
           String? status,
-          String? mime}) =>
+          String? mime,
+          double? longitude,
+          double? latitude}) =>
       DbMessage(
         id: id ?? this.id,
         type: type ?? this.type,
@@ -949,6 +975,8 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
         size: size ?? this.size,
         status: status ?? this.status,
         mime: mime ?? this.mime,
+        longitude: longitude ?? this.longitude,
+        latitude: latitude ?? this.latitude,
       );
   @override
   String toString() {
@@ -968,7 +996,9 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           ..write('sendTime: $sendTime, ')
           ..write('size: $size, ')
           ..write('status: $status, ')
-          ..write('mime: $mime')
+          ..write('mime: $mime, ')
+          ..write('longitude: $longitude, ')
+          ..write('latitude: $latitude')
           ..write(')'))
         .toString();
   }
@@ -1002,8 +1032,15 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
                                                       sendTime.hashCode,
                                                       $mrjc(
                                                           size.hashCode,
-                                                          $mrjc(status.hashCode,
-                                                              mime.hashCode))))))))))))))));
+                                                          $mrjc(
+                                                              status.hashCode,
+                                                              $mrjc(
+                                                                  mime.hashCode,
+                                                                  $mrjc(
+                                                                      longitude
+                                                                          .hashCode,
+                                                                      latitude
+                                                                          .hashCode))))))))))))))))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1023,7 +1060,9 @@ class DbMessage extends DataClass implements Insertable<DbMessage> {
           other.sendTime == this.sendTime &&
           other.size == this.size &&
           other.status == this.status &&
-          other.mime == this.mime);
+          other.mime == this.mime &&
+          other.longitude == this.longitude &&
+          other.latitude == this.latitude);
 }
 
 class MessagesCompanion extends UpdateCompanion<DbMessage> {
@@ -1043,6 +1082,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
   final Value<int?> size;
   final Value<String> status;
   final Value<String?> mime;
+  final Value<double?> longitude;
+  final Value<double?> latitude;
   const MessagesCompanion({
     this.id = const Value.absent(),
     this.type = const Value.absent(),
@@ -1060,6 +1101,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     this.size = const Value.absent(),
     this.status = const Value.absent(),
     this.mime = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.latitude = const Value.absent(),
   });
   MessagesCompanion.insert({
     required String id,
@@ -1078,6 +1121,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     this.size = const Value.absent(),
     this.status = const Value.absent(),
     this.mime = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.latitude = const Value.absent(),
   })  : id = Value(id),
         type = Value(type),
         fromId = Value(fromId),
@@ -1102,6 +1147,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     Expression<int?>? size,
     Expression<String>? status,
     Expression<String?>? mime,
+    Expression<double?>? longitude,
+    Expression<double?>? latitude,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1120,6 +1167,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       if (size != null) 'size': size,
       if (status != null) 'status': status,
       if (mime != null) 'mime': mime,
+      if (longitude != null) 'longitude': longitude,
+      if (latitude != null) 'latitude': latitude,
     });
   }
 
@@ -1139,7 +1188,9 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       Value<int>? sendTime,
       Value<int?>? size,
       Value<String>? status,
-      Value<String?>? mime}) {
+      Value<String?>? mime,
+      Value<double?>? longitude,
+      Value<double?>? latitude}) {
     return MessagesCompanion(
       id: id ?? this.id,
       type: type ?? this.type,
@@ -1157,6 +1208,8 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
       size: size ?? this.size,
       status: status ?? this.status,
       mime: mime ?? this.mime,
+      longitude: longitude ?? this.longitude,
+      latitude: latitude ?? this.latitude,
     );
   }
 
@@ -1211,6 +1264,12 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
     if (mime.present) {
       map['mime'] = Variable<String?>(mime.value);
     }
+    if (longitude.present) {
+      map['longitude'] = Variable<double?>(longitude.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double?>(latitude.value);
+    }
     return map;
   }
 
@@ -1232,7 +1291,9 @@ class MessagesCompanion extends UpdateCompanion<DbMessage> {
           ..write('sendTime: $sendTime, ')
           ..write('size: $size, ')
           ..write('status: $status, ')
-          ..write('mime: $mime')
+          ..write('mime: $mime, ')
+          ..write('longitude: $longitude, ')
+          ..write('latitude: $latitude')
           ..write(')'))
         .toString();
   }
@@ -1312,6 +1373,14 @@ class $MessagesTable extends Messages
   late final GeneratedColumn<String?> mime = GeneratedColumn<String?>(
       'mime', aliasedName, true,
       typeName: 'TEXT', requiredDuringInsert: false);
+  final VerificationMeta _longitudeMeta = const VerificationMeta('longitude');
+  late final GeneratedColumn<double?> longitude = GeneratedColumn<double?>(
+      'longitude', aliasedName, true,
+      typeName: 'REAL', requiredDuringInsert: false);
+  final VerificationMeta _latitudeMeta = const VerificationMeta('latitude');
+  late final GeneratedColumn<double?> latitude = GeneratedColumn<double?>(
+      'latitude', aliasedName, true,
+      typeName: 'REAL', requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1329,7 +1398,9 @@ class $MessagesTable extends Messages
         sendTime,
         size,
         status,
-        mime
+        mime,
+        longitude,
+        latitude
       ];
   @override
   String get aliasedName => _alias ?? 'messages';
@@ -1422,6 +1493,14 @@ class $MessagesTable extends Messages
     if (data.containsKey('mime')) {
       context.handle(
           _mimeMeta, mime.isAcceptableOrUnknown(data['mime']!, _mimeMeta));
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
     }
     return context;
   }

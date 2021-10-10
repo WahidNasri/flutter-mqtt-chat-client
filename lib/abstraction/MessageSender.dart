@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:uuid/uuid.dart';
 
-
-
 import 'models/ChatMessage.dart';
 import 'models/enums/MessageOriginality.dart';
 import 'models/enums/MessageType.dart';
@@ -24,7 +22,8 @@ abstract class MessageSender {
         originalMessage: toForwardMessage.text,
         originality: MessageOriginality.Forward,
         toId: toId,
-        toName: toName);
+        toName: toName,
+        sendTime: DateTime.now().millisecondsSinceEpoch);
     sendChatMessage(newMessage, toRoom);
   }
 
@@ -35,5 +34,18 @@ abstract class MessageSender {
         originalMessage: originalMessage.text,
         originality: MessageOriginality.Reply);
     sendChatMessage(toSendMessage, room);
+  }
+
+  void sendLocationMessage(
+      double longitude, double latitude, String? address, String room) {
+    ChatMessage message = ChatMessage(
+        id: Uuid().v4(),
+        type: MessageType.ChatLocation,
+        text: address ?? "",
+        roomId: room,
+        originality: MessageOriginality.Original,
+        sendTime: DateTime.now().millisecondsSinceEpoch);
+
+    sendChatMessage(message, room);
   }
 }

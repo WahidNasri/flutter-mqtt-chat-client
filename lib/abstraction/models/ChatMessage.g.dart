@@ -13,6 +13,8 @@ extension ChatMessageCopyWith on ChatMessage {
     String? fromId,
     String? fromName,
     String? id,
+    double? latitude,
+    double? longitude,
     String? mime,
     String? originalId,
     String? originalMessage,
@@ -32,6 +34,8 @@ extension ChatMessageCopyWith on ChatMessage {
       fromId: fromId ?? this.fromId,
       fromName: fromName ?? this.fromName,
       id: id ?? this.id,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       mime: mime ?? this.mime,
       originalId: originalId ?? this.originalId,
       originalMessage: originalMessage ?? this.originalMessage,
@@ -73,6 +77,8 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) {
     additionalFields: (json['additionalFields'] as List<dynamic>?)
         ?.map((e) => e as String)
         .toList(),
+    longitude: ChatMessage._latLngFromJson(json['longitude']),
+    latitude: ChatMessage._latLngFromJson(json['latitude']),
   );
 }
 
@@ -94,6 +100,8 @@ Map<String, dynamic> _$ChatMessageToJson(ChatMessage instance) =>
       'sendTime': instance.sendTime,
       'size': instance.size,
       'mime': instance.mime,
+      'longitude': instance.longitude,
+      'latitude': instance.latitude,
       'additionalFields': instance.additionalFields,
     };
 

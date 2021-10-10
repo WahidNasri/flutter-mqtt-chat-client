@@ -11,14 +11,14 @@ part 'ChatMessage.g.dart';
 
 @JsonSerializable()
 @CopyWith()
-class ChatMessage extends BaseMessage{
+class ChatMessage extends BaseMessage {
   final String id;
   final MessageType type;
   final String? fromId;
   final String? fromName;
   final String? toId;
   final String? toName;
-  final  String text;
+  final String text;
   final String roomId;
   final MessageOriginality originality;
   final String? attachment;
@@ -29,6 +29,10 @@ class ChatMessage extends BaseMessage{
   final int sendTime;
   final int? size;
   final String? mime;
+  @JsonKey(fromJson: _latLngFromJson)
+  final double? longitude;
+  @JsonKey(fromJson: _latLngFromJson)
+  final double? latitude;
   final List<String>? additionalFields;
   ChatMessage(
       {required this.id,
@@ -47,21 +51,35 @@ class ChatMessage extends BaseMessage{
       required this.sendTime,
       this.size,
       this.mime,
-      this.additionalFields}):super(id: id, fromId: fromId, fromName:  fromId, type: type);
+      this.additionalFields,
+      this.longitude,
+      this.latitude})
+      : super(id: id, fromId: fromId, fromName: fromId, type: type);
 
-  factory ChatMessage.fromJson(Map<String, dynamic> json) => _$ChatMessageFromJson(json);
-  factory ChatMessage.fromString(String jsonString) => _$ChatMessageFromJson(json.decode(jsonString));
+  factory ChatMessage.fromJson(Map<String, dynamic> json) =>
+      _$ChatMessageFromJson(json);
+  factory ChatMessage.fromString(String jsonString) =>
+      _$ChatMessageFromJson(json.decode(jsonString));
 
   Map<String, dynamic> toJson() => _$ChatMessageToJson(this);
+
+  static double? _latLngFromJson(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is double) {
+      return value;
+    } else {
+      double.tryParse(value);
+    }
+  }
 
   static int _sendTimeFromJson(dynamic milliseconds) {
     if (milliseconds is String) {
       return int.tryParse(milliseconds) ?? 0;
-    }
-    else if(milliseconds is int){
+    } else if (milliseconds is int) {
       return milliseconds;
-    }
-    else{
+    } else {
       return int.tryParse(milliseconds) ?? 0;
     }
   }
