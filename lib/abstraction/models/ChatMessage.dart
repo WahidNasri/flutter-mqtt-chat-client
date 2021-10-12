@@ -64,11 +64,15 @@ class ChatMessage extends BaseMessage {
   Map<String, dynamic> toJson() => _$ChatMessageToJson(this);
 
   static double? _latLngFromJson(dynamic value) {
+    var type = value.runtimeType;
     if (value == null) {
       return null;
     }
-    if (value is double) {
-      return value;
+    if(value is String){
+      return double.tryParse(value);
+    }
+    if (value is num) {
+      return value.toDouble();
     } else {
       double.tryParse(value);
     }

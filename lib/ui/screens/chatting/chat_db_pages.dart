@@ -10,6 +10,7 @@ import 'package:flutter_mqtt/abstraction/models/enums/MessageType.dart';
 import 'package:flutter_mqtt/db/appdata/AppData.dart';
 import 'package:flutter_mqtt/db/database.dart';
 import 'package:flutter_mqtt/global/ChatApp.dart';
+import 'package:flutter_mqtt/ui/extensions/MapsLauncher.dart';
 import 'package:flutter_mqtt/ui/screens/details/contact_page.dart';
 import 'package:flutter_mqtt/ui/viewers/document_viewer.dart';
 import 'package:flutter_mqtt/ui/viewers/media_viewer.dart';
@@ -100,7 +101,7 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
                   },
                   child: const Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('File'),
+                    child: Text('Location'),
                   ),
                 ),
                 TextButton(
@@ -171,14 +172,21 @@ class _ChatUIPageState extends State<ChatUIDBPage> {
                 )),
       );
     } else if (message is types.ImageMessage) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MediaViewerPage(
-                  roomId: widget.contactChat.roomId,
-                  messageId: message.id,
-                )),
-      );
+      if(message.metadata != null && message.metadata!["type"] == "ChatLocation"){
+        //location message
+        MapsLauncher.launchCoordinates((message.metadata!["latitude"])!, (message.metadata!["longitude"])!, message.metadata!["text"]);
+      }
+      else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MediaViewerPage(
+                    roomId: widget.contactChat.roomId,
+                    messageId: message.id,
+                  )),
+        );
+      }
     }
     //TODO: Handle DOC/DOCX/ODT/...
     //TODO: Handle TXT

@@ -86,9 +86,18 @@ extension MessageConversions on ChatMessage {
   Widget toGridItem() {
     if (type == MessageType.ChatImage) {
       return CachedNetworkImage(
-        progressIndicatorBuilder: (context, url, downloadProgress) =>
-            CircularProgressIndicator(value: downloadProgress.progress),
+        progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+            child: CircularProgressIndicator(value: downloadProgress.progress)),
         imageUrl: attachment ?? "",
+        fit: BoxFit.cover,
+        width: double.infinity,
+      );
+    } else if (type == MessageType.ChatLocation) {
+      return CachedNetworkImage(
+        progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+            child: CircularProgressIndicator(value: downloadProgress.progress)),
+        imageUrl:
+            "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&markers=color:blue%7C$latitude,$longitude&zoom=13&size=300x200&maptype=roadmap&key=AIzaSyDs9qcIhAV-aToQiGOIRlVTzFtrbh1z7tU",
         fit: BoxFit.cover,
         width: double.infinity,
       );
@@ -150,7 +159,9 @@ extension DbMessageConversions on DbMessage {
             author: author,
             id: id,
             name: "Image",
-            uri: attachment!,
+            metadata: toJson(),
+            uri:
+                "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&markers=color:blue%7C$latitude,$longitude&zoom=13&size=300x200&maptype=roadmap&key=AIzaSyDs9qcIhAV-aToQiGOIRlVTzFtrbh1z7tU",
             size: size ?? 0);
       default:
         return types.UnsupportedMessage(id: id, author: author);
@@ -203,9 +214,9 @@ extension IterableExtension<T> on Iterable<T> {
   }
 }
 
-extension PresenceExtension on PresenceType{
-  Color toColor(){
-    switch(this){
+extension PresenceExtension on PresenceType {
+  Color toColor() {
+    switch (this) {
       case PresenceType.Available:
         return Colors.green;
       case PresenceType.Unavailable:

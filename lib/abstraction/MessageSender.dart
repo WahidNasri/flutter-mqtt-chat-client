@@ -43,6 +43,8 @@ abstract class MessageSender {
         type: MessageType.ChatLocation,
         text: address ?? "",
         roomId: room,
+        longitude: longitude,
+        latitude: latitude,
         originality: MessageOriginality.Original,
         sendTime: DateTime.now().millisecondsSinceEpoch);
 
