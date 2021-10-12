@@ -22,6 +22,7 @@ To use this library inside your project with your custom UI, please refer to [Th
 - [x] Group Chat
 - [x] Presence (Testing...)
 - [x] File Previews (PDF and images Done)
+- [ ] In App Notifications
 - [ ] Push Notifications When App is in Background.
 
 ## P1 Features
