@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:example/database/models/room.dart';
-import 'package:example/database/models/user.dart';
 import 'package:example/proviers/chat_providers.dart';
 import 'package:example/proviers/user_provider.dart';
 import 'package:example/ui/extensions/messages_extensions.dart';
+import 'package:example/ui/widgets/room_avatar.dart';
 import 'package:example/ui/widgets/typing_indicator_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_mqtt/chat_app.dart';
@@ -39,13 +37,16 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
         title: Column(
           children: [
             Text(widget.room.name),
-            TypingIndicatorText(roomId: widget.room.id, isGroup: widget.room.isGroup, currentUserId: user!.id)
+            TypingIndicatorText(
+                roomId: widget.room.id,
+                isGroup: widget.room.isGroup,
+                currentUserId: user!.id)
           ],
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(foregroundImage: NetworkImage(widget.room.avatar ?? '')),
+            child: RoomAvatar(room: widget.room),
           )
         ],
       ),
@@ -54,19 +55,23 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
                 messages: messages
                     .map((m) => m.toUiMessage(
                         userId: m.fromId!, name: m.fromName ?? ""))
-                    .toList().reversed.toList(),
+                    .toList()
+                    .reversed
+                    .toList(),
                 onTextChanged: _handleTextChanged,
                 onAttachmentPressed: () {},
                 onMessageTap: (c, m) {},
                 onPreviewDataFetched: (tm, p) {},
                 onSendPressed: _handleSendPressed,
                 showUserAvatars: widget.room.isGroup,
-                onMessageVisibilityChanged: (message, visible){
-                  if(visible && message.status != types.Status.seen){
-                    ChatApp.instance()!.eventsSender.sendChatMarker(message.id, ChatMarker.displayed, widget.room.id);
+                onMessageVisibilityChanged: (message, visible) {
+                  if (visible && message.status != types.Status.seen) {
+                    ChatApp.instance()!.eventsSender.sendChatMarker(
+                        message.id, ChatMarker.displayed, widget.room.id);
                   }
                 },
-                user: types.User(id: user.id, firstName: user.name, imageUrl: user.avatar),
+                user: types.User(
+                    id: user.id, firstName: user.name, imageUrl: user.avatar),
               ),
           error: (e, s) => Text(e.toString()),
           loading: () => Text("Loading...")),
@@ -84,14 +89,15 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
             sendTime: DateTime.now().millisecondsSinceEpoch),
         widget.room.id);
   }
-  void _handleTextChanged(String text){
-    if(text.length % 3 == 0){
+
+  void _handleTextChanged(String text) {
+    if (text.length % 3 == 0) {
       ChatApp.instance()!.eventsSender.sendIsTyping(true, widget.room.id);
       lastTypingSentTime = DateTime.now();
 
       //if nothing changed in 3 seconds send is typing false
-      Future.delayed(const Duration(seconds: 3), (){
-        if(DateTime.now().difference(lastTypingSentTime!).inSeconds > 2){
+      Future.delayed(const Duration(seconds: 3), () {
+        if (DateTime.now().difference(lastTypingSentTime!).inSeconds > 2) {
           ChatApp.instance()!.eventsSender.sendIsTyping(false, widget.room.id);
         }
       });

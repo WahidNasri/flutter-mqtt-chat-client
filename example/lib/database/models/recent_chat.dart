@@ -1,11 +1,12 @@
 import 'package:floor/floor.dart';
 import 'package:flutter_chat_mqtt/models/enums.dart';
-@DatabaseView("SELECT m.id lastMessageId, m.type as lastMessageType, m.fromId lastMessageFromId, m.text lastMessageText, m.fromName lastMessageFromName, m.roomId roomId, r.name name, r.avatar avatar, r.isGroup isGroup  FROM message m"
+
+@DatabaseView(
+    "SELECT m.id lastMessageId, m.type as lastMessageType, m.fromId lastMessageFromId, m.text lastMessageText, m.fromName lastMessageFromName, m.roomId roomId, r.name name, r.avatar avatar, r.isGroup isGroup  FROM message m"
     " "
     " "
     "JOIN room r ON r.id  = m.roomId "
-    "JOIN (SELECT MAX(sendTime) maxtime, fromId from message group by fromId) latest on m.sendTime = latest.maxtime and m.fromId = latest.fromID ")
-
+    "JOIN (SELECT MAX(sendTime) maxtime, fromId, roomId from message group by roomId) latest on m.sendTime = latest.maxtime and m.roomId = latest.roomId ")
 class RecentChat {
   final String roomId;
   final String name;

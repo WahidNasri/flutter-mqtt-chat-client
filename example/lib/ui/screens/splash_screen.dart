@@ -1,4 +1,3 @@
-import 'package:example/database/models/user.dart';
 import 'package:example/proviers/user_provider.dart';
 import 'package:example/ui/screens/login_screen.dart';
 import 'package:example/ui/screens/main_screen.dart';
@@ -20,8 +19,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     ref.listen<UserProvider>(userProvider, (previous, state) async {
       if (state.user != null) {
         _goToHome();
-
-        final connected = await ChatApp.instance()!.clientHandler.connect(
+        ChatApp.instance()!.clientHandler.connect(
             host: await AppPreferences.brokerHost(),
             username: state.user!.username,
             password: state.user!.password,

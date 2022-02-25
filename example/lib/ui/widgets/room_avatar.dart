@@ -25,14 +25,21 @@ class RoomAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (room.avatar != null) {
+    if (room.avatar != null && room.avatar!.isNotEmpty) {
       return CircleAvatar(
         radius: radius,
         backgroundColor: room.presenceColor,
         child: CircleAvatar(
           radius: radius - (room.isGroup ? 0 : statusWidth),
-          foregroundImage: room.avatar != null && room.avatar!.isNotEmpty ? NetworkImage(room.avatar!) : null,
-          child: room.avatar  == null && room.avatar!.isEmpty ? Icon(room.isGroup ? Icons.group : Icons.person, size: 50,) : null,
+          foregroundImage: room.avatar != null && room.avatar!.isNotEmpty
+              ? NetworkImage(room.avatar!)
+              : null,
+          child: room.avatar == null && room.avatar!.isEmpty
+              ? Icon(
+                  room.isGroup ? Icons.group : Icons.person,
+                  size: 50,
+                )
+              : null,
         ),
       );
     } else {
@@ -41,7 +48,10 @@ class RoomAvatar extends StatelessWidget {
         foregroundColor: room.presenceColor,
         child: CircleAvatar(
             radius: radius - (room.isGroup ? 0 : statusWidth),
-            child: Icon(room.isGroup ? Icons.group : Icons.person, size: 50,)),
+            child: Icon(
+              room.isGroup ? Icons.group : Icons.person,
+              size: 20,
+            )),
       );
     }
     return Container();
