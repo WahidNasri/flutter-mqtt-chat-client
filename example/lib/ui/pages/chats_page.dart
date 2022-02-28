@@ -1,6 +1,7 @@
 import 'package:example/database/models/room.dart';
 import 'package:example/proviers/chat_providers.dart';
 import 'package:example/proviers/user_provider.dart';
+import 'package:example/ui/extensions/messages_extensions.dart';
 import 'package:example/ui/screens/chat_room_screen.dart';
 import 'package:example/ui/widgets/room_avatar.dart';
 import 'package:example/ui/widgets/typing_indicator_text.dart';
@@ -38,7 +39,14 @@ class _RecentChatsPageState extends ConsumerState<RecentChatsPage> {
                   child: ListTile(
                     title: Text(chats[index].name),
                     subtitle: TypingIndicatorText(
-                      fallbackWidget: Text(chats[index].lastMessageText),
+                      fallbackWidget: Row(
+                        children: [
+                          chats[index].lastMessageStatus.toChatMarkerWidget(chats[index].lastMessageFromId == user.user!.id),
+                          chats[index].lastMessageType.toIcon(),
+                          const SizedBox(width: 5),
+                          Expanded(child: Text(chats[index].lastMessageText, maxLines: 1)),
+                        ],
+                      ),
                       isGroup: chats[index].isGroup,
                       currentUserId: user.user != null ? user.user!.id : '',
                       roomId: chats[index].roomId,

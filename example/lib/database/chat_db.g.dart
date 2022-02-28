@@ -88,12 +88,12 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `User` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `clientId` TEXT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `avatar` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Room` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `avatar` TEXT, `isGroup` INTEGER NOT NULL, `presence` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Room` (`id` TEXT NOT NULL, `otherMemberId` TEXT, `name` TEXT NOT NULL, `avatar` TEXT, `isGroup` INTEGER NOT NULL, `presence` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Message` (`id` TEXT NOT NULL, `type` TEXT NOT NULL, `fromId` TEXT, `fromName` TEXT, `toId` TEXT, `toName` TEXT, `text` TEXT NOT NULL, `roomId` TEXT NOT NULL, `originality` TEXT NOT NULL, `attachment` TEXT, `thumbnail` TEXT, `originalId` TEXT, `originalMessage` TEXT, `size` INTEGER, `mime` TEXT, `longitude` REAL, `latitude` REAL, `sendTime` INTEGER NOT NULL, `status` TEXT, PRIMARY KEY (`id`))');
 
         await database.execute(
-            'CREATE VIEW IF NOT EXISTS `RecentChat` AS SELECT m.id lastMessageId, m.type as lastMessageType, m.fromId lastMessageFromId, m.text lastMessageText, m.fromName lastMessageFromName, m.roomId roomId, r.name name, r.avatar avatar, r.isGroup isGroup  FROM message m  JOIN room r ON r.id  = m.roomId JOIN (SELECT MAX(sendTime) maxtime, fromId from message group by fromId) latest on m.sendTime = latest.maxtime and m.fromId = latest.fromID ');
+            'CREATE VIEW IF NOT EXISTS `RecentChat` AS SELECT m.id lastMessageId, m.type as lastMessageType, m.fromId lastMessageFromId, m.text lastMessageText, m.fromName lastMessageFromName, m.status lastMessageStatus, m.roomId roomId, r.name name, r.avatar avatar, r.isGroup isGroup  FROM message m  JOIN room r ON r.id  = m.roomId JOIN (SELECT MAX(sendTime) maxtime, fromId, roomId from message group by roomId) latest on m.sendTime = latest.maxtime and m.roomId = latest.roomId ');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -200,6 +200,7 @@ class _$RoomDao extends RoomDao {
             'Room',
             (Room item) => <String, Object?>{
                   'id': item.id,
+                  'otherMemberId': item.otherMemberId,
                   'name': item.name,
                   'avatar': item.avatar,
                   'isGroup': item.isGroup ? 1 : 0,
@@ -220,6 +221,7 @@ class _$RoomDao extends RoomDao {
     return _queryAdapter.queryListStream('SELECT * FROM Room',
         mapper: (Map<String, Object?> row) => Room(
             id: row['id'] as String,
+            otherMemberId: row['otherMemberId'] as String?,
             name: row['name'] as String,
             avatar: row['avatar'] as String?,
             isGroup: (row['isGroup'] as int) != 0,
@@ -234,6 +236,7 @@ class _$RoomDao extends RoomDao {
     return _queryAdapter.queryListStream('SELECT * FROM Room WHERE isGroup = 0',
         mapper: (Map<String, Object?> row) => Room(
             id: row['id'] as String,
+            otherMemberId: row['otherMemberId'] as String?,
             name: row['name'] as String,
             avatar: row['avatar'] as String?,
             isGroup: (row['isGroup'] as int) != 0,
@@ -248,6 +251,7 @@ class _$RoomDao extends RoomDao {
     return _queryAdapter.queryListStream('SELECT * FROM Room WHERE isGroup = 1',
         mapper: (Map<String, Object?> row) => Room(
             id: row['id'] as String,
+            otherMemberId: row['otherMemberId'] as String?,
             name: row['name'] as String,
             avatar: row['avatar'] as String?,
             isGroup: (row['isGroup'] as int) != 0,
@@ -258,10 +262,10 @@ class _$RoomDao extends RoomDao {
   }
 
   @override
-  Future<void> updateRoomPresence(String roomId, String presence) async {
+  Future<void> updateRoomPresence(String userId, PresenceType presence) async {
     await _queryAdapter.queryNoReturn(
-        'UPDATE Room SET presence = ?2 WHERE id = ?1',
-        arguments: [roomId, presence]);
+        'UPDATE Room SET presence = ?2 WHERE otherMemberId = ?1',
+        arguments: [userId, _presenceNotNullTypeConverter.encode(presence)]);
   }
 
   @override
@@ -354,7 +358,9 @@ class _$MessageDao extends MessageDao {
                 _messageTypeConverter.decode(row['lastMessageType'] as String),
             lastMessageText: row['lastMessageText'] as String,
             lastMessageFromId: row['lastMessageFromId'] as String,
-            lastMessageFromName: row['lastMessageFromName'] as String?),
+            lastMessageFromName: row['lastMessageFromName'] as String?,
+            lastMessageStatus: _chatMarkerConverter
+                .decode(row['lastMessageStatus'] as String?)),
         queryableName: 'RecentChat',
         isView: true);
   }
@@ -451,3 +457,4 @@ final _messageTypeConverter = MessageTypeConverter();
 final _messageOriginalityConverter = MessageOriginalityConverter();
 final _chatMarkerConverter = ChatMarkerConverter();
 final _presenceTypeConverter = PresenceTypeConverter();
+final _presenceNotNullTypeConverter = PresenceNotNullTypeConverter();

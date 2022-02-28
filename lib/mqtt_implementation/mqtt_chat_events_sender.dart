@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_chat_mqtt/extensions/topics_extensions.dart';
 import 'package:flutter_chat_mqtt/interfaces/chat_events_sender.dart';
 import 'package:flutter_chat_mqtt/interfaces/client_handler.dart';
@@ -27,7 +29,10 @@ class MqttChatEventsSender extends ChatEventsSender {
   @override
   void sendIsTyping(bool isTyping, String bareRoom) {
     TypingIndicatorMessage message = TypingIndicatorMessage(
-        id: const Uuid().v4(), type: MessageType.typing, isTyping: isTyping, roomId: bareRoom);
+        id: const Uuid().v4(),
+        type: MessageType.typing,
+        isTyping: isTyping,
+        roomId: bareRoom);
 
     String topic = bareRoom.toRoomEventsTopic;
     clientHandler.sendPayload(message.toJson().toString(), topic);
@@ -53,7 +58,7 @@ class MqttChatEventsSender extends ChatEventsSender {
         type: MessageType.invitationRequest,
         sendTime: DateTime.now().millisecondsSinceEpoch);
 
-    String topic = username.toPersonalEventTopic;//TODO: decide the right topic
+    String topic = username.toPersonalEventTopic; //TODO: decide the right topic
     clientHandler.sendPayload(message.toJson().toString(), topic);
   }
 
@@ -64,7 +69,7 @@ class MqttChatEventsSender extends ChatEventsSender {
         type: MessageType.presence,
         presenceType: presenceType,
         fromId: myId);
-    String payload = presenceMessage.toJson().toString();
+    var payload = jsonEncode(presenceMessage.toJson());
     clientHandler.sendPayload(payload, myId.toPresenceTopic);
   }
 }

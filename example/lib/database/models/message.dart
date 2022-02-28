@@ -1,6 +1,10 @@
 import 'package:floor/floor.dart';
 import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'message.g.dart';
+
+@JsonSerializable()
 @entity
 class Message {
   @primaryKey
@@ -43,6 +47,11 @@ class Message {
       this.latitude,
       required this.sendTime,
       this.status});
+
+  factory Message.fromJson(Map<String, dynamic> json) =>
+      _$MessageFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MessageToJson(this);
 }
 
 class DateTimeConverter extends TypeConverter<DateTime, int> {

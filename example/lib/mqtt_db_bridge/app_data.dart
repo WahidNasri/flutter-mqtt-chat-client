@@ -8,7 +8,17 @@ import 'package:flutter_chat_mqtt/models/enums.dart';
 
 //TODO: Migrate to a provider
 class AppData {
+  User? user;
   AppData() {
+    AppDatabase.instance().then((db){
+      if(db != null){
+        db.userDao.findAllUsersAsync().listen((users){
+          if(users.isNotEmpty){
+            user = users.first;
+          }
+        });
+      }
+    });
     //================User================//
     ChatApp.instance()!.archiveHandler.getUser().listen((user) {
       AppDatabase.instance().then((db) async {
@@ -24,14 +34,22 @@ class AppData {
 
     //================ROOMS================//
     ChatApp.instance()!.archiveHandler.getAllConversations().listen((rooms) {
-      final dbRooms = rooms
-          .map((r) => Room(
-              id: r.roomId,
-              name: r.firstName ?? 'ROOM',
-              avatar: r.avatar,
-              isGroup: r.isGroup))
-          .toList();
-      AppDatabase.instance().then((db) {
+      AppDatabase.instance().then((db) async {
+        final users = await db?.userDao.findAllUsers();
+        final user = users != null && users.isNotEmpty
+            ? users[0]
+            : User(id: '0', name: '', clientId: '', username: '', password: '');
+
+        final dbRooms = rooms
+            .map((r) => Room(
+                id: r.roomId,
+                otherMemberId: r.isGroup
+                    ? null
+                    : r.members?.firstWhere((m) => m.id != user.id).id,
+                name: r.firstName ?? 'ROOM',
+                avatar: r.avatar,
+                isGroup: r.isGroup))
+            .toList();
         db!.roomDao.insertRooms(dbRooms);
       });
     });
@@ -57,7 +75,7 @@ class AppData {
             mime: message.mime,
             longitude: message.longitude,
             latitude: message.latitude,
-            status: ChatMarker.delivered, //default when received is Delivered
+            status: message.fromId != user!.id ? ChatMarker.delivered : ChatMarker.sent, //default when received is Delivered
             sendTime: message.sendTime != null
                 ? DateTime.fromMillisecondsSinceEpoch(message.sendTime ?? 0)
                 : DateTime.now()));
@@ -85,7 +103,7 @@ class AppData {
     ChatApp.instance()!.messageReader.getPresenceMessages().listen((event) {
       AppDatabase.instance().then((db) {
         if (db != null) {
-          db.roomDao.updateRoomPresence(event.id, event.presenceType.name);
+          db.roomDao.updateRoomPresence(event.fromId ?? "", event.presenceType);
         }
       });
     });

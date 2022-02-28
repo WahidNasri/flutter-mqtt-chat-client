@@ -3,7 +3,7 @@ import 'package:example/database/models/room.dart';
 import 'package:example/ui/extensions/rooms_extensions.dart';
 import 'package:flutter/material.dart';
 
-class RoomAvatar extends StatelessWidget {
+class RoomAvatar extends StatefulWidget {
   final Room room;
   final double radius;
   final double statusWidth;
@@ -24,33 +24,38 @@ class RoomAvatar extends StatelessWidget {
           statusWidth: statusWidth);
 
   @override
+  State<RoomAvatar> createState() => _RoomAvatarState();
+}
+
+class _RoomAvatarState extends State<RoomAvatar> {
+  @override
   Widget build(BuildContext context) {
-    if (room.avatar != null && room.avatar!.isNotEmpty) {
+    if (widget.room.avatar != null && widget.room.avatar!.isNotEmpty) {
       return CircleAvatar(
-        radius: radius,
-        backgroundColor: room.presenceColor,
+        radius: widget.radius,
+        backgroundColor: widget.room.presenceColor,
         child: CircleAvatar(
-          radius: radius - (room.isGroup ? 0 : statusWidth),
-          foregroundImage: room.avatar != null && room.avatar!.isNotEmpty
-              ? NetworkImage(room.avatar!)
+          radius: widget.radius - (widget.room.isGroup ? 0 : widget.statusWidth),
+          foregroundImage: widget.room.avatar != null && widget.room.avatar!.isNotEmpty
+              ? NetworkImage(widget.room.avatar!)
               : null,
-          child: room.avatar == null && room.avatar!.isEmpty
+          child: widget.room.avatar == null && widget.room.avatar!.isEmpty
               ? Icon(
-                  room.isGroup ? Icons.group : Icons.person,
-                  size: 50,
+                  widget.room.isGroup ? Icons.group : Icons.person,
+                  size: widget.radius,
                 )
               : null,
         ),
       );
     } else {
-      CircleAvatar(
-        radius: radius,
-        foregroundColor: room.presenceColor,
+      return CircleAvatar(
+        radius: widget.radius,
+        foregroundColor: widget.room.presenceColor,
         child: CircleAvatar(
-            radius: radius - (room.isGroup ? 0 : statusWidth),
+            radius: widget.radius - (widget.room.isGroup ? 0 : widget.statusWidth),
             child: Icon(
-              room.isGroup ? Icons.group : Icons.person,
-              size: 20,
+              widget.room.isGroup ? Icons.group : Icons.person,
+              size: widget.radius,
             )),
       );
     }

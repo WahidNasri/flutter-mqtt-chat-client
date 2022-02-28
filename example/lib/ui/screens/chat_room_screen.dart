@@ -2,16 +2,24 @@ import 'package:example/database/models/room.dart';
 import 'package:example/proviers/chat_providers.dart';
 import 'package:example/proviers/user_provider.dart';
 import 'package:example/ui/extensions/messages_extensions.dart';
+import 'package:example/ui/pages/profile_page.dart';
+import 'package:example/ui/screens/profile_screen.dart';
+import 'package:example/ui/widgets/custom_message.dart';
 import 'package:example/ui/widgets/room_avatar.dart';
 import 'package:example/ui/widgets/typing_indicator_text.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:place_picker/place_picker.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:flutter_chat_mqtt/chat_app.dart';
 import 'package:flutter_chat_mqtt/models/chat_message.dart';
 import 'package:flutter_chat_mqtt/models/enums.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:uuid/uuid.dart';
+import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 
 class ChatRoomScreen extends ConsumerStatefulWidget {
   final Room room;
@@ -44,9 +52,20 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
           ],
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RoomAvatar(room: widget.room),
+          InkWell(
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileScreen(
+                        room:widget.room),
+              ));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Hero(tag: "avatar_"+widget.room.id,
+              child: RoomAvatar(room: widget.room)),
+            ),
           )
         ],
       ),
@@ -59,13 +78,13 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
                     .reversed
                     .toList(),
                 onTextChanged: _handleTextChanged,
-                onAttachmentPressed: () {},
+                onAttachmentPressed: _handleAtachmentPressed,
                 onMessageTap: (c, m) {},
                 onPreviewDataFetched: (tm, p) {},
                 onSendPressed: _handleSendPressed,
                 showUserAvatars: widget.room.isGroup,
                 onMessageVisibilityChanged: (message, visible) {
-                  if (visible && message.status != types.Status.seen) {
+                  if (visible && message.status != types.Status.seen && user.id != message.metadata!["fromId"]) {
                     ChatApp.instance()!.eventsSender.sendChatMarker(
                         message.id, ChatMarker.displayed, widget.room.id);
                   }
@@ -74,7 +93,7 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
                     id: user.id, firstName: user.name, imageUrl: user.avatar),
               ),
           error: (e, s) => Text(e.toString()),
-          loading: () => Text("Loading...")),
+          loading: () => const Text("Loading...")),
     );
   }
 
@@ -101,6 +120,75 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
           ChatApp.instance()!.eventsSender.sendIsTyping(false, widget.room.id);
         }
       });
+    }
+  }
+
+  void _handleAtachmentPressed() {
+    showAdaptiveActionSheet(context: context, actions: [
+      BottomSheetAction(
+          title: const Text('Video'), onPressed: _handleVideoSelection),BottomSheetAction(
+          title: const Text('Photo'), onPressed: _handleImageSelection),
+      BottomSheetAction(
+          title: const Text('File'), onPressed: _handleFileSelection),
+      BottomSheetAction(
+          title: const Text('Location'), onPressed: _handleLocationSelection),
+    ]);
+  }
+
+  void _handleFileSelection() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.any,
+    );
+
+    if (result != null && result.files.single.path != null) {
+      ChatApp.instance()!.messageSender.sendFileChatMessage(
+          type: MessageType.chatImage,
+          fileLocalPath: result.files.single.path!,
+          room: widget.room.id);
+    }
+  }
+
+  void _handleLocationSelection() async {
+    LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => PlacePicker(
+              "AIzaSyDs9qcIhAV-aToQiGOIRlVTzFtrbh1z7tU",
+            )));
+
+    // Handle the result in your way
+    if (result.latLng != null) {
+      ChatApp.instance()!.messageSender.sendLocationMessage(
+          result.latLng!.longitude,
+          result.latLng!.latitude,
+          result.formattedAddress,
+          widget.room.id);
+    }
+    print(result);
+  }
+
+  void _handleImageSelection() async {
+    final result = await ImagePicker().pickImage(
+      imageQuality: 70,
+      maxWidth: 1440,
+      source: ImageSource.gallery,
+    );
+
+    if (result != null) {
+      ChatApp.instance()!.messageSender.sendFileChatMessage(
+          type: MessageType.chatImage,
+          fileLocalPath: result.path,
+          room: widget.room.id);
+    }
+  }
+  void _handleVideoSelection() async {
+    final result = await ImagePicker().pickVideo(
+      source: ImageSource.gallery,
+    );
+
+    if (result != null) {
+      ChatApp.instance()!.messageSender.sendFileChatMessage(
+          type: MessageType.chatVideo,
+          fileLocalPath: result.path,
+          room: widget.room.id);
     }
   }
 }

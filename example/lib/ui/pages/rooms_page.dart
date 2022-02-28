@@ -34,13 +34,17 @@ class _RoomPageState extends ConsumerState<RoomsPage> {
                     );
                   },
                   child: ListTile(
-                      leading: SizedBox(width: 50,child: RoomAvatar(room: rooms[index])),
+                      leading: SizedBox(
+                          width: 50, child: RoomAvatar(room: rooms[index])),
+                      trailing: rooms[index].presence == null
+                          ? null
+                          : Text(rooms[index].presence!.name),
                       title: Text(rooms[index].name),
                       subtitle: TypingIndicatorText(
                         roomId: rooms[index].id,
-                        currentUserId: user.user != null ?  user.user!.id : "",
+                        currentUserId: user.user != null ? user.user!.id : "",
                         isGroup: rooms[index].isGroup,
-                        fallbackWidget: Text("Room ID: "+ rooms[index].id),
+                        fallbackWidget: Text("Room ID: " + rooms[index].id),
                       )),
                 )),
         error: (o, s) => Text(o.toString()),

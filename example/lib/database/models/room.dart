@@ -5,6 +5,7 @@ import 'package:flutter_chat_mqtt/models/enums.dart';
 class Room {
   @primaryKey
   final String id;
+  final String? otherMemberId;
   final String name;
   final String? avatar;
   final bool isGroup;
@@ -12,23 +13,37 @@ class Room {
 
   Room(
       {required this.id,
+      this.otherMemberId, //only for non group rooms
       required this.name,
       this.avatar,
       required this.isGroup,
       this.presence});
 }
+
 class PresenceTypeConverter extends TypeConverter<PresenceType?, String?> {
   @override
   PresenceType? decode(String? databaseValue) {
-    if(databaseValue != null) {
+    if (databaseValue != null) {
       return PresenceType.values.byName(databaseValue);
     }
   }
 
   @override
   String? encode(PresenceType? value) {
-    if(value != null) {
+    if (value != null) {
       return value.name;
     }
+  }
+}
+
+class PresenceNotNullTypeConverter extends TypeConverter<PresenceType, String> {
+  @override
+  PresenceType decode(String databaseValue) {
+    return PresenceType.values.byName(databaseValue);
+  }
+
+  @override
+  String encode(PresenceType value) {
+    return value.name;
   }
 }

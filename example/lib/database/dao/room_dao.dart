@@ -1,8 +1,9 @@
 import 'package:example/database/models/room.dart';
 import 'package:floor/floor.dart';
+import 'package:flutter_chat_mqtt/models/enums.dart';
 
 @dao
-abstract class RoomDao{
+abstract class RoomDao {
   @Query('SELECT * FROM Room')
   Stream<List<Room>> findAllRoomsAsync();
 
@@ -12,8 +13,8 @@ abstract class RoomDao{
   @Query('SELECT * FROM Room WHERE isGroup = 1')
   Stream<List<Room>> findGroupRoomsAsync();
 
-  @Query("UPDATE Room SET presence = :presence WHERE id = :roomId")
-  Future<void> updateRoomPresence(String roomId, String presence);
+  @Query("UPDATE Room SET presence = :presence WHERE otherMemberId = :userId")
+  Future<void> updateRoomPresence(String userId, PresenceType presence);
 
   @Query("DELETE FROM Room")
   Future<void> deleteAllRooms();
