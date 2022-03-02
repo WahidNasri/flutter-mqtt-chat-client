@@ -1,13 +1,16 @@
 extension TopicsExtensions on String {
-  bool get isChattingTopic{
+  bool get isChattingTopic {
     return toLowerCase().startsWith("messages/");
   }
+
   bool get isRoomEventsTopic {
     return toLowerCase().startsWith("events/");
   }
-  bool get isPresenceTopic{
+
+  bool get isPresenceTopic {
     return toLowerCase().startsWith("presence/");
   }
+
   bool get isArchivesTopic {
     return toLowerCase().startsWith("archives");
   }
@@ -23,6 +26,7 @@ extension TopicsExtensions on String {
   bool get isMyProfileArchiveTopic {
     return toLowerCase().startsWith("archives/me/");
   }
+
   bool get isMessagesArchiveTopic {
     return toLowerCase().startsWith("archives/messages/");
   }
@@ -31,10 +35,10 @@ extension TopicsExtensions on String {
     return toLowerCase().startsWith("personalevents/");
   }
 
-
-  String get toChattingTopic{
+  String get toChattingTopic {
     return "messages/" + this;
   }
+
   String get toFileSendingTopic {
     return "filemessages/" + this;
   }
@@ -43,13 +47,14 @@ extension TopicsExtensions on String {
     return "events/" + this;
   }
 
-  String get toPresenceTopic{
+  String get toPresenceTopic {
     return "presence/" + this;
   }
 
   String get toMembershipArchivesTopic {
     return "archives/rooms/" + this;
-}
+  }
+
   String get toInvitationsArchivesTopic {
     return "archives/invitations/" + this;
   }
@@ -57,11 +62,17 @@ extension TopicsExtensions on String {
   String get toMyProfileArchiveTopic {
     return "archives/me/" + this;
   }
+
   String get toMessagesArchiveTopic {
     return "archives/messages/" + this;
   }
+
   String get toPersonalEventTopic {
     return "personalevents/" + this;
+  }
+
+  String get toInvitationEventTopic {
+    return "invitations/" + this;
   }
 
   String get toGroupCrudTopic {

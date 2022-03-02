@@ -1,3 +1,4 @@
+import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:example/database/chat_db.dart';
 import 'package:example/ui/pages/calls_page.dart';
 import 'package:example/ui/pages/chats_page.dart';
@@ -5,6 +6,7 @@ import 'package:example/ui/pages/rooms_page.dart';
 import 'package:example/ui/pages/groups_page.dart';
 import 'package:example/ui/pages/profile_page.dart';
 import 'package:example/ui/screens/login_screen.dart';
+import 'package:example/ui/screens/new_invitation_screen.dart';
 import 'package:example/ui/widgets/connectivity_listener_text.dart';
 import 'package:example/ui/widgets/local_user_avatar.dart';
 import 'package:flutter/material.dart';
@@ -41,26 +43,21 @@ class _MainScreenState extends State<MainScreen> {
               child: LocalUserAvatar(),
             ),
             actions: [
-              IconButton(onPressed: (){
-                ChatApp.instance()!.disconnect();
-                AppDatabase.instance().then((db){
-                  if(db != null){
-                    db.deleteAll();
-                  }
-                });
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const LoginScreen(),
-                  ),
-                      (route) => false,
-                );
-              }, icon: const Icon(Icons.logout))
+              IconButton(
+                  onPressed: () {
+                    _addChat();
+                  },
+                  icon: const Icon(Icons.add)),
+              IconButton(
+                  onPressed: () {
+                    _logout();
+                  },
+                  icon: const Icon(Icons.logout))
             ],
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
-                Text("Flutter MQTT Chat"),
+                Text("Flutter MqChat Client"),
                 ConnectivityListenerText()
               ],
             ),
@@ -103,5 +100,59 @@ class _MainScreenState extends State<MainScreen> {
           ),
           body: pages[_currentIndex]),
     );
+  }
+
+  _logout() {
+    showAdaptiveActionSheet(
+        context: context,
+        title: const Text('Are you sure you want to logout?'),
+        actions: [
+          BottomSheetAction(
+              title: const Text('Logout'),
+              onPressed: () {
+                ChatApp.instance()!.disconnect();
+                AppDatabase.instance().then((db) {
+                  if (db != null) {
+                    db.deleteAll();
+                  }
+                });
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => const LoginScreen(),
+                  ),
+                  (route) => false,
+                );
+              }),
+          BottomSheetAction(
+              title: const Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+        ]);
+  }
+
+  _addChat() {
+    showAdaptiveActionSheet(
+        context: context,
+        title: const Text('New Chat'),
+        actions: [
+          BottomSheetAction(
+              title: const Text('Create a group Chat'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => const NewInvitationScreen()));
+              }),
+          BottomSheetAction(
+              title: const Text('Invite an existing user to Chat'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => const NewInvitationScreen()));
+              }),
+        ]);
   }
 }

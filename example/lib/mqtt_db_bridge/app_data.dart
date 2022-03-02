@@ -107,5 +107,21 @@ class AppData {
         }
       });
     });
+
+    //========== Invitations =========//
+    ChatApp.instance()!
+        .invitationHandler
+        .newInvitationsStream()
+        .listen((invitation) {
+      if (invitation.type == MessageType.invitationRequest) {
+        //new invitation request
+
+      }
+      if (invitation.type == MessageType.invitationResponseAccept ||
+          invitation.type == MessageType.invitationResponseReject) {
+        //responded to invitation, update the local record and wait the server to sync the new contact (if accepted)
+
+      }
+    });
   }
 }

@@ -10,13 +10,16 @@ part 'invitation_message.g.dart';
 //@CopyWith()
 class InvitationMessage extends BaseMessage {
   final String? fromAvatar;
+  final String? text;
 
   InvitationMessage(
       {required String id,
       required MessageType type,
       String? fromId,
       String? fromName,
-      this.fromAvatar, int? sendTime})
+      this.fromAvatar,
+      this.text,
+      int? sendTime})
       : super(
             id: id,
             type: type,
@@ -27,7 +30,8 @@ class InvitationMessage extends BaseMessage {
   factory InvitationMessage.fromJson(Map<String, dynamic> json) =>
       _$InvitationMessageFromJson(json);
 
-  factory InvitationMessage.fromString(payload) => InvitationMessage.fromJson(json.decode(payload));
+  factory InvitationMessage.fromString(payload) =>
+      InvitationMessage.fromJson(json.decode(payload));
 
   @override
   Map<String, dynamic> toJson() => _$InvitationMessageToJson(this);

@@ -13,6 +13,7 @@ InvitationMessage _$InvitationMessageFromJson(Map<String, dynamic> json) =>
       fromId: json['fromId'] as String?,
       fromName: json['fromName'] as String?,
       fromAvatar: json['fromAvatar'] as String?,
+      text: json['text'] as String?,
       sendTime: BaseMessage.sendTimeFromJson(json['sendTime']),
     );
 
@@ -24,6 +25,7 @@ Map<String, dynamic> _$InvitationMessageToJson(InvitationMessage instance) =>
       'fromName': instance.fromName,
       'sendTime': instance.sendTime,
       'fromAvatar': instance.fromAvatar,
+      'text': instance.text,
     };
 
 const _$MessageTypeEnumMap = {

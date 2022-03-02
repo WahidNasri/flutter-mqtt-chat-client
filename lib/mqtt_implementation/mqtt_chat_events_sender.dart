@@ -58,7 +58,8 @@ class MqttChatEventsSender extends ChatEventsSender {
         type: MessageType.invitationRequest,
         sendTime: DateTime.now().millisecondsSinceEpoch);
 
-    String topic = username.toPersonalEventTopic; //TODO: decide the right topic
+    String topic =
+        username.toInvitationEventTopic; //TODO: decide the right topic
     clientHandler.sendPayload(message.toJson().toString(), topic);
   }
 
