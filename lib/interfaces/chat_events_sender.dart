@@ -1,7 +1,5 @@
-
-
-import 'package:flutter_chat_mqtt/models/chat_message.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/chat_message.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 
 abstract class ChatEventsSender {
   void sendIsTyping(bool isTyping, String bareRoom);

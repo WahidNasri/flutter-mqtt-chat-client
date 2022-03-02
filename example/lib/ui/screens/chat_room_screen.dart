@@ -16,9 +16,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:flutter_chat_mqtt/chat_app.dart';
-import 'package:flutter_chat_mqtt/models/chat_message.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/chat_app.dart';
+import 'package:flutter_mqchat/models/chat_message.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 
 class ChatRoomScreen extends ConsumerStatefulWidget {
@@ -53,18 +53,18 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
         ),
         actions: [
           InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProfileScreen(
-                        room:widget.room),
-              ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(room: widget.room),
+                  ));
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Hero(tag: "avatar_"+widget.room.id,
-              child: RoomAvatar(room: widget.room)),
+              child: Hero(
+                  tag: "avatar_" + widget.room.id,
+                  child: RoomAvatar(room: widget.room)),
             ),
           )
         ],
@@ -84,7 +84,9 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
                 onSendPressed: _handleSendPressed,
                 showUserAvatars: widget.room.isGroup,
                 onMessageVisibilityChanged: (message, visible) {
-                  if (visible && message.status != types.Status.seen && user.id != message.metadata!["fromId"]) {
+                  if (visible &&
+                      message.status != types.Status.seen &&
+                      user.id != message.metadata!["fromId"]) {
                     ChatApp.instance()!.eventsSender.sendChatMarker(
                         message.id, ChatMarker.displayed, widget.room.id);
                   }
@@ -126,7 +128,8 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
   void _handleAtachmentPressed() {
     showAdaptiveActionSheet(context: context, actions: [
       BottomSheetAction(
-          title: const Text('Video'), onPressed: _handleVideoSelection),BottomSheetAction(
+          title: const Text('Video'), onPressed: _handleVideoSelection),
+      BottomSheetAction(
           title: const Text('Photo'), onPressed: _handleImageSelection),
       BottomSheetAction(
           title: const Text('File'), onPressed: _handleFileSelection),
@@ -179,6 +182,7 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
           room: widget.room.id);
     }
   }
+
   void _handleVideoSelection() async {
     final result = await ImagePicker().pickVideo(
       source: ImageSource.gallery,

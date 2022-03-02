@@ -1,16 +1,10 @@
 # example
 
-A new Flutter project.
+An example Flutter implementation of mqChat.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+First run flutter pug get to downlload all dependencies.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Note
+I used the package  example project [flutter-chat-ui](https://github.com/flyerhq/flutter_chat_ui) as UI for messages and chat rooms (not all message types of my project are supported), please refere to their developers for any UI issues.

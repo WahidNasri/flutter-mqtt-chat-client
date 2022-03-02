@@ -1,6 +1,6 @@
-import 'package:flutter_chat_mqtt/models/base_message.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
-import 'package:flutter_chat_mqtt/models/room_member.dart';
+import 'package:flutter_mqchat/models/base_message.dart';
+import 'package:flutter_mqchat/models/enums.dart';
+import 'package:flutter_mqchat/models/room_member.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'room_membership_message.g.dart';
@@ -22,11 +22,17 @@ class RoomMembershipMessage extends BaseMessage {
       this.firstName,
       this.lastName,
       required this.roomId,
-      this.avatar, this.presenceType = PresenceType.available,
-        required this.isGroup,
+      this.avatar,
+      this.presenceType = PresenceType.available,
+      required this.isGroup,
       this.members,
       int? sendTime})
-      : super(id: id, type: MessageType.membership, fromId: '', fromName: '', sendTime: sendTime);
+      : super(
+            id: id,
+            type: MessageType.membership,
+            fromId: '',
+            fromName: '',
+            sendTime: sendTime);
 
   factory RoomMembershipMessage.fromJson(Map<String, dynamic> json) =>
       _$RoomMembershipMessageFromJson(json);
@@ -34,17 +40,15 @@ class RoomMembershipMessage extends BaseMessage {
   @override
   Map<String, dynamic> toJson() => _$RoomMembershipMessageToJson(this);
 
-  static bool boolFromJson(dynamic value){
-    if(value == null){
+  static bool boolFromJson(dynamic value) {
+    if (value == null) {
       return false;
     }
-    if(value is String){
+    if (value is String) {
       return value.toLowerCase() == "true";
-    }
-    else if(value is bool){
+    } else if (value is bool) {
       return value;
-    }
-    else if(value is int){
+    } else if (value is int) {
       return value > 0;
     }
     return false;

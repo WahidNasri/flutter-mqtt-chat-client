@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter_chat_mqtt/extensions/topics_extensions.dart';
-import 'package:flutter_chat_mqtt/interfaces/client_handler.dart';
-import 'package:flutter_chat_mqtt/interfaces/invitations_handler.dart';
-import 'package:flutter_chat_mqtt/models/base_message.dart';
-import 'package:flutter_chat_mqtt/models/invitation_message.dart';
+import 'package:flutter_mqchat/extensions/topics_extensions.dart';
+import 'package:flutter_mqchat/interfaces/client_handler.dart';
+import 'package:flutter_mqchat/interfaces/invitations_handler.dart';
+import 'package:flutter_mqchat/models/base_message.dart';
+import 'package:flutter_mqchat/models/invitation_message.dart';
 
 class MqttInvitationHandler extends InvitationHandler {
   final ClientHandler clientHandler;

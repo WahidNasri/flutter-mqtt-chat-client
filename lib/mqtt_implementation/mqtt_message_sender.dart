@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_chat_mqtt/extensions/topics_extensions.dart';
-import 'package:flutter_chat_mqtt/interfaces/client_handler.dart';
-import 'package:flutter_chat_mqtt/interfaces/message_sender.dart';
-import 'package:flutter_chat_mqtt/models/chat_message.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/extensions/topics_extensions.dart';
+import 'package:flutter_mqchat/interfaces/client_handler.dart';
+import 'package:flutter_mqchat/interfaces/message_sender.dart';
+import 'package:flutter_mqchat/models/chat_message.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 
 class MqttMessageSender extends MessageSender {
   ClientHandler clientHandler;

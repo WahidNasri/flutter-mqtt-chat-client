@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'message.g.dart';
@@ -66,7 +66,7 @@ class DateTimeConverter extends TypeConverter<DateTime, int> {
   }
 }
 
-class MessageTypeConverter extends TypeConverter<MessageType, String>{
+class MessageTypeConverter extends TypeConverter<MessageType, String> {
   @override
   MessageType decode(String databaseValue) {
     return MessageType.values.byName(databaseValue);
@@ -78,7 +78,8 @@ class MessageTypeConverter extends TypeConverter<MessageType, String>{
   }
 }
 
-class MessageOriginalityConverter extends TypeConverter<MessageOriginality, String> {
+class MessageOriginalityConverter
+    extends TypeConverter<MessageOriginality, String> {
   @override
   MessageOriginality decode(String databaseValue) {
     return MessageOriginality.values.byName(databaseValue);
@@ -89,17 +90,18 @@ class MessageOriginalityConverter extends TypeConverter<MessageOriginality, Stri
     return value.name;
   }
 }
+
 class ChatMarkerConverter extends TypeConverter<ChatMarker?, String?> {
   @override
   ChatMarker? decode(String? databaseValue) {
-    if(databaseValue != null) {
+    if (databaseValue != null) {
       return ChatMarker.values.byName(databaseValue);
     }
   }
 
   @override
   String? encode(ChatMarker? value) {
-    if(value != null) {
+    if (value != null) {
       return value.name;
     }
   }

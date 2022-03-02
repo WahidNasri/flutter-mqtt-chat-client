@@ -1,6 +1,6 @@
 import 'package:example/database/models/room.dart';
 import 'package:floor/floor.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 
 @dao
 abstract class RoomDao {

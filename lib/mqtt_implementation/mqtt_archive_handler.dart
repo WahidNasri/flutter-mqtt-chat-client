@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_chat_mqtt/extensions/topics_extensions.dart';
-import 'package:flutter_chat_mqtt/interfaces/archive_handler.dart';
-import 'package:flutter_chat_mqtt/interfaces/client_handler.dart';
-import 'package:flutter_chat_mqtt/models/room_membership_message.dart';
-import 'package:flutter_chat_mqtt/models/user.dart';
+import 'package:flutter_mqchat/extensions/topics_extensions.dart';
+import 'package:flutter_mqchat/interfaces/archive_handler.dart';
+import 'package:flutter_mqchat/interfaces/client_handler.dart';
+import 'package:flutter_mqchat/models/room_membership_message.dart';
+import 'package:flutter_mqchat/models/user.dart';
 
 class MqttArchiveHandler extends ArchiveHandler {
   final ClientHandler clientHandler;
@@ -21,11 +21,10 @@ class MqttArchiveHandler extends ArchiveHandler {
       String payload = payloadEvent.payload;
       if (topic.isMembershipArchivesTopic) {
         try {
-          Iterable l =
-          jsonDecode(payload);
-          List<RoomMembershipMessage> contacts = List<RoomMembershipMessage>.from(
-              l.map((model) =>
-                  RoomMembershipMessage.fromJson(model)));
+          Iterable l = jsonDecode(payload);
+          List<RoomMembershipMessage> contacts =
+              List<RoomMembershipMessage>.from(
+                  l.map((model) => RoomMembershipMessage.fromJson(model)));
           for (var contact in contacts) {
             //======================================//
             clientHandler.joinRoom(contact.roomId);

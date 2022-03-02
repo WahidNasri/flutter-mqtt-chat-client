@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter_chat_mqtt/extensions/topics_extensions.dart';
-import 'package:flutter_chat_mqtt/interfaces/chat_events_sender.dart';
-import 'package:flutter_chat_mqtt/interfaces/client_handler.dart';
-import 'package:flutter_chat_mqtt/models/chat_marker_message.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
-import 'package:flutter_chat_mqtt/models/invitation_message.dart';
-import 'package:flutter_chat_mqtt/models/presence_message.dart';
-import 'package:flutter_chat_mqtt/models/typing_indicator_message.dart';
+import 'package:flutter_mqchat/extensions/topics_extensions.dart';
+import 'package:flutter_mqchat/interfaces/chat_events_sender.dart';
+import 'package:flutter_mqchat/interfaces/client_handler.dart';
+import 'package:flutter_mqchat/models/chat_marker_message.dart';
+import 'package:flutter_mqchat/models/enums.dart';
+import 'package:flutter_mqchat/models/invitation_message.dart';
+import 'package:flutter_mqchat/models/presence_message.dart';
+import 'package:flutter_mqchat/models/typing_indicator_message.dart';
 import 'package:uuid/uuid.dart';
 
 class MqttChatEventsSender extends ChatEventsSender {

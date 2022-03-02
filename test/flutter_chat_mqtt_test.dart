@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_chat_mqtt/flutter_chat_mqtt.dart';
+import 'package:flutter_mqchat/flutter_chat_mqtt.dart';
 
 void main() {
   test('adds one to input values', () {

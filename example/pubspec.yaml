@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   #=== Chat Client ===
-  flutter_chat_mqtt:
+  flutter_mqchat:
     path: ../
 
   salomon_bottom_bar: ^3.1.0

@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:flutter_chat_mqtt/extensions/topics_extensions.dart';
-import 'package:flutter_chat_mqtt/interfaces/client_handler.dart';
-import 'package:flutter_chat_mqtt/interfaces/muc_handler.dart';
-import 'package:flutter_chat_mqtt/models/chat_message.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
-import 'package:flutter_chat_mqtt/models/group_crud_message.dart';
-import 'package:flutter_chat_mqtt/models/room_member.dart';
+import 'package:flutter_mqchat/extensions/topics_extensions.dart';
+import 'package:flutter_mqchat/interfaces/client_handler.dart';
+import 'package:flutter_mqchat/interfaces/muc_handler.dart';
+import 'package:flutter_mqchat/models/chat_message.dart';
+import 'package:flutter_mqchat/models/enums.dart';
+import 'package:flutter_mqchat/models/group_crud_message.dart';
+import 'package:flutter_mqchat/models/room_member.dart';
 import 'package:uuid/uuid.dart';
 
 class MqttMucHandler extends MucHandler {
@@ -29,7 +29,9 @@ class MqttMucHandler extends MucHandler {
 
   @override
   void createGroup(
-      {required String name, required List<RoomMember> members, String? password}) {
+      {required String name,
+      required List<RoomMember> members,
+      String? password}) {
     String id = const Uuid().v4();
     GroupCrudMessage msg = GroupCrudMessage(
         id: id,

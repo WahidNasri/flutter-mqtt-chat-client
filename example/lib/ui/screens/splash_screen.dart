@@ -3,7 +3,7 @@ import 'package:example/ui/screens/login_screen.dart';
 import 'package:example/ui/screens/main_screen.dart';
 import 'package:example/utils/preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_mqtt/chat_app.dart';
+import 'package:flutter_mqchat/chat_app.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {

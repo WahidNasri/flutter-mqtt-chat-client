@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_mqtt/chat_app.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart' as e;
+import 'package:flutter_mqchat/chat_app.dart';
+import 'package:flutter_mqchat/models/enums.dart' as e;
 
 class ConnectivityListenerText extends StatelessWidget {
   const ConnectivityListenerText({Key? key}) : super(key: key);

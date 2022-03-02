@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_chat_mqtt/models/base_message.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/base_message.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'presence_message.g.dart';
@@ -15,7 +15,7 @@ class PresenceMessage extends BaseMessage {
       {required String id,
       required MessageType type,
       required this.presenceType,
-      String?  fromId,
+      String? fromId,
       String? fromName,
       int? sendTime})
       : super(
@@ -27,7 +27,8 @@ class PresenceMessage extends BaseMessage {
 
   factory PresenceMessage.fromJson(Map<String, dynamic> json) =>
       _$PresenceMessageFromJson(json);
-  factory PresenceMessage.fromString(String payload) => PresenceMessage.fromJson(json.decode(payload));
+  factory PresenceMessage.fromString(String payload) =>
+      PresenceMessage.fromJson(json.decode(payload));
 
   @override
   Map<String, dynamic> toJson() => _$PresenceMessageToJson(this);

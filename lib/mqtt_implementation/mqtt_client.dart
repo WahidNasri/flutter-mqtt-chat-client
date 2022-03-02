@@ -4,10 +4,10 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_chat_mqtt/extensions/topics_extensions.dart';
-import 'package:flutter_chat_mqtt/interfaces/client_handler.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
-import 'package:flutter_chat_mqtt/models/payload_with_topic.dart';
+import 'package:flutter_mqchat/extensions/topics_extensions.dart';
+import 'package:flutter_mqchat/interfaces/client_handler.dart';
+import 'package:flutter_mqchat/models/enums.dart';
+import 'package:flutter_mqchat/models/payload_with_topic.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:path/path.dart';
@@ -61,7 +61,7 @@ class MqttClient extends ClientHandler {
       _broadcastConnectionState();
       _listenAndFilter();
 
-      if(_client!.connectionStatus!.state == MqttConnectionState.connected) {
+      if (_client!.connectionStatus!.state == MqttConnectionState.connected) {
         _subscribeToArchivesTopics();
       }
       return true;

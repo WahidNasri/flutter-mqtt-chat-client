@@ -1,6 +1,6 @@
 import 'package:example/database/models/room.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 
 extension RoomsExtensions on Room {
   Color get presenceColor {

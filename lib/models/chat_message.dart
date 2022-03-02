@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_chat_mqtt/models/base_message.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/base_message.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'chat_message.g.dart';

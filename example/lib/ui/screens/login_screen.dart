@@ -2,7 +2,7 @@ import 'package:example/ui/screens/main_screen.dart';
 import 'package:example/utils/preferences.dart';
 import 'package:example/utils/validators.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_mqtt/chat_app.dart';
+import 'package:flutter_mqchat/chat_app.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -33,9 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: DecoratedBox(
-          decoration: const BoxDecoration(
-
-          ),
+          decoration: const BoxDecoration(),
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: Column(
@@ -48,7 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                              color: Theme.of(context).primaryColor.withOpacity(.2),
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(.2),
                               blurRadius: 20.0,
                               offset: Offset(0, 5))
                         ]),
@@ -58,7 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: <Widget>[
                           TextFormField(
                             keyboardType: TextInputType.url,
-                            validator: (host) => AppValidators.isValidHost(host),
+                            validator: (host) =>
+                                AppValidators.isValidHost(host),
                             textInputAction: TextInputAction.next,
                             controller: _hostController,
                             textAlignVertical: TextAlignVertical.center,
@@ -68,13 +69,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 isCollapsed: true,
                                 prefixIcon: const Icon(Icons.rss_feed),
                                 contentPadding: const EdgeInsets.all(10),
-                                hintStyle:
-                                TextStyle(color: Colors.grey[400])),
+                                hintStyle: TextStyle(color: Colors.grey[400])),
                           ),
                           const Divider(),
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,
-                            validator: (email) =>AppValidators.isValidEmail(email),
+                            validator: (email) =>
+                                AppValidators.isValidEmail(email),
                             textInputAction: TextInputAction.next,
                             controller: _usernameController,
                             decoration: InputDecoration(
@@ -83,21 +84,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 isCollapsed: true,
                                 prefixIcon: const Icon(Icons.mail),
                                 contentPadding: const EdgeInsets.all(10),
-                                hintStyle:
-                                TextStyle(color: Colors.grey[400])),
+                                hintStyle: TextStyle(color: Colors.grey[400])),
                           ),
                           const Divider(),
                           TextFormField(
                             controller: _passwordController,
                             obscureText: true,
-                            validator: (pass)=>AppValidators.isValidPassword(pass),
+                            validator: (pass) =>
+                                AppValidators.isValidPassword(pass),
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Password",
                                 prefixIcon: const Icon(Icons.lock),
                                 contentPadding: const EdgeInsets.all(10),
-                                hintStyle:
-                                TextStyle(color: Colors.grey[400])),
+                                hintStyle: TextStyle(color: Colors.grey[400])),
                           )
                         ],
                       ),
@@ -106,12 +106,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 30,
                   ),
-                  ElevatedButton(onPressed: (){
-                    if(_formKey.currentState!.validate()){
-                      _loginTap(context);
-                    }
-                  }, child: Text("Log in")),
-                  ],
+                  ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _loginTap(context);
+                        }
+                      },
+                      child: Text("Log in")),
+                ],
               )),
         ));
   }
@@ -137,6 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ));
     }
   }
+
   @override
   void dispose() {
     _hostController.dispose();

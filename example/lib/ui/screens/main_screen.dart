@@ -10,7 +10,7 @@ import 'package:example/ui/screens/new_invitation_screen.dart';
 import 'package:example/ui/widgets/connectivity_listener_text.dart';
 import 'package:example/ui/widgets/local_user_avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_mqtt/chat_app.dart';
+import 'package:flutter_mqchat/chat_app.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class MainScreen extends StatefulWidget {

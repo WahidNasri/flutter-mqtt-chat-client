@@ -1,12 +1,15 @@
 import 'dart:io';
 
-import 'package:flutter_chat_mqtt/models/enums.dart';
-import 'package:flutter_chat_mqtt/models/payload_with_topic.dart';
-
+import 'package:flutter_mqchat/models/enums.dart';
+import 'package:flutter_mqchat/models/payload_with_topic.dart';
 
 abstract class ClientHandler {
   Future<bool> connect(
-      {required host, required String username, required String password, String? clientId, int? port});
+      {required host,
+      required String username,
+      required String password,
+      String? clientId,
+      int? port});
   void disconnect();
   bool isConnected();
   bool isConnecting();

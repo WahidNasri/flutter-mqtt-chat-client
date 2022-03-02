@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_mqtt/chat_app.dart';
+import 'package:flutter_mqchat/chat_app.dart';
 import 'package:place_picker/uuid.dart';
 
 class NewInvitationScreen extends StatefulWidget {
@@ -23,21 +23,23 @@ class _NewInvitationScreenState extends State<NewInvitationScreen> {
             controller: controller,
             maxLines: 1,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(hintText: "email",contentPadding: EdgeInsets.all(8)),
+            decoration: const InputDecoration(
+                hintText: "email", contentPadding: EdgeInsets.all(8)),
           ),
-          ElevatedButton(onPressed: (){
-           _sendInvitation();
-          }, child: const Text("Invite")),
+          ElevatedButton(
+              onPressed: () {
+                _sendInvitation();
+              },
+              child: const Text("Invite")),
           Text(invitationUpdate)
         ],
       ),
     );
   }
-  _sendInvitation(){
+
+  _sendInvitation() {
     String id = Uuid().generateV4();
-    ChatApp.instance()!
-        .eventsSender
-        .sendInvitation(controller.text, id);
+    ChatApp.instance()!.eventsSender.sendInvitation(controller.text, id);
 
     ChatApp.instance()!
         .invitationHandler

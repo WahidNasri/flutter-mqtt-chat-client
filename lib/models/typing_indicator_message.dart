@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_chat_mqtt/models/base_message.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/base_message.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'typing_indicator_message.g.dart';
@@ -17,7 +17,7 @@ class TypingIndicatorMessage extends BaseMessage {
       {required String id,
       required MessageType type,
       required this.isTyping,
-        required this.roomId,
+      required this.roomId,
       String? fromId,
       String? fromName,
       int? sendTime})
@@ -36,17 +36,15 @@ class TypingIndicatorMessage extends BaseMessage {
   @override
   Map<String, dynamic> toJson() => _$TypingIndicatorMessageToJson(this);
 
-  static bool boolFromJson(dynamic value){
-    if(value == null){
+  static bool boolFromJson(dynamic value) {
+    if (value == null) {
       return false;
     }
-    if(value is String){
+    if (value is String) {
       return value.toLowerCase() == "true";
-    }
-    else if(value is bool){
+    } else if (value is bool) {
       return value;
-    }
-    else if(value is int){
+    } else if (value is int) {
       return value > 0;
     }
     return false;

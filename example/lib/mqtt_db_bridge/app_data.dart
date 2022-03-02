@@ -3,17 +3,17 @@ import 'package:example/database/models/message.dart';
 import 'package:example/database/models/room.dart';
 import 'package:example/database/models/user.dart';
 import 'package:example/utils/preferences.dart';
-import 'package:flutter_chat_mqtt/chat_app.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/chat_app.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 
 //TODO: Migrate to a provider
 class AppData {
   User? user;
   AppData() {
-    AppDatabase.instance().then((db){
-      if(db != null){
-        db.userDao.findAllUsersAsync().listen((users){
-          if(users.isNotEmpty){
+    AppDatabase.instance().then((db) {
+      if (db != null) {
+        db.userDao.findAllUsersAsync().listen((users) {
+          if (users.isNotEmpty) {
             user = users.first;
           }
         });
@@ -75,7 +75,9 @@ class AppData {
             mime: message.mime,
             longitude: message.longitude,
             latitude: message.latitude,
-            status: message.fromId != user!.id ? ChatMarker.delivered : ChatMarker.sent, //default when received is Delivered
+            status: message.fromId != user!.id
+                ? ChatMarker.delivered
+                : ChatMarker.sent, //default when received is Delivered
             sendTime: message.sendTime != null
                 ? DateTime.fromMillisecondsSinceEpoch(message.sendTime ?? 0)
                 : DateTime.now()));

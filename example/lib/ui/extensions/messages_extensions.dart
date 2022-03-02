@@ -4,7 +4,7 @@ import 'package:example/database/models/message.dart';
 import 'package:example/database/models/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 extension MessagesExtension on Message {
@@ -76,8 +76,6 @@ extension MessagesExtension on Message {
         metadata: toJson(),
         status: status.toStatus());
   }
-
-
 }
 
 extension ChatMarkerUIExtension on ChatMarker? {
@@ -100,12 +98,15 @@ extension ChatMarkerUIExtension on ChatMarker? {
       return const SizedBox();
     }
 
-    return Icon(this == ChatMarker.sent
-        ? Icons.done
-        : this == ChatMarker.delivered || this == ChatMarker.displayed
-        ? Icons.done_all
-        : Icons.timer,
-        color: this == ChatMarker.displayed ? Colors.green : Colors.grey, size: 20,);
+    return Icon(
+      this == ChatMarker.sent
+          ? Icons.done
+          : this == ChatMarker.delivered || this == ChatMarker.displayed
+              ? Icons.done_all
+              : Icons.timer,
+      color: this == ChatMarker.displayed ? Colors.green : Colors.grey,
+      size: 20,
+    );
   }
 }
 
@@ -124,7 +125,8 @@ extension MessageTypeUiExtensions on MessageType {
         return Icon(Icons.location_pin, size: size);
       case MessageType.chatContact:
         return Icon(Icons.contact_page_sharp, size: size);
+      default:
+        return const SizedBox();
     }
-    return const SizedBox();
   }
 }

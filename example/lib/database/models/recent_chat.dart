@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 
 @DatabaseView(
     "SELECT m.id lastMessageId, m.type as lastMessageType, m.fromId lastMessageFromId, m.text lastMessageText, m.fromName lastMessageFromName, m.status lastMessageStatus, m.roomId roomId, r.name name, r.avatar avatar, r.isGroup isGroup  FROM message m"

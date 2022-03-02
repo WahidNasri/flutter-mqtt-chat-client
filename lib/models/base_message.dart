@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_chat_mqtt/models/enums.dart';
+import 'package:flutter_mqchat/models/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'base_message.g.dart';
@@ -25,7 +25,8 @@ class BaseMessage {
   factory BaseMessage.fromJson(Map<String, dynamic> json) =>
       _$BaseMessageFromJson(json);
 
-  factory BaseMessage.fromString(String payload) => BaseMessage.fromJson(json.decode(payload));
+  factory BaseMessage.fromString(String payload) =>
+      BaseMessage.fromJson(json.decode(payload));
   Map<String, dynamic> toJson() => _$BaseMessageToJson(this);
 
   bool isChatMessage() {
@@ -62,7 +63,7 @@ class BaseMessage {
   }
 
   static int sendTimeFromJson(dynamic milliseconds) {
-    if(milliseconds == null){
+    if (milliseconds == null) {
       return DateTime.now().millisecondsSinceEpoch;
     }
     if (milliseconds is String) {
@@ -74,12 +75,10 @@ class BaseMessage {
     }
   }
 
-
   DateTime? get dateTime {
-    if(sendTime != null){
+    if (sendTime != null) {
       return DateTime.fromMillisecondsSinceEpoch(sendTime!);
     }
     return null;
   }
-
 }
