@@ -3,7 +3,6 @@ import 'package:example/database/chat_db.dart';
 import 'package:example/ui/pages/calls_page.dart';
 import 'package:example/ui/pages/chats_page.dart';
 import 'package:example/ui/pages/rooms_page.dart';
-import 'package:example/ui/pages/groups_page.dart';
 import 'package:example/ui/pages/profile_page.dart';
 import 'package:example/ui/screens/login_screen.dart';
 import 'package:example/ui/screens/new_invitation_screen.dart';

@@ -97,6 +97,7 @@ class ChatMarkerConverter extends TypeConverter<ChatMarker?, String?> {
     if (databaseValue != null) {
       return ChatMarker.values.byName(databaseValue);
     }
+    return null;
   }
 
   @override
@@ -104,5 +105,6 @@ class ChatMarkerConverter extends TypeConverter<ChatMarker?, String?> {
     if (value != null) {
       return value.name;
     }
+    return null;
   }
 }

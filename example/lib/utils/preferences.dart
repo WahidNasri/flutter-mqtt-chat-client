@@ -10,6 +10,7 @@ class AppPreferences {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_HOST_KEY);
   }
+
   static void setHost(String host) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(_HOST_KEY, host);
@@ -24,6 +25,7 @@ class AppPreferences {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_USERNAME_KEY);
   }
+
   static void setUsername(String uname) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(_USERNAME_KEY, uname);
@@ -33,6 +35,7 @@ class AppPreferences {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_PASSWORD_KEY);
   }
+
   static void setPassword(String pw) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(_PASSWORD_KEY, pw);

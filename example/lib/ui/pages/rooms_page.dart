@@ -1,5 +1,3 @@
-import 'package:example/database/chat_db.dart';
-import 'package:example/database/models/room.dart';
 import 'package:example/proviers/chat_providers.dart';
 import 'package:example/proviers/user_provider.dart';
 import 'package:example/ui/screens/chat_room_screen.dart';
@@ -48,6 +46,6 @@ class _RoomPageState extends ConsumerState<RoomsPage> {
                       )),
                 )),
         error: (o, s) => Text(o.toString()),
-        loading: () => Text("Loading..."));
+        loading: () => const Text("Loading..."));
   }
 }

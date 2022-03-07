@@ -35,10 +35,12 @@ class _RoomAvatarState extends State<RoomAvatar> {
         radius: widget.radius,
         backgroundColor: widget.room.presenceColor,
         child: CircleAvatar(
-          radius: widget.radius - (widget.room.isGroup ? 0 : widget.statusWidth),
-          foregroundImage: widget.room.avatar != null && widget.room.avatar!.isNotEmpty
-              ? NetworkImage(widget.room.avatar!)
-              : null,
+          radius:
+              widget.radius - (widget.room.isGroup ? 0 : widget.statusWidth),
+          foregroundImage:
+              widget.room.avatar != null && widget.room.avatar!.isNotEmpty
+                  ? NetworkImage(widget.room.avatar!)
+                  : null,
           child: widget.room.avatar == null && widget.room.avatar!.isEmpty
               ? Icon(
                   widget.room.isGroup ? Icons.group : Icons.person,
@@ -52,13 +54,13 @@ class _RoomAvatarState extends State<RoomAvatar> {
         radius: widget.radius,
         foregroundColor: widget.room.presenceColor,
         child: CircleAvatar(
-            radius: widget.radius - (widget.room.isGroup ? 0 : widget.statusWidth),
+            radius:
+                widget.radius - (widget.room.isGroup ? 0 : widget.statusWidth),
             child: Icon(
               widget.room.isGroup ? Icons.group : Icons.person,
               size: widget.radius,
             )),
       );
     }
-    return Container();
   }
 }

@@ -26,6 +26,7 @@ class PresenceTypeConverter extends TypeConverter<PresenceType?, String?> {
     if (databaseValue != null) {
       return PresenceType.values.byName(databaseValue);
     }
+    return null;
   }
 
   @override
@@ -33,6 +34,7 @@ class PresenceTypeConverter extends TypeConverter<PresenceType?, String?> {
     if (value != null) {
       return value.name;
     }
+    return null;
   }
 }
 

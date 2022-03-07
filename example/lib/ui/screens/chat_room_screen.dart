@@ -2,9 +2,7 @@ import 'package:example/database/models/room.dart';
 import 'package:example/proviers/chat_providers.dart';
 import 'package:example/proviers/user_provider.dart';
 import 'package:example/ui/extensions/messages_extensions.dart';
-import 'package:example/ui/pages/profile_page.dart';
 import 'package:example/ui/screens/profile_screen.dart';
-import 'package:example/ui/widgets/custom_message.dart';
 import 'package:example/ui/widgets/room_avatar.dart';
 import 'package:example/ui/widgets/typing_indicator_text.dart';
 import 'package:file_picker/file_picker.dart';
@@ -165,7 +163,7 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
           result.formattedAddress,
           widget.room.id);
     }
-    print(result);
+    debugPrint(result.toString());
   }
 
   void _handleImageSelection() async {
