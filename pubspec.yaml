@@ -1,7 +1,9 @@
 name: flutter_mqchat
-description: Using MQTT as chat protocol
-version: 0.1.0
+description: MqChat client, this package enables you to use MQTT protocol as a chatting protocol, the broker should implement the HiveMq-Chat-Extension specifications.
+version: 0.1.2
 homepage: https://github.com/WahidNasri/flutter-mqtt-chat-client
+repository: https://github.com/WahidNasri/flutter-mqtt-chat-client
+documentation: https://github.com/WahidNasri/flutter-mqtt-chat-client/blob/dev/README.md
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
@@ -17,13 +19,17 @@ dependencies:
   uuid: ^3.0.4
 
   #==== RXDART ====
-  rxdart:
+  rxdart: ^0.27.3
+  json_annotation: ^4.4.0
+  mime: ^1.0.1
+  path: ^1.8.0
+
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
-  json_serializable: ^6.1.1
   copy_with_extension_gen: ^2.0.2
   build_runner: ^2.0.4
-flutter:
+  json_serializable: ^6.1.1

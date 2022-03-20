@@ -41,10 +41,13 @@ class _RecentChatsPageState extends ConsumerState<RecentChatsPage> {
                     subtitle: TypingIndicatorText(
                       fallbackWidget: Row(
                         children: [
-                          chats[index].lastMessageStatus.toChatMarkerWidget(chats[index].lastMessageFromId == user.user!.id),
+                          chats[index].lastMessageStatus.toChatMarkerWidget(
+                              chats[index].lastMessageFromId == user.user!.id),
                           chats[index].lastMessageType.toIcon(),
                           const SizedBox(width: 5),
-                          Expanded(child: Text(chats[index].lastMessageText, maxLines: 1)),
+                          Expanded(
+                              child: Text(chats[index].lastMessageText,
+                                  maxLines: 1)),
                         ],
                       ),
                       isGroup: chats[index].isGroup,

@@ -1,5 +1,7 @@
 Flutter client of MqChat, a protocol built over MQTT for chatting purposes.
 
+The Broker should install [HiveMQ Chat-Extension](https://github.com/WahidNasri/hivemq-chat-extension) first.
+
 ## Features
 
 Use MQTT as a chat protocol, to create a modern chat application that supports all needed features. This is a flutter client of MqChat.

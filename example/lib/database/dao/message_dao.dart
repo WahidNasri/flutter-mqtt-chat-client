@@ -3,7 +3,7 @@ import 'package:example/database/models/recent_chat.dart';
 import 'package:floor/floor.dart';
 
 @dao
-abstract class MessageDao{
+abstract class MessageDao {
   @Query('SELECT * FROM Message')
   Stream<List<Message>> allMessages();
 
@@ -12,7 +12,7 @@ abstract class MessageDao{
 
   @Query('SELECT * FROM Message WHERE roomId = :roomId')
   Stream<List<Message>> allMessagesByRoomId(String roomId);
-  
+
   @Query("SELECT * FROM Message WHERE status is null")
   Future<List<Message>> getUnsentMessages();
 
@@ -30,5 +30,4 @@ abstract class MessageDao{
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertMessage(Message message);
-
 }

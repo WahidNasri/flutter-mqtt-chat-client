@@ -4,7 +4,7 @@ import 'package:example/database/models/room.dart';
 import 'package:example/proviers/db_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final recentChatsProvider = StreamProvider<List<RecentChat>>((ref){
+final recentChatsProvider = StreamProvider<List<RecentChat>>((ref) {
   final db = ref.watch(databaseProvider);
   if (db.database != null) {
     return db.database!.messageDao.getRecentChats();

@@ -18,7 +18,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   void init() async {
-    if(dataBaseProvider.database ==null){
+    if (dataBaseProvider.database == null) {
       return;
     }
     dataBaseProvider.database!.userDao.findAllUsersAsync().listen((users) {

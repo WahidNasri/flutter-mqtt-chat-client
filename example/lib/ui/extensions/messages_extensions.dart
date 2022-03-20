@@ -1,4 +1,5 @@
 import 'package:example/database/models/message.dart';
+import 'package:example/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mqchat/models/enums.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -56,7 +57,7 @@ extension MessagesExtension on Message {
       return types.ImageMessage(
           id: id,
           uri:
-              "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&markers=color:blue%7C$latitude,$longitude&zoom=13&size=300x200&maptype=roadmap&key=AIzaSyDs9qcIhAV-aToQiGOIRlVTzFtrbh1z7tU",
+              "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&markers=color:blue%7C$latitude,$longitude&zoom=13&size=300x200&maptype=roadmap&key=$mapApiKey",
           size: size ?? 0,
           name: text,
           author: author,

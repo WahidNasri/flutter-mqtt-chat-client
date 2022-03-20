@@ -5,6 +5,7 @@ import 'package:example/ui/extensions/messages_extensions.dart';
 import 'package:example/ui/screens/profile_screen.dart';
 import 'package:example/ui/widgets/room_avatar.dart';
 import 'package:example/ui/widgets/typing_indicator_text.dart';
+import 'package:example/utils/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -152,7 +153,7 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
   void _handleLocationSelection() async {
     LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => PlacePicker(
-              "AIzaSyDs9qcIhAV-aToQiGOIRlVTzFtrbh1z7tU",
+              mapApiKey,
             )));
 
     // Handle the result in your way

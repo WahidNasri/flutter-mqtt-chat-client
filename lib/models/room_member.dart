@@ -22,7 +22,8 @@ class RoomMember {
 
   factory RoomMember.fromJson(Map<String, dynamic> json) =>
       _$RoomMemberFromJson(json);
-  factory RoomMember.fromString(String payload) => RoomMember.fromJson(json.decode(payload));
+  factory RoomMember.fromString(String payload) =>
+      RoomMember.fromJson(json.decode(payload));
 
   Map<String, dynamic> toJson() => _$RoomMemberToJson(this);
 }

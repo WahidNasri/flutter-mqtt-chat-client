@@ -12,9 +12,9 @@ class User {
 
   User(
       {required this.id,
-        required this.name,
-        required this.clientId,
-        required this.username,
-        required this.password,
+      required this.name,
+      required this.clientId,
+      required this.username,
+      required this.password,
       this.avatar});
 }

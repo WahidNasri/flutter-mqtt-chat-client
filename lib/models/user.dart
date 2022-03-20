@@ -21,6 +21,6 @@ class User {
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
-  factory User.fromString(String jsonString) => _$UserFromJson(json.decode(jsonString));
-
+  factory User.fromString(String jsonString) =>
+      _$UserFromJson(json.decode(jsonString));
 }
